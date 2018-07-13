@@ -1,0 +1,16 @@
+PODS:
+  - FrameLayoutKit (0.1.0)
+
+DEPENDENCIES:
+  - FrameLayoutKit (from `../`)
+
+EXTERNAL SOURCES:
+  FrameLayoutKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  FrameLayoutKit: b446d3812f181a9231e8de3c3830c1ad58445c69
+
+PODFILE CHECKSUM: d06e8862c7548a3a189ad3f3a8be86589241f732
+
+COCOAPODS: 1.5.3
