@@ -38,8 +38,74 @@ public class FrameLayout: UIView {
 	public var allowContentHorizontalGrowing: Bool = false
 	public var allowContentHorizontalShrinking: Bool = false
 	public var shouldCacheSize: Bool = false
-	public var showFrameDebug: Bool = false
+	public var showFrameDebug: Bool = false {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
 	public var debugColor: UIColor? = nil
+	
+	public var fixSize: CGSize = .zero {
+		didSet {
+			minSize = fixSize
+			maxSize = fixSize
+		}
+	}
+	
+	public var contentAlignment: (NKContentVerticalAlignment, NKContentHorizontalAlignment) = (.fill, .fill) {
+		didSet {
+			contentVerticalAlignment = contentAlignment.0
+			contentHorizontalAlignment = contentAlignment.1
+		}
+	}
+	
+	public var configurationBlock: ((_ frameLayout:FrameLayout) -> Void)? = nil {
+		didSet {
+			configurationBlock?(self)
+		}
+	}
+	
+	public override var frame: CGRect {
+		get {
+			return super.frame
+		}
+		set {
+			if frame.isInfinite || frame.isNull || frame.origin.x.isNaN || frame.origin.y.isNaN || frame.size.width.isNaN || frame.size.height.isNaN {
+				return
+			}
+			
+			super.frame = frame
+			self.setNeedsLayout()
+			self.setNeedsDisplay()
+			
+			if self.superview == nil {
+				self.layoutIfNeeded()
+			}
+		}
+	}
+	
+	public override var bounds: CGRect {
+		get {
+			return super.bounds
+		}
+		set {
+			if bounds.isInfinite || bounds.isNull || bounds.origin.x.isNaN || bounds.origin.y.isNaN || bounds.size.width.isNaN || bounds.size.height.isNaN {
+				return
+			}
+			
+			super.bounds = bounds
+			self.setNeedsLayout()
+			self.setNeedsDisplay()
+			
+			if self.superview == nil {
+				self.layoutIfNeeded()
+			}
+		}
+	}
+	
+	public override var description: String {
+		return "[\(super.description)]-targetView: \(String(describing: targetView))"
+	}
 	
 	lazy fileprivate var sizeCacheData: [String: CGSize] = {
 		return [:]
@@ -126,6 +192,13 @@ public class FrameLayout: UIView {
 		super.layoutSubviews()
 	}
 	
+	override public func setNeedsLayout() {
+		super.setNeedsLayout()
+		targetView?.setNeedsLayout()
+	}
+	
+	// MARK: -
+	
 	// MARK: -
 	
 	fileprivate func targetSizeThatFits(size: CGSize) -> CGSize {
@@ -166,6 +239,12 @@ public class FrameLayout: UIView {
 		}
 		
 		return result
+	}
+	
+	fileprivate func randomColor() -> UIColor {
+		let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
+		let randomIndex = Int(arc4random()) % colors.count
+		return colors[randomIndex]
 	}
 	
 }
