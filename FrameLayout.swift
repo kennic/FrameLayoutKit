@@ -56,6 +56,8 @@ public class FrameLayout: UIView {
 		didSet {
 			contentVerticalAlignment = contentAlignment.0
 			contentHorizontalAlignment = contentAlignment.1
+			
+			setNeedsLayout()
 		}
 	}
 	
@@ -137,6 +139,17 @@ public class FrameLayout: UIView {
 			return
 		}
 		
+		if debugColor == nil {
+			debugColor = randomColor()
+		}
+		
+		if let context = UIGraphicsGetCurrentContext() {
+			context.saveGState()
+			context.setStrokeColor(debugColor!.cgColor)
+			context.setLineDash(phase: 0, lengths: [4.0, 2.0])
+			context.stroke(self.bounds)
+			context.restoreGState()
+		}
 	}
 	#endif
 	
@@ -145,8 +158,6 @@ public class FrameLayout: UIView {
 		guard isHiddenView == false else {
 			return .zero
 		}
-		
-		
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
 			return minSize
