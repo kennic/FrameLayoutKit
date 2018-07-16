@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import FrameLayoutKit
 
 class ViewController: UIViewController {
+	let label = UILabel()
+	let frameLayout = FrameLayout()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+		
+		
     }
 
     override func didReceiveMemoryWarning() {

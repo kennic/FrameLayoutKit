@@ -115,12 +115,12 @@ public class FrameLayout: UIView {
 	
 	// MARK: -
 	
-	convenience init(targetView: UIView) {
+	convenience public init(targetView: UIView) {
 		self.init()
 		self.targetView = targetView
 	}
 	
-	init() {
+	public init() {
 		super.init(frame: .zero)
 		
 		self.backgroundColor = .clear
