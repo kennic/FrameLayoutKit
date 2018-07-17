@@ -26,6 +26,7 @@ public class DoubleFrameLayout: FrameLayout {
 	
 	public var layoutAlignment: LayoutAlignment = .top
 	public var layoutDirection: LayoutDirection = .auto
+	public var isIntrinsicSizeEnabled: Bool = false
 	public var spacing: CGFloat = 0 {
 		didSet {
 			if spacing != oldValue {
@@ -270,12 +271,37 @@ public class DoubleFrameLayout: FrameLayout {
 					
 				case .center:
 					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
-					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
+					space = frame1ContentSize.width > 0 ? spacing : 0
+					
+					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
 					break
 				}
+				
+				if isIntrinsicSizeEnabled {
+					space = frame1ContentSize.width > 0 && frame2ContentSize.width > 0 ? spacing : 0
+					result.width = frame1ContentSize.width + frame2ContentSize.width + space
+				}
+				else {
+					result.width = size.width
+				}
+				
+				result.height = max(frame1ContentSize.height, frame2ContentSize.height)
 			}
 			else {
-				
+				switch layoutAlignment {
+				case .top, .left:
+					break
+					
+				case .bottom, .right:
+					break
+					
+				case .split:
+					break
+					
+				case .center:
+					break
+				}
 			}
 		}
 		
