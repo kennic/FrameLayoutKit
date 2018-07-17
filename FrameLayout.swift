@@ -39,6 +39,12 @@ public class FrameLayout: UIView {
 	public var allowContentHorizontalShrinking: Bool = true
 	public var shouldCacheSize: Bool = false
 	
+	public var isEmpty: Bool {
+		get {
+			return targetView == nil || (targetView!.isHidden && ignoreHiddenView) || self.isHidden
+		}
+	}
+	
 	public var showFrameDebug: Bool = false {
 		didSet {
 			self.setNeedsDisplay()
@@ -159,8 +165,7 @@ public class FrameLayout: UIView {
 	#endif
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
-		let isHiddenView: Bool = targetView == nil || (targetView!.isHidden && ignoreHiddenView) || self.isHidden
-		guard isHiddenView == false else {
+		guard self.isEmpty == false else {
 			return .zero
 		}
 		

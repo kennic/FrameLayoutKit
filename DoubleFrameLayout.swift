@@ -35,6 +35,13 @@ public class DoubleFrameLayout: FrameLayout {
 	}
 	public var splitRatio: CGFloat = 0.5
 	
+	override public var ignoreHiddenView: Bool {
+		didSet {
+			self.frameLayout1?.ignoreHiddenView = ignoreHiddenView
+			self.frameLayout2?.ignoreHiddenView = ignoreHiddenView
+		}
+	}
+	
 	override public var shouldCacheSize: Bool {
 		didSet {
 			self.frameLayout1?.shouldCacheSize = shouldCacheSize
@@ -201,5 +208,91 @@ public class DoubleFrameLayout: FrameLayout {
 		self.frameLayout1?.setNeedsLayout()
 		self.frameLayout2?.setNeedsLayout()
 	}
+	
+	override public func sizeThatFits(_ size: CGSize) -> CGSize {
+		var result: CGSize = .zero
+		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
+		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
+		
+		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
+			result = minSize
+		}
+		else {
+			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
+			
+			var frame1ContentSize: CGSize = .zero
+			var frame2ContentSize: CGSize = .zero
+			var space: CGFloat = 0
+			var direction: LayoutDirection = layoutDirection
+			if layoutDirection == .auto {
+				direction = size.width < size.height ? .vertical : .horizontal
+			}
+			
+			if direction == .horizontal {
+				switch layoutAlignment {
+				case .left, .top:
+					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
+					space = frame1ContentSize.width > 0 ? spacing : 0
+					
+					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					break
+					
+				case .right, .bottom:
+					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
+					space = frame2ContentSize.width > 0 ? spacing : 0
+					
+					frame1ContentSize = CGSize(width: contentSize.width - frame2ContentSize.width - space, height: contentSize.height)
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					break
+					
+				case .split:
+					var splitValue: CGFloat = splitRatio
+					var spaceValue: CGFloat = spacing
+					
+					if frameLayout1?.isEmpty ?? true {
+						splitValue = 0.0
+						spaceValue = 0.0
+					}
+					
+					if frameLayout2?.isEmpty ?? true {
+						splitValue = 1.0
+						spaceValue = 0.0
+					}
+					
+					frame1ContentSize = CGSize(width: (contentSize.width - spaceValue) * splitValue, height: contentSize.height)
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					space = frame1ContentSize.width > 0 ? spaceValue : 0
+					
+					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					break
+					
+				case .center:
+					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
+					break
+				}
+			}
+			else {
+				
+			}
+		}
+		
+		if result.width > 0 {
+			result.width += verticalEdgeValues
+		}
+		
+		if result.height > 0 {
+			result.height += horizontalEdgeValues
+		}
+		
+		result.width = min(result.width, size.width)
+		result.height = min(result.height, size.height)
+		
+		return result
+	}
+	
+	// MARK: -
 	
 }

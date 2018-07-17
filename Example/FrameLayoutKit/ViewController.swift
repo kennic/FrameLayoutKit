@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		label.text = "This is a label"
+		label.text = "Hello World"
 		label.textAlignment = .center
 		label.textColor = .white
 		label.backgroundColor = .red
