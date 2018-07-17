@@ -173,7 +173,7 @@ public class FrameLayout: UIView {
 			result.height = contentSize.width * heightRatio
 		}
 		else {
-			result = targetSizeThatFits(size: contentSize)
+			result = contentSizeThatFits(size: contentSize)
 		}
 		
 		result.width = max(minSize.width, result.width)
@@ -201,6 +201,13 @@ public class FrameLayout: UIView {
 	
 	override public func layoutSubviews() {
 		super.layoutSubviews()
+		
+		if targetView == nil || self.isHidden || (targetView?.isHidden ?? true) || bounds.size.width < 1 || bounds.size.height < 1 {
+    		return
+		}
+		
+		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
+		let contentSize = contentHorizontalAlignment != .fill || contentVerticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
 	}
 	
 	override public func setNeedsLayout() {
@@ -212,7 +219,7 @@ public class FrameLayout: UIView {
 	
 	// MARK: -
 	
-	fileprivate func targetSizeThatFits(size: CGSize) -> CGSize {
+	fileprivate func contentSizeThatFits(size: CGSize) -> CGSize {
 		var result: CGSize
 		
 		if minSize.equalTo(maxSize) && minSize.width > 0 && minSize.height > 0 {

@@ -16,13 +16,23 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		label.text = "This is a label"
+		label.textAlignment = .center
+		label.textColor = .white
+		label.backgroundColor = .red
+		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
+		frameLayout.targetView = label
+		
+		view.addSubview(label)
+		view.addSubview(frameLayout)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		frameLayout.frame = self.view.bounds
+	}
 
 }
 

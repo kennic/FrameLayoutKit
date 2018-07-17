@@ -7,6 +7,8 @@
 
 FrameLayout is a super fast and easy to use layout library for iOS and tvOS.
 
+Note: This is the Swift version of [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayoutKit) and it's still in development progress
+
 ## Example
 
 ![Grid Example](/../master/example_grid.png?raw=true "GridFrameLayout example")
@@ -32,7 +34,7 @@ let image = UIImage(named: "earth.jpg")
 let label = UILabel()
 label.text = "Hello World"
 
-let layout = DoubleFrameLayout(direction: .horizontal, andVies: [image, label])
+let layout = DoubleFrameLayout(direction: .horizontal, andViews: [image, label])
 layout.spacing = 5
 layout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 layout.frame = self.bounds
