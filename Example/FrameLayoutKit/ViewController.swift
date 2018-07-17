@@ -23,9 +23,10 @@ class ViewController: UIViewController {
 		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
 		frameLayout.targetView = label
-		frameLayout.contentAlignment = (.fill, .fill)
-		frameLayout.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+		frameLayout.contentAlignment = (.center, .center)
+		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
+		frameLayout.heightRatio = 9/16
 		
 		view.addSubview(label)
 		view.addSubview(frameLayout)

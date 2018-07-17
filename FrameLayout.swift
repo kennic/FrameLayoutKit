@@ -38,12 +38,17 @@ public class FrameLayout: UIView {
 	public var allowContentHorizontalGrowing: Bool = false
 	public var allowContentHorizontalShrinking: Bool = true
 	public var shouldCacheSize: Bool = false
+	
 	public var showFrameDebug: Bool = false {
 		didSet {
 			self.setNeedsDisplay()
 		}
 	}
-	public var debugColor: UIColor? = nil
+	public var debugColor: UIColor? = nil {
+		didSet {
+			self.setNeedsDisplay()
+		}
+	}
 	
 	public var fixSize: CGSize = .zero {
 		didSet {
@@ -167,13 +172,10 @@ public class FrameLayout: UIView {
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
 		let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
+		result = contentSizeThatFits(size: contentSize)
 		
-		if heightRatio > 0.0 {
-			result = contentSize
-			result.height = contentSize.width * heightRatio
-		}
-		else {
-			result = contentSizeThatFits(size: contentSize)
+		if heightRatio > 0 {
+			result.height = result.width * heightRatio
 		}
 		
 		result.width = max(minSize.width, result.width)
@@ -208,7 +210,10 @@ public class FrameLayout: UIView {
 		
 		var targetFrame: CGRect = .zero
 		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
-		let contentSize = contentHorizontalAlignment != .fill || contentVerticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
+		var contentSize = contentHorizontalAlignment != .fill || contentVerticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
+		if heightRatio > 0 {
+			contentSize.height = contentSize.width * heightRatio
+		}
 		
 		switch contentHorizontalAlignment {
 		case .left:
@@ -360,8 +365,6 @@ public class FrameLayout: UIView {
 		super.setNeedsLayout()
 		targetView?.setNeedsLayout()
 	}
-	
-	// MARK: -
 	
 	// MARK: -
 	
