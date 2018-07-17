@@ -23,6 +23,9 @@ class ViewController: UIViewController {
 		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
 		frameLayout.targetView = label
+		frameLayout.contentAlignment = (.fill, .fill)
+		frameLayout.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+		frameLayout.showFrameDebug = true
 		
 		view.addSubview(label)
 		view.addSubview(frameLayout)
@@ -31,8 +34,9 @@ class ViewController: UIViewController {
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		frameLayout.frame = self.view.bounds
-		print("LAYOUT \(frameLayout.frame)")
+		let viewSize = self.view.bounds.size
+		let contentSize = frameLayout.sizeThatFits(viewSize)
+		frameLayout.frame = CGRect(x: (viewSize.width - contentSize.width)/2, y: (viewSize.height - contentSize.height)/2, width: contentSize.width, height: contentSize.height)
 	}
 
 }
