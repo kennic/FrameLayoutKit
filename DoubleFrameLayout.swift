@@ -16,8 +16,8 @@ public enum LayoutDirection : Int {
 public enum LayoutAlignment : Int {
 	case top = 0
     case bottom
-    static let left: LayoutAlignment = .top
-    static let right: LayoutAlignment = .bottom
+    public static let left: LayoutAlignment = .top
+    public static let right: LayoutAlignment = .bottom
     case split
     case center
 }
@@ -150,7 +150,7 @@ public class DoubleFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	convenience init(direction: LayoutDirection, alignment: LayoutAlignment = .top, views: [UIView]? = nil) {
+	convenience public init(direction: LayoutDirection, alignment: LayoutAlignment = .top, views: [UIView]? = nil) {
 		self.init()
 		
 		self.layoutDirection = direction
@@ -183,7 +183,7 @@ public class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
-	override init() {
+	override public init() {
 		super.init()
 		
 		frameLayout1 = FrameLayout()
