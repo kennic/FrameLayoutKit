@@ -248,20 +248,20 @@ public class DoubleFrameLayout: FrameLayout {
 					break
 					
 				case .split:
-					var splitValue: CGFloat = splitRatio
+					var ratioValue: CGFloat = splitRatio
 					var spaceValue: CGFloat = spacing
 					
 					if frameLayout1?.isEmpty ?? true {
-						splitValue = 0.0
-						spaceValue = 0.0
+						ratioValue = 0
+						spaceValue = 0
 					}
 					
 					if frameLayout2?.isEmpty ?? true {
-						splitValue = 1.0
-						spaceValue = 0.0
+						ratioValue = 1
+						spaceValue = 0
 					}
 					
-					frame1ContentSize = CGSize(width: (contentSize.width - spaceValue) * splitValue, height: contentSize.height)
+					frame1ContentSize = CGSize(width: (contentSize.width - spaceValue) * ratioValue, height: contentSize.height)
 					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
 					space = frame1ContentSize.width > 0 ? spaceValue : 0
 					
@@ -307,20 +307,20 @@ public class DoubleFrameLayout: FrameLayout {
 					break
 					
 				case .split:
-					var splitValue: CGFloat = splitRatio
+					var ratioValue: CGFloat = splitRatio
 					var spaceValue: CGFloat = spacing
 					
 					if frameLayout1?.isEmpty ?? true {
-						splitValue = 0.0
-						spaceValue = 0.0
+						ratioValue = 0
+						spaceValue = 0
 					}
 					
 					if frameLayout2?.isEmpty ?? true {
-						splitValue = 1.0
-						spaceValue = 0.0
+						ratioValue = 1
+						spaceValue = 0
 					}
 					
-					frame1ContentSize = CGSize(width: contentSize.width, height: (contentSize.height - spaceValue) * splitValue)
+					frame1ContentSize = CGSize(width: contentSize.width, height: (contentSize.height - spaceValue) * ratioValue)
 					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
 					space = frame1ContentSize.height > 0 ? spaceValue : 0
 					
