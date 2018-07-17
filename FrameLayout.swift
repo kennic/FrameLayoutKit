@@ -34,9 +34,9 @@ public class FrameLayout: UIView {
 	public var contentVerticalAlignment: NKContentVerticalAlignment = .fill
 	public var contentHorizontalAlignment: NKContentHorizontalAlignment = .fill
 	public var allowContentVerticalGrowing: Bool = false
-	public var allowContentVerticalShrinking: Bool = false
+	public var allowContentVerticalShrinking: Bool = true
 	public var allowContentHorizontalGrowing: Bool = false
-	public var allowContentHorizontalShrinking: Bool = false
+	public var allowContentHorizontalShrinking: Bool = true
 	public var shouldCacheSize: Bool = false
 	public var showFrameDebug: Bool = false {
 		didSet {
@@ -202,12 +202,158 @@ public class FrameLayout: UIView {
 	override public func layoutSubviews() {
 		super.layoutSubviews()
 		
-		if targetView == nil || self.isHidden || (targetView?.isHidden ?? true) || bounds.size.width < 1 || bounds.size.height < 1 {
-    		return
+		guard let targetView = targetView, targetView.isHidden == false, self.isHidden == false, bounds.size.width > 0, bounds.size.height > 0 else {
+			return
 		}
 		
+		var targetFrame: CGRect = .zero
 		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
 		let contentSize = contentHorizontalAlignment != .fill || contentVerticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
+		
+		switch contentHorizontalAlignment {
+		case .left:
+			if allowContentHorizontalGrowing {
+				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+			}
+			else if allowContentHorizontalShrinking {
+				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
+			}
+			else {
+				targetFrame.size.width = contentSize.width
+			}
+			
+			targetFrame.origin.x = containerFrame.origin.x
+			break
+			
+		case .right:
+			if allowContentHorizontalGrowing {
+				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+			}
+			else if allowContentHorizontalShrinking {
+				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
+			}
+			else {
+				targetFrame.size.width = contentSize.width
+			}
+			
+			targetFrame.origin.x = containerFrame.maxX - contentSize.width
+			break
+			
+		case .center:
+			if allowContentHorizontalGrowing {
+				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+			}
+			else if allowContentHorizontalShrinking {
+				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
+			}
+			else {
+				targetFrame.size.width = contentSize.width
+			}
+			
+			targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - contentSize.width) / 2
+			break
+			
+		case .fill:
+			targetFrame.origin.x = containerFrame.origin.x
+			targetFrame.size.width = containerFrame.size.width
+			break
+			
+		case .fit:
+			if allowContentHorizontalGrowing {
+				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+			}
+			else {
+				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
+			}
+			
+			targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame.size.width) / 2
+			break
+			
+		}
+		
+		switch contentVerticalAlignment {
+		case .top:
+			if allowContentVerticalGrowing {
+				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+			}
+			else if allowContentVerticalShrinking {
+				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+			}
+			else {
+				targetFrame.size.height = contentSize.height
+			}
+			
+			targetFrame.origin.y = containerFrame.origin.y
+			break
+		
+		case .bottom:
+			if allowContentVerticalGrowing {
+				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+			}
+			else if allowContentVerticalShrinking {
+				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+			}
+			else {
+				targetFrame.size.height = contentSize.height
+			}
+			
+			targetFrame.origin.y = containerFrame.maxY - contentSize.height
+			break
+			
+		case .center:
+			if allowContentVerticalGrowing {
+				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+			}
+			else if allowContentVerticalShrinking {
+				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+			}
+			else {
+				targetFrame.size.height = contentSize.height
+			}
+			
+			targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - contentSize.height) / 2
+			break
+			
+		case .fill:
+			targetFrame.origin.y = containerFrame.origin.y
+			targetFrame.size.height = containerFrame.size.height
+			break
+			
+		case .fit:
+			if allowContentVerticalGrowing {
+				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+			}
+			else {
+				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+			}
+			
+			targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.height) / 2
+			break
+		}
+	
+		targetFrame = targetFrame.integral
+		
+		if targetView.superview == self {
+			targetView.frame = targetFrame
+		}
+		else if targetView.superview != nil {
+			if window == nil {
+				targetFrame.origin.x = frame.origin.x
+				targetFrame.origin.y = frame.origin.y
+				var superView: UIView? = superview
+				
+				while superView != nil && (superView is FrameLayout) {
+					targetFrame.origin.x += superView!.frame.origin.x
+					targetFrame.origin.y += superView!.frame.origin.y
+					superView = superView!.superview
+				}
+				
+				targetView.frame = targetFrame
+			}
+			else {
+				targetView.frame = convert(targetFrame, to: targetView.superview)
+			}
+		}
 	}
 	
 	override public func setNeedsLayout() {
