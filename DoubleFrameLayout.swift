@@ -291,17 +291,52 @@ public class DoubleFrameLayout: FrameLayout {
 			else {
 				switch layoutAlignment {
 				case .top, .left:
+					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
+					space = frame1ContentSize.height > 0 ? spacing : 0
+					
+					frame2ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
 					break
 					
 				case .bottom, .right:
+					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
+					space = frame2ContentSize.height > 0 ? spacing : 0
+					
+					frame1ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame2ContentSize.height - space)
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
 					break
 					
 				case .split:
+					var splitValue: CGFloat = splitRatio
+					var spaceValue: CGFloat = spacing
+					
+					if frameLayout1?.isEmpty ?? true {
+						splitValue = 0.0
+						spaceValue = 0.0
+					}
+					
+					if frameLayout2?.isEmpty ?? true {
+						splitValue = 1.0
+						spaceValue = 0.0
+					}
+					
+					frame1ContentSize = CGSize(width: contentSize.width, height: (contentSize.height - spaceValue) * splitValue)
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					space = frame1ContentSize.height > 0 ? spaceValue : 0
+					
+					frame2ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
 					break
 					
 				case .center:
+					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
 					break
 				}
+				
+				result.width = isIntrinsicSizeEnabled ? max(frame1ContentSize.width, frame2ContentSize.width) : size.width
+				space = frame1ContentSize.height > 0 && frame2ContentSize.height > 0 ? spacing : 0
+				result.height = frame1ContentSize.height + frame2ContentSize.height + space
 			}
 		}
 		
