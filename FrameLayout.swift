@@ -72,11 +72,11 @@ public class FrameLayout: UIView {
 			return super.frame
 		}
 		set {
-			if frame.isInfinite || frame.isNull || frame.origin.x.isNaN || frame.origin.y.isNaN || frame.size.width.isNaN || frame.size.height.isNaN {
+			if newValue.isInfinite || newValue.isNull || newValue.origin.x.isNaN || newValue.origin.y.isNaN || newValue.size.width.isNaN || newValue.size.height.isNaN {
 				return
 			}
 			
-			super.frame = frame
+			super.frame = newValue
 			self.setNeedsLayout()
 			self.setNeedsDisplay()
 			
@@ -91,11 +91,11 @@ public class FrameLayout: UIView {
 			return super.bounds
 		}
 		set {
-			if bounds.isInfinite || bounds.isNull || bounds.origin.x.isNaN || bounds.origin.y.isNaN || bounds.size.width.isNaN || bounds.size.height.isNaN {
+			if newValue.isInfinite || newValue.isNull || newValue.origin.x.isNaN || newValue.origin.y.isNaN || newValue.size.width.isNaN || newValue.size.height.isNaN {
 				return
 			}
 			
-			super.bounds = bounds
+			super.bounds = newValue
 			self.setNeedsLayout()
 			self.setNeedsDisplay()
 			

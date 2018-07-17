@@ -32,6 +32,7 @@ class ViewController: UIViewController {
 		super.viewDidLayoutSubviews()
 		
 		frameLayout.frame = self.view.bounds
+		print("LAYOUT \(frameLayout.frame)")
 	}
 
 }
