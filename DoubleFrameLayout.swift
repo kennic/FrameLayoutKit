@@ -422,13 +422,12 @@ public class DoubleFrameLayout: FrameLayout {
 				space = frame2ContentSize.width > 0 ? spacing : 0
 				
 				frame1ContentSize = CGSize(width: containerFrame.size.width - frame2ContentSize.width - space, height: containerFrame.size.height)
-				targetFrame1.origin.x = containerFrame.origin.x
 				targetFrame1.size.width = frame1ContentSize.width
 				break
 				
 			case .split:
-				var ratioValue: CGFloat = splitRatio
-				var spaceValue: CGFloat = spacing
+				var ratioValue = splitRatio
+				var spaceValue = spacing
 				
 				if frameLayout1?.isEmpty ?? true {
 					ratioValue = 0
@@ -441,7 +440,6 @@ public class DoubleFrameLayout: FrameLayout {
 				}
 				
 				frame1ContentSize = CGSize(width: (containerFrame.size.width - spaceValue) * ratioValue, height: containerFrame.size.height)
-				targetFrame1.origin.x = containerFrame.origin.x
 				targetFrame1.size.width = frame1ContentSize.width
 				space = frame1ContentSize.width > 0 ? spaceValue : 0
 				
@@ -460,13 +458,72 @@ public class DoubleFrameLayout: FrameLayout {
 				let totalWidth = frame1ContentSize.width + frame2ContentSize.width + space
 				targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - totalWidth)/2
 				targetFrame1.size.width = frame1ContentSize.width
+				
 				targetFrame2.origin.x = targetFrame1.origin.x + frame1ContentSize.width + space
 				targetFrame2.size.width = frame2ContentSize.width
 				break
 			}
 		}
 		else {
-			
+			switch layoutAlignment {
+			case .top, .left:
+				frame1ContentSize = frameLayout1?.sizeThatFits(containerFrame.size) ?? .zero
+				targetFrame1.size.height = frame1ContentSize.height
+				space = frame1ContentSize.height > 0 ? spacing : 0
+				
+				frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
+				targetFrame2.origin.y = containerFrame.origin.y + frame1ContentSize.height + space
+				targetFrame2.size.height = frame2ContentSize.height
+				break
+				
+			case .bottom, .right:
+				frame2ContentSize = frameLayout2?.sizeThatFits(containerFrame.size) ?? .zero
+				targetFrame2.origin.y = containerFrame.origin.y + (containerFrame.size.height - frame2ContentSize.height)
+				targetFrame2.size.height = frame2ContentSize.height
+				space = frame2ContentSize.height > 0 ? spacing : 0
+				
+				frame1ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame2ContentSize.height - space)
+				targetFrame1.size.height = frame1ContentSize.height
+				break
+				
+			case .split:
+				var ratioValue = splitRatio
+				var spaceValue = spacing
+				
+				if frameLayout1?.isEmpty ?? true {
+					ratioValue = 0.0
+					spaceValue = 0.0
+				}
+				
+				if frameLayout2?.isEmpty ?? true {
+					ratioValue = 1.0
+					spaceValue = 0.0
+				}
+				
+				frame1ContentSize = CGSize(width: containerFrame.size.width, height: (containerFrame.size.height - spaceValue) * ratioValue)
+				targetFrame1.size.height = frame1ContentSize.height
+				space = frame1ContentSize.height > 0 ? spaceValue : 0
+				
+				frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
+				targetFrame2.origin.y = containerFrame.origin.y + targetFrame1.size.height + space
+				targetFrame2.size.height = frame2ContentSize.height
+				break
+				
+			case .center:
+				frame1ContentSize = frameLayout1?.sizeThatFits(containerFrame.size) ?? .zero
+				space = frame1ContentSize.height > 0 ? spacing : 0
+				
+				frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
+				frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+				
+				let totalHeight: CGFloat = frame1ContentSize.height + frame2ContentSize.height + space
+				targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - totalHeight)/2
+				targetFrame1.size.height = frame1ContentSize.height
+				
+				targetFrame2.origin.y = targetFrame1.origin.y + frame1ContentSize.height + space
+				targetFrame2.size.height = frame2ContentSize.height
+				break
+			}
 		}
 		
 		frameLayout1?.frame = targetFrame1.integral

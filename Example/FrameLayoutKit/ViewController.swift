@@ -25,13 +25,11 @@ class ViewController: UIViewController {
 		label.backgroundColor = .red
 		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
-		frameLayout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [imageView, label])
-//		frameLayout.contentAlignment = (.center, .center)
+		frameLayout = DoubleFrameLayout(direction: .horizontal, alignment: .center, views: [imageView, label])
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5
 		frameLayout.isIntrinsicSizeEnabled = true
-		frameLayout.heightRatio = 3/4
 		
 		view.addSubview(label)
 		view.addSubview(imageView)
