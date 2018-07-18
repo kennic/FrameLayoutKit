@@ -365,6 +365,92 @@ public class DoubleFrameLayout: FrameLayout {
 		return result
 	}
 	
+	override public func layoutSubviews() {
+		super.layoutSubviews()
+		
+		let containerFrame: CGRect = UIEdgeInsetsInsetRect(bounds, edgeInsets)
+		guard containerFrame.size.width > 0 && containerFrame.size.height > 0 else {
+			return
+		}
+		
+		var frame1ContentSize: CGSize = .zero
+		var frame2ContentSize: CGSize = .zero
+		var targetFrame1: CGRect = containerFrame
+		var targetFrame2: CGRect = containerFrame
+		var space: CGFloat = 0
+		var direction: LayoutDirection = layoutDirection
+		if layoutDirection == .auto {
+			let size = self.bounds.size
+			direction = size.width < size.height ? .vertical : .horizontal
+		}
+		
+		if direction == .horizontal {
+			switch layoutAlignment {
+			case .top, .left:
+				frame1ContentSize = frameLayout1?.sizeThatFits(containerFrame.size) ?? .zero
+				targetFrame1.size.width = frame1ContentSize.width
+				space = frame1ContentSize.width > 0 ? spacing : 0
+				
+				frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
+				targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
+				targetFrame2.size.width = frame2ContentSize.width
+				break
+				
+			case .bottom, .right:
+				frame2ContentSize = frameLayout2?.sizeThatFits(containerFrame.size) ?? .zero
+				targetFrame2.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame2ContentSize.width)
+				targetFrame2.size.width = frame2ContentSize.width
+				space = frame2ContentSize.width > 0 ? spacing : 0
+				
+				frame1ContentSize = CGSize(width: containerFrame.size.width - frame2ContentSize.width - space, height: containerFrame.size.height)
+				targetFrame1.origin.x = containerFrame.origin.x
+				targetFrame1.size.width = frame1ContentSize.width
+				break
+				
+			case .split:
+				var ratioValue: CGFloat = splitRatio
+				var spaceValue: CGFloat = spacing
+				
+				if frameLayout1?.isEmpty ?? true {
+					ratioValue = 0
+					spaceValue = 0
+				}
+				
+				if frameLayout2?.isEmpty ?? true {
+					ratioValue = 1
+					spaceValue = 0
+				}
+				
+				frame1ContentSize = CGSize(width: (containerFrame.size.width - spaceValue) * ratioValue, height: containerFrame.size.height)
+				targetFrame1.origin.x = containerFrame.origin.x
+				targetFrame1.size.width = frame1ContentSize.width
+				space = frame1ContentSize.width > 0 ? spaceValue : 0
+				
+				frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
+				targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
+				targetFrame2.size.width = frame2ContentSize.width
+				break
+				
+			case .center:
+				frame1ContentSize = frameLayout1?.sizeThatFits(containerFrame.size) ?? .zero
+				space = frame1ContentSize.width > 0 ? spacing : 0
+				
+				frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
+				frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+				
+				let totalWidth = frame1ContentSize.width + frame2ContentSize.width + space
+				targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - totalWidth)/2
+				targetFrame1.size.width = frame1ContentSize.width
+				targetFrame2.origin.x = targetFrame1.origin.x + frame1ContentSize.width + space
+				targetFrame2.size.width = frame2ContentSize.width
+				break
+			}
+		}
+		else {
+			
+		}
+	}
+	
 	// MARK: -
 	
 }
