@@ -50,6 +50,13 @@ public class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
+	override public var showFrameDebug: Bool {
+		didSet {
+			self.frameLayout1?.showFrameDebug = showFrameDebug
+			self.frameLayout2?.showFrameDebug = showFrameDebug
+		}
+	}
+	
 	override public var allowContentVerticalGrowing: Bool {
 		didSet {
 			self.frameLayout1?.allowContentVerticalGrowing = allowContentVerticalGrowing
@@ -196,6 +203,8 @@ public class DoubleFrameLayout: FrameLayout {
 		
 		frameLayout1 = FrameLayout()
 		frameLayout2 = FrameLayout()
+		self.addSubview(frameLayout1!)
+		self.addSubview(frameLayout2!)
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
@@ -286,7 +295,12 @@ public class DoubleFrameLayout: FrameLayout {
 					result.width = size.width
 				}
 				
-				result.height = max(frame1ContentSize.height, frame2ContentSize.height)
+				if heightRatio > 0 {
+					result.height = result.width * heightRatio
+				}
+				else {
+					result.height = max(frame1ContentSize.height, frame2ContentSize.height)
+				}
 			}
 			else {
 				switch layoutAlignment {
@@ -335,8 +349,13 @@ public class DoubleFrameLayout: FrameLayout {
 				}
 				
 				result.width = isIntrinsicSizeEnabled ? max(frame1ContentSize.width, frame2ContentSize.width) : size.width
-				space = frame1ContentSize.height > 0 && frame2ContentSize.height > 0 ? spacing : 0
-				result.height = frame1ContentSize.height + frame2ContentSize.height + space
+				if heightRatio > 0 {
+					result.height = result.width * heightRatio
+				}
+				else {
+					space = frame1ContentSize.height > 0 && frame2ContentSize.height > 0 ? spacing : 0
+					result.height = frame1ContentSize.height + frame2ContentSize.height + space
+				}
 			}
 			
 			result.width = max(minSize.width, result.width)
@@ -449,6 +468,9 @@ public class DoubleFrameLayout: FrameLayout {
 		else {
 			
 		}
+		
+		frameLayout1?.frame = targetFrame1.integral
+		frameLayout2?.frame = targetFrame2.integral
 	}
 	
 	// MARK: -

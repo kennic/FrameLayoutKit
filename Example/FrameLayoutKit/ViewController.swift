@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
+		self.view.backgroundColor = .lightGray
+		
 		label.text = "Hello World"
 		label.textAlignment = .center
 		label.textColor = .white
@@ -27,7 +29,9 @@ class ViewController: UIViewController {
 //		frameLayout.contentAlignment = (.center, .center)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
-//		frameLayout.heightRatio = 9/16
+		frameLayout.spacing = 5
+		frameLayout.isIntrinsicSizeEnabled = true
+		frameLayout.heightRatio = 3/4
 		
 		view.addSubview(label)
 		view.addSubview(imageView)
