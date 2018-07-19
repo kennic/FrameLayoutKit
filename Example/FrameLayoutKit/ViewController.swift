@@ -26,8 +26,8 @@ class ViewController: UIViewController {
 		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
 		frameLayout = StackLayout(direction: .vertical, alignment: .top, views: [imageView, label])
-		frameLayout.addFrameLayout(targetView: imageView)
-		frameLayout.addFrameLayout(targetView: label)
+		frameLayout.append(view: imageView)
+		frameLayout.append(view: label)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5

@@ -117,7 +117,7 @@ public class StackLayout: FrameLayout {
 					self.append(frameLayout: view as! FrameLayout)
 				}
 				else {
-					self.addFrameLayout(targetView: view)
+					self.append(view: view)
 				}
 			}
 		}
@@ -136,6 +136,7 @@ public class StackLayout: FrameLayout {
 	@discardableResult
 	public func append(frameLayout: FrameLayout) -> FrameLayout {
 		if frameLayouts.contains(frameLayout) == false {
+			frameLayout.showFrameDebug = showFrameDebug
 			frameLayouts.append(frameLayout)
 		}
 		
@@ -145,6 +146,7 @@ public class StackLayout: FrameLayout {
 	
 	@discardableResult
 	public func insert(frameLayout: FrameLayout, at index: Int) -> FrameLayout {
+		frameLayout.showFrameDebug = showFrameDebug
 		frameLayouts.insert(frameLayout, at: index)
 		return frameLayout
 	}
@@ -183,8 +185,8 @@ public class StackLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	public func addFrameLayout(targetView: UIView? = nil) -> FrameLayout {
-		let frameLayout = FrameLayout(targetView: targetView)
+	public func append(view: UIView? = nil) -> FrameLayout {
+		let frameLayout = FrameLayout(targetView: view)
 		frameLayout.showFrameDebug = showFrameDebug
 		frameLayouts.append(frameLayout)
 		self.addSubview(frameLayout)
@@ -192,8 +194,8 @@ public class StackLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	public func addEmptySpace(size: CGSize) -> FrameLayout {
-		let frameLayout = addFrameLayout()
+	public func appendEmptySpace(size: CGSize) -> FrameLayout {
+		let frameLayout = append()
 		frameLayout.fixSize = size
 		return frameLayout
 	}
