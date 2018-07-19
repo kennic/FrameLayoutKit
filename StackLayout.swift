@@ -132,6 +132,39 @@ public class StackLayout: FrameLayout {
 		return frameLayout
 	}
 	
+	public func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) {
+		guard index >= 0 && index < frameLayouts.count else {
+			return
+		}
+		
+		let frameLayout = frameLayouts[index]
+		if frameLayout.superview == self {
+			frameLayout.removeFromSuperview()
+		}
+		
+		if autoRemoveTargetView {
+			frameLayout.targetView?.removeFromSuperview()
+		}
+		
+		frameLayout.targetView = nil
+		frameLayouts.remove(at: index)
+	}
+	
+	public func removeAll(autoRemoveTargetView: Bool = false) {
+		for layout in frameLayouts {
+			if autoRemoveTargetView {
+				layout.targetView?.removeFromSuperview()
+			}
+			
+			layout.targetView = nil
+			if layout.superview == self {
+				layout.removeFromSuperview()
+			}
+		}
+		
+		frameLayouts.removeAll()
+	}
+	
 	@discardableResult
 	public func addFrameLayout(targetView: UIView? = nil) -> FrameLayout {
 		let frameLayout = FrameLayout(targetView: targetView)
