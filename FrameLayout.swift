@@ -126,7 +126,7 @@ public class FrameLayout: UIView {
 	
 	// MARK: -
 	
-	convenience public init(targetView: UIView) {
+	convenience public init(targetView: UIView? = nil) {
 		self.init()
 		self.targetView = targetView
 	}
