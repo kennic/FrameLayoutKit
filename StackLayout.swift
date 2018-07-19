@@ -183,6 +183,29 @@ public class StackLayout: FrameLayout {
 	
 	// MARK: -
 	
+	public func frameLayout(at index: Int) -> FrameLayout? {
+		guard index >= 0 && index < frameLayouts.count else {
+			return nil
+		}
+		
+		return frameLayouts[index]
+	}
+	
+	public func frameLayout(with view: UIView) -> FrameLayout? {
+		var result: FrameLayout? = nil
+		
+		for layout in frameLayouts {
+			if layout.targetView == view {
+				result = layout
+				break
+			}
+		}
+		
+		return result
+	}
+	
+	// MARK: -
+	
 	override public func setNeedsLayout() {
 		super.setNeedsLayout()
 		
