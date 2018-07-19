@@ -223,6 +223,19 @@ public class StackLayout: FrameLayout {
 		return result
 	}
 	
+	public func enumerate(block: ((FrameLayout, Int, inout Bool) -> Void)) {
+		var stop: Bool = false
+		var index = 0
+		for layout in frameLayouts {
+			block(layout, index, &stop)
+			if stop {
+				break
+			}
+			
+			index += 1
+		}
+	}
+	
 	// MARK: -
 	
 	override public func setNeedsLayout() {
