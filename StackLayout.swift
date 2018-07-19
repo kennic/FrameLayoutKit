@@ -157,6 +157,14 @@ public class StackLayout: FrameLayout {
 	}
 	
 	@discardableResult
+	public func insert(view: UIView? = nil, at index: Int) -> FrameLayout {
+		let frameLayout = FrameLayout(targetView: view)
+		frameLayout.showFrameDebug = showFrameDebug
+		frameLayouts.insert(frameLayout, at: index)
+		return frameLayout
+	}
+	
+	@discardableResult
 	public func insert(frameLayout: FrameLayout, at index: Int) -> FrameLayout {
 		frameLayout.showFrameDebug = showFrameDebug
 		frameLayouts.insert(frameLayout, at: index)
@@ -212,6 +220,32 @@ public class StackLayout: FrameLayout {
 		return frameLayout
 	}
 	
+	public func replace(frameLayout: FrameLayout?, at index: Int) {
+		if let frameLayout = frameLayout {
+			let count = frameLayouts.count
+			var currentFrameLayout: FrameLayout? = nil
+			
+			if index < count {
+				currentFrameLayout = frameLayouts[index]
+			}
+			
+			if let currentFrameLayout = currentFrameLayout, currentFrameLayout != frameLayout {
+				if currentFrameLayout.superview == self {
+					currentFrameLayout.removeFromSuperview()
+				}
+				
+				frameLayouts.insert(frameLayout, at: index)
+				self.addSubview(frameLayout)
+			}
+			else if index == count {
+				self.insert(view: nil, at: index)
+			}
+		}
+		else {
+			removeFrameLayout(at: index)
+		}
+	}
+	
 	// MARK: -
 	
 	public func frameLayout(at index: Int) -> FrameLayout? {
@@ -256,6 +290,19 @@ public class StackLayout: FrameLayout {
 		for layout in frameLayouts {
 			layout.setNeedsLayout()
 		}
+	}
+	
+	fileprivate func numberOfVisibleFrames() -> Int {
+		var count: Int = 0
+		for layout in frameLayouts {
+			if layout.isHidden || (layout.targetView?.isHidden ?? true) {
+				continue
+			}
+			
+			count += 1
+		}
+		
+		return count
 	}
 	
 }
