@@ -165,6 +165,10 @@ public class FrameLayout: UIView {
 	#endif
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
+		return sizeThatFits(size, intrinsic: true)
+	}
+	
+	public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
 		guard self.isEmpty == false else {
 			return .zero
 		}
@@ -173,14 +177,23 @@ public class FrameLayout: UIView {
 			return minSize
 		}
 		
-		var result: CGSize
+		var result: CGSize = .zero
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
 		let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
-		result = contentSizeThatFits(size: contentSize)
 		
 		if heightRatio > 0 {
+			if intrinsic {
+				result.width = contentSizeThatFits(size: contentSize).width
+			}
+			else {
+				result.width = contentSize.width
+			}
+			
 			result.height = result.width * heightRatio
+		}
+		else {
+			result = contentSizeThatFits(size: contentSize)
 		}
 		
 		result.width = max(minSize.width, result.width)

@@ -245,7 +245,7 @@ public class DoubleFrameLayout: FrameLayout {
 					space = frame1ContentSize.width > 0 ? spacing : 0
 					
 					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
 					break
 					
 				case .right, .bottom:
@@ -253,7 +253,7 @@ public class DoubleFrameLayout: FrameLayout {
 					space = frame2ContentSize.width > 0 ? spacing : 0
 					
 					frame1ContentSize = CGSize(width: contentSize.width - frame2ContentSize.width - space, height: contentSize.height)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
 					break
 					
 				case .split:
@@ -271,11 +271,27 @@ public class DoubleFrameLayout: FrameLayout {
 					}
 					
 					frame1ContentSize = CGSize(width: (contentSize.width - spaceValue) * ratioValue, height: contentSize.height)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
 					space = frame1ContentSize.width > 0 ? spaceValue : 0
 					
 					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
+					
+					if frame1ContentSize.width > frame2ContentSize.width {
+						frame2ContentSize.width = frame1ContentSize.width
+						
+						if let heightRatio = frameLayout2?.heightRatio, heightRatio > 0 {
+							frame2ContentSize.height = frame2ContentSize.width * heightRatio
+						}
+					}
+					else if frame2ContentSize.width > frame1ContentSize.width {
+						frame1ContentSize.width = frame2ContentSize.width
+						
+						if let heightRatio = frameLayout1?.heightRatio, heightRatio > 0 {
+							frame1ContentSize.height = frame1ContentSize.width * heightRatio
+						}
+					}
+					
 					break
 					
 				case .center:
@@ -491,13 +507,13 @@ public class DoubleFrameLayout: FrameLayout {
 				var spaceValue = spacing
 				
 				if frameLayout1?.isEmpty ?? true {
-					ratioValue = 0.0
-					spaceValue = 0.0
+					ratioValue = 0
+					spaceValue = 0
 				}
 				
 				if frameLayout2?.isEmpty ?? true {
-					ratioValue = 1.0
-					spaceValue = 0.0
+					ratioValue = 1
+					spaceValue = 0
 				}
 				
 				frame1ContentSize = CGSize(width: containerFrame.size.width, height: (containerFrame.size.height - spaceValue) * ratioValue)
