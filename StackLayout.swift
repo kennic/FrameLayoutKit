@@ -89,6 +89,14 @@ public class StackLayout: FrameLayout {
 		}
 	}
 	
+	override public var clipsToBounds: Bool {
+		didSet {
+			for layout in frameLayouts {
+				layout.clipsToBounds = clipsToBounds
+			}
+		}
+	}
+	
 	public fileprivate(set) var frameLayouts: [FrameLayout]! = [] {
 		didSet {
 			
@@ -103,7 +111,16 @@ public class StackLayout: FrameLayout {
 		self.layoutDirection = direction
 		self.layoutAlignment = alignment
 		
-		
+		if let views = views {
+			for view in views {
+				if view is FrameLayout && view.superview == nil {
+					self.append(frameLayout: view as! FrameLayout)
+				}
+				else {
+					self.addFrameLayout(targetView: view)
+				}
+			}
+		}
 	}
 	
 	override public init() {
