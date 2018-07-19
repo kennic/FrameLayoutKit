@@ -381,16 +381,25 @@ public class DoubleFrameLayout: FrameLayout {
 					frame2ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)
 					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
 					
-					if frame1ContentSize.width > frame2ContentSize.width {
-						if let heightRatio = frameLayout2?.heightRatio, heightRatio > 0 {
+					if let heightRatio = frameLayout2?.heightRatio, heightRatio > 0 {
+						if frame1ContentSize.width > frame2ContentSize.width {
 							frame2ContentSize.height = frame1ContentSize.width * heightRatio
 						}
 					}
-					else if frame2ContentSize.width > frame1ContentSize.width {
-						if let heightRatio = frameLayout1?.heightRatio, heightRatio > 0 {
+					
+					if let heightRatio = frameLayout1?.heightRatio, heightRatio > 0 {
+						if frame2ContentSize.width > frame1ContentSize.width {
 							frame1ContentSize.height = frame2ContentSize.width * heightRatio
 						}
 					}
+					
+					if frame1ContentSize.height > frame2ContentSize.height {
+						frame2ContentSize.height = frame1ContentSize.height
+					}
+					else if frame2ContentSize.height > frame1ContentSize.height {
+						frame1ContentSize.height = frame2ContentSize.height
+					}
+					
 					break
 					
 				case .center:
