@@ -25,17 +25,17 @@ class ViewController: UIViewController {
 		label.backgroundColor = .red
 		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
-		frameLayout = DoubleFrameLayout(direction: .horizontal, alignment: .split, views: [imageView, label])
+		frameLayout = DoubleFrameLayout(direction: .vertical, alignment: .split, views: [imageView, label])
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5
-//		frameLayout.isIntrinsicSizeEnabled = true
-//		frameLayout.leftFrameLayout?.contentAlignment = (.center, .center)
-		frameLayout.rightFrameLayout?.contentAlignment = (.fit, .fit)
+		frameLayout.isIntrinsicSizeEnabled = true
+//		frameLayout.leftFrameLayout?.contentAlignment = (.fit, .fit)
+//		frameLayout.rightFrameLayout?.contentAlignment = (.fit, .fit)
 		frameLayout.leftFrameLayout?.heightRatio = 1
-		frameLayout.rightFrameLayout?.heightRatio = 3/4
-		frameLayout.rightFrameLayout?.allowContentVerticalGrowing = true
-		frameLayout.rightFrameLayout?.allowContentHorizontalGrowing = true
+		frameLayout.rightFrameLayout?.heightRatio = 1
+//		frameLayout.leftFrameLayout?.allowContentHorizontalGrowing = true
+//		frameLayout.leftFrameLayout?.allowContentVerticalGrowing = true
 		
 		view.addSubview(label)
 		view.addSubview(imageView)
