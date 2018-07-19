@@ -97,6 +97,18 @@ public class StackLayout: FrameLayout {
 		}
 	}
 	
+	public var firstFrameLayout: FrameLayout? {
+		get {
+			return frameLayouts.first
+		}
+	}
+	
+	public var lastFrameLayout: FrameLayout? {
+		get {
+			return frameLayouts.last
+		}
+	}
+	
 	public fileprivate(set) var frameLayouts: [FrameLayout]! = [] {
 		didSet {
 			
