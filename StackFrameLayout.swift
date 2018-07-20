@@ -380,19 +380,36 @@ public class StackFrameLayout: FrameLayout {
 				result.height = min(maxHeight + horizontalEdgeValues, size.height)
 			}
 			else {
-				switch layoutAlignment {
-				case .top, .left:
-					break
+				var maxWidth: CGFloat = 0
+				for frameLayout in frameLayouts {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						continue
+					}
+					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - usedSpace)
+					if isIntrinsicSizeEnabled {
+						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+					}
 					
-				case .bottom, .right:
-					break
-					
-				case .split:
-					break
-					
-				case .center:
-					break
+					space = frameContentSize.height > 0 && frameLayout != lastFrameLayout ? spacing : 0
+					usedSpace += frameContentSize.height + space
+					maxWidth = max(maxWidth, frameContentSize.width)
 				}
+				
+				if isIntrinsicSizeEnabled {
+					result.width = maxWidth
+				}
+				result.height = min(usedSpace, size.height)
+			}
+			
+			result.width = max(minSize.width, result.width)
+			result.height = max(minSize.height, result.height)
+			
+			if maxSize.width > 0 && maxSize.width >= minSize.width {
+				result.width = min(maxSize.width, result.width)
+			}
+			
+			if maxSize.height > 0 && maxSize.height >= minSize.height {
+				result.height = min(maxSize.height, result.height)
 			}
 		}
 		
