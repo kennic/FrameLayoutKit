@@ -590,6 +590,4 @@ public class DoubleFrameLayout: FrameLayout {
 		frameLayout2?.frame = targetFrame2.integral
 	}
 	
-	// MARK: -
-	
 }

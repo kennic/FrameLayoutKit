@@ -38,6 +38,7 @@ public class FrameLayout: UIView {
 	public var allowContentHorizontalGrowing: Bool = false
 	public var allowContentHorizontalShrinking: Bool = true
 	public var shouldCacheSize: Bool = false
+	public var isFlexible: Bool = false
 	
 	public var isEmpty: Bool {
 		get {

@@ -110,8 +110,8 @@ public class StackFrameLayout: FrameLayout {
 	}
 	
 	public fileprivate(set) var frameLayouts: [FrameLayout]! = [] {
-		didSet {
-			
+		willSet {
+			removeAll()
 		}
 	}
 	
@@ -303,6 +303,94 @@ public class StackFrameLayout: FrameLayout {
 		}
 		
 		return count
+	}
+	
+	// MARK: -
+	
+	override public func sizeThatFits(_ size: CGSize) -> CGSize {
+		var result: CGSize = .zero
+		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
+		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
+		
+		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
+			result = minSize
+		}
+		else {
+			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
+			var space: CGFloat = 0
+			var usedSpace: CGFloat = 0
+			var frameContentSize: CGSize
+			
+			let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
+			let layouts: [FrameLayout] = isInvertedAlignment ? frameLayouts.reversed() : frameLayouts
+			
+			var lastFrameLayout: FrameLayout? = nil
+			for layout in layouts {
+				if !layout.isHidden && !(layout.targetView?.isHidden ?? true) {
+					lastFrameLayout = layout
+					break
+				}
+			}
+			
+			var direction: FrameLayoutDirection = layoutDirection
+			if layoutDirection == .auto {
+				direction = size.width < size.height ? .vertical : .horizontal
+			}
+			
+			if direction == .horizontal {
+				var maxHeight: CGFloat = 0
+				
+				switch layoutAlignment {
+				case .left, .right, .top, .bottom:
+					for frameLayout in frameLayouts {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+							continue
+						}
+						
+						frameContentSize = CGSize(width: contentSize.width - usedSpace, height: contentSize.height)
+						if isIntrinsicSizeEnabled {
+							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+						}
+						
+						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
+						usedSpace += frameContentSize.width + space
+						maxHeight = max(maxHeight, frameContentSize.height)
+					}
+					break
+					
+				case .split, .center:
+					break
+				}
+			}
+			else {
+				switch layoutAlignment {
+				case .top, .left:
+					break
+					
+				case .bottom, .right:
+					break
+					
+				case .split:
+					break
+					
+				case .center:
+					break
+				}
+			}
+		}
+		
+		if result.width > 0 {
+			result.width += verticalEdgeValues
+		}
+		
+		if result.height > 0 {
+			result.height += horizontalEdgeValues
+		}
+		
+		result.width = min(result.width, size.width)
+		result.height = min(result.height, size.height)
+		
+		return result
 	}
 	
 }
