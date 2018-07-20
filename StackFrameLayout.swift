@@ -359,8 +359,25 @@ public class StackFrameLayout: FrameLayout {
 					break
 					
 				case .split, .center:
+					frameContentSize = CGSize(width: contentSize.width / CGFloat(numberOfVisibleFrames()), height: contentSize.height)
+					for frameLayout in frameLayouts {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+							continue
+						}
+						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+						
+						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
+						usedSpace += frameContentSize.width + space
+						maxHeight = max(maxHeight, frameContentSize.height)
+					}
 					break
 				}
+				
+				if isIntrinsicSizeEnabled {
+					result.width = usedSpace
+				}
+				
+				result.height = min(maxHeight + horizontalEdgeValues, size.height)
 			}
 			else {
 				switch layoutAlignment {
