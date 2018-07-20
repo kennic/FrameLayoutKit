@@ -1,5 +1,5 @@
 //
-//  StackLayout.swift
+//  StackFrameLayout.swift
 //  FrameLayoutKit
 //
 //  Created by Nam Kennic on 7/19/18.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-public class StackLayout: FrameLayout {
+public class StackFrameLayout: FrameLayout {
 	
-	public var layoutAlignment: LayoutAlignment = .top
-	public var layoutDirection: LayoutDirection = .auto
+	public var layoutAlignment: NKLayoutAlignment = .top
+	public var layoutDirection: NKLayoutDirection = .auto
 	public var isIntrinsicSizeEnabled: Bool = true
 	public var spacing: CGFloat = 0 {
 		didSet {
@@ -117,7 +117,7 @@ public class StackLayout: FrameLayout {
 	
 	// MARK: -
 	
-	convenience public init(direction: LayoutDirection, alignment: LayoutAlignment = .top, views: [UIView]? = nil) {
+	convenience public init(direction: NKLayoutDirection, alignment: NKLayoutAlignment = .top, views: [UIView]? = nil) {
 		self.init()
 		
 		self.layoutDirection = direction
