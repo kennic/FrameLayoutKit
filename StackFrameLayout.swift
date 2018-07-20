@@ -9,8 +9,8 @@ import UIKit
 
 public class StackFrameLayout: FrameLayout {
 	
-	public var layoutAlignment: NKLayoutAlignment = .top
-	public var layoutDirection: NKLayoutDirection = .auto
+	public var layoutAlignment: FrameLayoutAlignment = .top
+	public var layoutDirection: FrameLayoutDirection = .auto
 	public var isIntrinsicSizeEnabled: Bool = true
 	public var spacing: CGFloat = 0 {
 		didSet {
@@ -117,7 +117,7 @@ public class StackFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	convenience public init(direction: NKLayoutDirection, alignment: NKLayoutAlignment = .top, views: [UIView]? = nil) {
+	convenience public init(direction: FrameLayoutDirection, alignment: FrameLayoutAlignment = .top, views: [UIView]? = nil) {
 		self.init()
 		
 		self.layoutDirection = direction

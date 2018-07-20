@@ -7,25 +7,25 @@
 
 import UIKit
 
-public enum NKLayoutDirection : Int {
+public enum FrameLayoutDirection : Int {
     case horizontal = 0 // left - right
     case vertical // top - bottom
     case auto
 }
 
-public enum NKLayoutAlignment : Int {
+public enum FrameLayoutAlignment : Int {
 	case top = 0
     case bottom
-    public static let left: NKLayoutAlignment = .top
-    public static let right: NKLayoutAlignment = .bottom
+    public static let left: FrameLayoutAlignment = .top
+    public static let right: FrameLayoutAlignment = .bottom
     case split
     case center
 }
 
 public class DoubleFrameLayout: FrameLayout {
 	
-	public var layoutAlignment: NKLayoutAlignment = .top
-	public var layoutDirection: NKLayoutDirection = .auto
+	public var layoutAlignment: FrameLayoutAlignment = .top
+	public var layoutDirection: FrameLayoutDirection = .auto
 	public var isIntrinsicSizeEnabled: Bool = false
 	public var spacing: CGFloat = 0 {
 		didSet {
@@ -165,7 +165,7 @@ public class DoubleFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	convenience public init(direction: NKLayoutDirection, alignment: NKLayoutAlignment = .top, views: [UIView]? = nil) {
+	convenience public init(direction: FrameLayoutDirection, alignment: FrameLayoutAlignment = .top, views: [UIView]? = nil) {
 		self.init()
 		
 		self.layoutDirection = direction
@@ -233,7 +233,7 @@ public class DoubleFrameLayout: FrameLayout {
 			var frame1ContentSize: CGSize = .zero
 			var frame2ContentSize: CGSize = .zero
 			var space: CGFloat = 0
-			var direction: NKLayoutDirection = layoutDirection
+			var direction: FrameLayoutDirection = layoutDirection
 			if layoutDirection == .auto {
 				direction = size.width < size.height ? .vertical : .horizontal
 			}
@@ -457,7 +457,7 @@ public class DoubleFrameLayout: FrameLayout {
 		var targetFrame1: CGRect = containerFrame
 		var targetFrame2: CGRect = containerFrame
 		var space: CGFloat = 0
-		var direction: NKLayoutDirection = layoutDirection
+		var direction: FrameLayoutDirection = layoutDirection
 		if layoutDirection == .auto {
 			let size = self.bounds.size
 			direction = size.width < size.height ? .vertical : .horizontal

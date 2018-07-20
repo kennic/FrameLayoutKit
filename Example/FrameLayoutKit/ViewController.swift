@@ -12,7 +12,7 @@ import FrameLayoutKit
 class ViewController: UIViewController {
 	let label = UILabel()
 	let imageView = UIImageView(image: #imageLiteral(resourceName: "earth_48x48"))
-	var frameLayout: StackLayout!
+	var frameLayout: StackFrameLayout!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +25,7 @@ class ViewController: UIViewController {
 		label.backgroundColor = .red
 		label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
 		
-		frameLayout = StackLayout(direction: .vertical, alignment: .top, views: [imageView, label])
+		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top, views: [imageView, label])
 		frameLayout.append(view: imageView)
 		frameLayout.append(view: label)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
