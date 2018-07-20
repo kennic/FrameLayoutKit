@@ -109,11 +109,7 @@ public class StackFrameLayout: FrameLayout {
 		}
 	}
 	
-	public fileprivate(set) var frameLayouts: [FrameLayout]! = [] {
-		willSet {
-			removeAll()
-		}
-	}
+	public fileprivate(set) var frameLayouts: [FrameLayout]! = []
 	
 	// MARK: -
 	
