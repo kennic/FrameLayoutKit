@@ -41,11 +41,16 @@ class ViewController: UIViewController {
 		label3.numberOfLines = 1
 		label3.font = UIFont.systemFont(ofSize: 10, weight: .medium)
 		
+		let labels = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label2, label3])
+		labels.spacing = 5
+		labels.isIntrinsicSizeEnabled = true
+		
 		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top) // , views: [label1, imageView, label2, label3]
 		frameLayout.append(view: label1)
-		frameLayout.append(view: imageView)
-		frameLayout.append(view: label2).isFlexible = true
-		frameLayout.append(view: label3)
+		frameLayout.append(view: imageView).contentAlignment = (.center, .center)
+		frameLayout.append(frameLayout: labels)
+//		frameLayout.append(view: label2).isFlexible = true
+//		frameLayout.append(view: label3)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5

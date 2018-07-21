@@ -290,7 +290,7 @@ public class StackFrameLayout: FrameLayout {
 	fileprivate func numberOfVisibleFrames() -> Int {
 		var count: Int = 0
 		for layout in frameLayouts {
-			if layout.isHidden || (layout.targetView?.isHidden ?? true) {
+			if layout.isHidden || (layout.targetView?.isHidden ?? false) {
 				continue
 			}
 			
@@ -321,7 +321,7 @@ public class StackFrameLayout: FrameLayout {
 			
 			var lastFrameLayout: FrameLayout? = nil
 			for layout in (isInvertedAlignment ? frameLayouts : invertedLayoutArray) {
-				if !layout.isHidden && !(layout.targetView?.isHidden ?? true) {
+				if !layout.isHidden && !(layout.targetView?.isHidden ?? false) {
 					lastFrameLayout = layout
 					break
 				}
@@ -338,7 +338,7 @@ public class StackFrameLayout: FrameLayout {
 				switch layoutAlignment {
 				case .left, .right, .top, .bottom:
 					for frameLayout in frameLayouts {
-						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 							continue
 						}
 						
@@ -356,7 +356,7 @@ public class StackFrameLayout: FrameLayout {
 				case .split, .center:
 					frameContentSize = CGSize(width: contentSize.width / CGFloat(numberOfVisibleFrames()), height: contentSize.height)
 					for frameLayout in frameLayouts {
-						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 							continue
 						}
 						
@@ -379,7 +379,7 @@ public class StackFrameLayout: FrameLayout {
 				var maxWidth: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
@@ -441,7 +441,7 @@ public class StackFrameLayout: FrameLayout {
 		
 		var lastFrameLayout: FrameLayout? = nil
 		for layout in (isInvertedAlignment ? frameLayouts : invertedLayoutArray) {
-			if !layout.isHidden && !(layout.targetView?.isHidden ?? true) {
+			if !layout.isHidden && !(layout.targetView?.isHidden ?? false) {
 				lastFrameLayout = layout
 				break
 			}
@@ -459,7 +459,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleLeftEdge: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -494,7 +494,7 @@ public class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in invertedLayoutArray {
-						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 							continue
 						}
 						
@@ -526,7 +526,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleRightEdge: CGFloat = 0
 				
 				for frameLayout in invertedLayoutArray {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -558,7 +558,7 @@ public class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 							continue
 						}
 						
@@ -600,7 +600,7 @@ public class StackFrameLayout: FrameLayout {
 				let cellSize = (containerFrame.size.width - spaces) / CGFloat(Float(visibleFrameCount))
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -615,7 +615,7 @@ public class StackFrameLayout: FrameLayout {
 				
 			case .center:
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -639,7 +639,7 @@ public class StackFrameLayout: FrameLayout {
 				
 				let spaceToCenter: CGFloat = (containerFrame.size.width - usedSpace) / 2
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -658,7 +658,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleTopEdge: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -693,7 +693,7 @@ public class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in invertedLayoutArray {
-						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 							continue
 						}
 						
@@ -725,7 +725,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleBottomEdge: CGFloat = 0
 				
 				for frameLayout in invertedLayoutArray {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -758,7 +758,7 @@ public class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 							continue
 						}
 						
@@ -801,7 +801,7 @@ public class StackFrameLayout: FrameLayout {
 				let cellSize = (containerFrame.size.height - spaces) / CGFloat(Float(visibleFramecount))
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -818,7 +818,7 @@ public class StackFrameLayout: FrameLayout {
 				
 			case .center:
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
@@ -847,7 +847,7 @@ public class StackFrameLayout: FrameLayout {
 				
 				let spaceToCenter: CGFloat = (containerFrame.size.height - usedSpace) / 2
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
 						continue
 					}
 					
