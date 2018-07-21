@@ -47,7 +47,7 @@ class ViewController: UIViewController {
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5
-		frameLayout.isIntrinsicSizeEnabled = false
+		frameLayout.isIntrinsicSizeEnabled = true
 //		frameLayout.leftFrameLayout?.contentAlignment = (.center, .center)
 //		frameLayout.rightFrameLayout?.contentAlignment = (.center, .center)
 //		frameLayout.firstFrameLayout?.heightRatio = 1

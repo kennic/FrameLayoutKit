@@ -306,7 +306,7 @@ public class StackFrameLayout: FrameLayout {
 	// MARK: -
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
-		var result: CGSize = .zero
+		var result: CGSize = size
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
 		
@@ -475,7 +475,7 @@ public class StackFrameLayout: FrameLayout {
 					frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
 					if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
 						let fitSize = frameLayout.sizeThatFits(frameContentSize)
-						
+						print("OK \(containerFrame) - \(frameLayout == lastFrameLayout) - \(fitSize)")
 						if !frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
 							frameContentSize.height = fitSize.height
 						}
