@@ -29,16 +29,16 @@ class ViewController: UIViewController {
 		
 		self.view.backgroundColor = .lightGray
 		
-		let label1 = createLabel(text: "Hellow World 1", backgroundColor: .red)
-		let label2 = createLabel(text: "Hellow World 2", backgroundColor: .green)
-		let label3 = createLabel(text: "Hellow World 3", backgroundColor: .blue)
-		let label4 = createLabel(text: "Hellow World 4", backgroundColor: .black)
-		let label5 = createLabel(text: "Hellow World 5", backgroundColor: .purple)
+		let label1 = createLabel(text: "Hello World 1", backgroundColor: .red)
+		let label2 = createLabel(text: "Hello World 2", backgroundColor: .green)
+		let label3 = createLabel(text: "Hello World 3", backgroundColor: .blue)
+		let label4 = createLabel(text: "Hello World 4", backgroundColor: .black)
+		let label5 = createLabel(text: "Hello World 5", backgroundColor: .purple)
 		
 		let labels = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
 		labels.spacing = 5
 		labels.isIntrinsicSizeEnabled = true
-		view.addSubview(labels)
+//		view.addSubview(labels)
 		
 		let labelsLayout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, labels])
 		labelsLayout.spacing = 5

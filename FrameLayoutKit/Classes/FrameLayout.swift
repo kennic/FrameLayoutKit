@@ -41,12 +41,6 @@ public class FrameLayout: UIView {
 	public var isFlexible: Bool = false
 	public var isIntrinsicSizeEnabled: Bool = false
 	
-	public var isEmpty: Bool {
-		get {
-			return targetView == nil || (targetView!.isHidden && ignoreHiddenView) || self.isHidden
-		}
-	}
-	
 	public var showFrameDebug: Bool = false {
 		didSet {
 			self.setNeedsDisplay()
@@ -125,6 +119,12 @@ public class FrameLayout: UIView {
 	lazy fileprivate var sizeCacheData: [String: CGSize] = {
 		return [:]
 	}()
+	
+	internal var isEmpty: Bool {
+		get {
+			return targetView == nil || (targetView!.isHidden && ignoreHiddenView) || self.isHidden
+		}
+	}
 	
 	// MARK: -
 	

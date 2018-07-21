@@ -97,6 +97,10 @@ public class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
+	public override var description: String {
+		return "[\(super.description)]\n[frameLayout1: \(String(describing: self.frameLayout1))]\n-[frameLayout2: \(String(describing: self.frameLayout2))]"
+	}
+	
 	// MARK: -
 	
 	public var frameLayout1: FrameLayout? = nil {
@@ -220,7 +224,12 @@ public class DoubleFrameLayout: FrameLayout {
 	}
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
-		var result: CGSize = .zero
+		return self.sizeThatFits(size, intrinsic: true)
+	}
+	
+	override public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
+		var result: CGSize = size
+		
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
 		
