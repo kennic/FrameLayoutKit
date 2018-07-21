@@ -523,6 +523,7 @@ public class StackFrameLayout: FrameLayout {
 				}
 				
 				break
+				
 			case .bottom, .right:
 				var flexibleFrame: FrameLayout? = nil
 				var flexibleRightEdge: CGFloat = 0
@@ -595,9 +596,61 @@ public class StackFrameLayout: FrameLayout {
 					}
 				}
 				break
+				
 			case .split:
+				let visibleFrameCount = numberOfVisibleFrames()
+				let spaces: CGFloat = CGFloat(visibleFrameCount - 1) * spacing
+				let cellSize = (containerFrame.size.width - spaces) / CGFloat(Float(visibleFrameCount))
+				
+				for frameLayout in frameLayouts {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						continue
+					}
+					
+					frameContentSize = CGSize(width: cellSize, height: containerFrame.size.height)
+					targetFrame.origin.x = containerFrame.origin.x + usedSpace
+					targetFrame.size.width = frameContentSize.width
+					frameLayout.frame = targetFrame
+					
+					usedSpace += frameContentSize.width + spacing
+				}
 				break
+				
 			case .center:
+				for frameLayout in frameLayouts {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						continue
+					}
+					
+					frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
+					let fitSize = frameLayout.sizeThatFits(frameContentSize)
+					if frameLayout.isIntrinsicSizeEnabled {
+						frameContentSize = fitSize
+					}
+					else {
+						frameContentSize.width = fitSize.width
+					}
+					
+					targetFrame.origin.x = containerFrame.origin.x + usedSpace
+					targetFrame.size = frameContentSize
+					frameLayout.frame = targetFrame
+					
+					space = frameContentSize.width > 0 ? spacing : 0
+					space = frameLayout != lastFrameLayout ? space : 0
+					usedSpace += frameContentSize.width + space
+				}
+				
+				let spaceToCenter: CGFloat = (containerFrame.size.width - usedSpace) / 2
+				for frameLayout in frameLayouts {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						continue
+					}
+					
+					targetFrame = frameLayout.frame
+					targetFrame.origin.x += spaceToCenter
+					frameLayout.frame = targetFrame
+				}
+				
 				break
 			}
 		}
