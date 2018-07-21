@@ -224,7 +224,7 @@ public class FrameLayout: UIView {
 	override public func layoutSubviews() {
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, targetView.isHidden == false, self.isHidden == false, bounds.size.width > 0, bounds.size.height > 0 else {
+		guard let targetView = targetView, !targetView.isHidden, !self.isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
 			return
 		}
 		

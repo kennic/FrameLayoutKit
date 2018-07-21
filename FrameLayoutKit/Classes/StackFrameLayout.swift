@@ -301,6 +301,10 @@ public class StackFrameLayout: FrameLayout {
 	// MARK: -
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
+		return self.sizeThatFits(size, intrinsic: isIntrinsicSizeEnabled)
+	}
+	
+	override public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
 		var result: CGSize = size
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
@@ -341,7 +345,7 @@ public class StackFrameLayout: FrameLayout {
 						}
 						
 						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
-						if isIntrinsicSizeEnabled {
+						if intrinsic {
 							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						}
 						
@@ -367,7 +371,7 @@ public class StackFrameLayout: FrameLayout {
 					break
 				}
 				
-				if isIntrinsicSizeEnabled {
+				if intrinsic {
 					result.width = totalSpace
 				}
 				
@@ -381,7 +385,7 @@ public class StackFrameLayout: FrameLayout {
 						continue
 					}
 					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
-					if isIntrinsicSizeEnabled {
+					if intrinsic {
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 					}
 					
@@ -390,7 +394,7 @@ public class StackFrameLayout: FrameLayout {
 					maxWidth = max(maxWidth, frameContentSize.width)
 				}
 				
-				if isIntrinsicSizeEnabled {
+				if intrinsic {
 					result.width = maxWidth
 				}
 				result.height = min(totalSpace, size.height)

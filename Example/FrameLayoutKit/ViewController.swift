@@ -38,7 +38,7 @@ class ViewController: UIViewController {
 		let labels = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
 		labels.spacing = 5
 		labels.isIntrinsicSizeEnabled = true
-//		view.addSubview(labels)
+		view.addSubview(labels)
 		
 		let labelsLayout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, labels])
 		labelsLayout.spacing = 5
