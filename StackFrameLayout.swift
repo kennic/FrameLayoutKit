@@ -11,7 +11,7 @@ public class StackFrameLayout: FrameLayout {
 	
 	public var layoutAlignment: FrameLayoutAlignment = .top
 	public var layoutDirection: FrameLayoutDirection = .auto
-	public var isIntrinsicSizeEnabled: Bool = true
+	
 	public var spacing: CGFloat = 0 {
 		didSet {
 			if spacing != oldValue {
@@ -133,6 +133,8 @@ public class StackFrameLayout: FrameLayout {
 	
 	override public init() {
 		super.init()
+		
+		isIntrinsicSizeEnabled = true
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
@@ -314,7 +316,7 @@ public class StackFrameLayout: FrameLayout {
 		else {
 			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
 			var space: CGFloat = 0
-			var usedSpace: CGFloat = 0
+			var totalSpace: CGFloat = 0
 			var frameContentSize: CGSize
 			
 			let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
@@ -343,13 +345,13 @@ public class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = CGSize(width: contentSize.width - usedSpace, height: contentSize.height)
+						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
 						if isIntrinsicSizeEnabled {
 							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						}
 						
 						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
-						usedSpace += frameContentSize.width + space
+						totalSpace += frameContentSize.width + space
 						maxHeight = max(maxHeight, frameContentSize.height)
 					}
 					break
@@ -363,38 +365,39 @@ public class StackFrameLayout: FrameLayout {
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
 						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
-						usedSpace += frameContentSize.width + space
+						totalSpace += frameContentSize.width + space
 						maxHeight = max(maxHeight, frameContentSize.height)
 					}
 					break
 				}
 				
 				if isIntrinsicSizeEnabled {
-					result.width = usedSpace
+					result.width = totalSpace
 				}
 				
 				result.height = min(maxHeight + horizontalEdgeValues, size.height)
 			}
 			else {
 				var maxWidth: CGFloat = 0
+				
 				for frameLayout in frameLayouts {
 					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
 						continue
 					}
-					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - usedSpace)
+					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
 					if isIntrinsicSizeEnabled {
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 					}
 					
 					space = frameContentSize.height > 0 && frameLayout != lastFrameLayout ? spacing : 0
-					usedSpace += frameContentSize.height + space
+					totalSpace += frameContentSize.height + space
 					maxWidth = max(maxWidth, frameContentSize.width)
 				}
 				
 				if isIntrinsicSizeEnabled {
 					result.width = maxWidth
 				}
-				result.height = min(usedSpace, size.height)
+				result.height = min(totalSpace, size.height)
 			}
 			
 			result.width = max(minSize.width, result.width)
@@ -421,6 +424,125 @@ public class StackFrameLayout: FrameLayout {
 		result.height = min(result.height, size.height)
 		
 		return result
+	}
+	
+	override public func layoutSubviews() {
+		super.layoutSubviews()
+		if bounds.size == .zero {
+			return
+		}
+		
+		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
+		var space: CGFloat = 0
+		var usedSpace: CGFloat = 0
+		var frameContentSize: CGSize = .zero
+		var targetFrame = containerFrame
+		
+		let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
+		let layouts: [FrameLayout] = isInvertedAlignment ? frameLayouts.reversed() : frameLayouts
+		
+		var lastFrameLayout: FrameLayout? = nil
+		for layout in layouts {
+			if !layout.isHidden && !(layout.targetView?.isHidden ?? true) {
+				lastFrameLayout = layout
+				break
+			}
+		}
+		
+		var direction: FrameLayoutDirection = layoutDirection
+		if layoutDirection == .auto {
+			direction = frame.size.width < frame.size.height ? .vertical : .horizontal
+		}
+		
+		if direction == .horizontal {
+			switch layoutAlignment {
+			case .top, .left:
+				var flexibleFrame: FrameLayout? = nil
+				var flexibleLeftEdge: CGFloat = 0
+				
+				for frameLayout in frameLayouts {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						continue
+					}
+					
+					if frameLayout.isFlexible {
+						flexibleFrame = frameLayout
+						flexibleLeftEdge = containerFrame.origin.x + usedSpace
+						break
+					}
+					
+					frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
+					if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
+						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						
+						if frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
+							frameContentSize.height = fitSize.height
+						}
+						else {
+							frameContentSize = fitSize
+						}
+					}
+					
+					targetFrame.origin.x = containerFrame.origin.x + usedSpace
+					targetFrame.size.width = frameContentSize.width
+					frameLayout.frame = targetFrame
+					
+					space = frameContentSize.width > 0 ? spacing : 0
+					usedSpace += frameContentSize.width + space
+				}
+				
+				if flexibleFrame != nil {
+					space = 0
+					usedSpace = 0
+					
+					let invertedFrameArray = isInvertedAlignment ? layouts : frameLayouts.reversed()
+					for frameLayout in invertedFrameArray {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+							continue
+						}
+						
+						if frameLayout == flexibleFrame {
+							targetFrame.origin.x = flexibleLeftEdge
+							targetFrame.size.width = containerFrame.size.width - flexibleLeftEdge - usedSpace + edgeInsets.left
+						}
+						else {
+							frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
+							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+							targetFrame.origin.x = max(bounds.size.width - frameContentSize.width - edgeInsets.right - usedSpace, 0)
+							targetFrame.size.width = frameContentSize.width
+						}
+						
+						frameLayout.frame = targetFrame
+						if frameLayout == flexibleFrame {
+							break
+						}
+						
+						space = frameContentSize.width > 0 ? spacing : 0
+						usedSpace += frameContentSize.width + space
+					}
+				}
+				
+				break
+			case .bottom, .right:
+				break
+			case .split:
+				break
+			case .center:
+				break
+			}
+		}
+		else {
+			switch layoutAlignment {
+			case .top, .left:
+				break
+			case .bottom, .right:
+				break
+			case .split:
+				break
+			case .center:
+				break
+			}
+		}
 	}
 	
 }

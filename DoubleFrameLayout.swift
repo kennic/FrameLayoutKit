@@ -26,7 +26,7 @@ public class DoubleFrameLayout: FrameLayout {
 	
 	public var layoutAlignment: FrameLayoutAlignment = .top
 	public var layoutDirection: FrameLayoutDirection = .auto
-	public var isIntrinsicSizeEnabled: Bool = false
+	
 	public var spacing: CGFloat = 0 {
 		didSet {
 			if spacing != oldValue {
