@@ -475,7 +475,7 @@ public class StackFrameLayout: FrameLayout {
 					frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
 					if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
 						let fitSize = frameLayout.sizeThatFits(frameContentSize)
-						print("OK \(containerFrame) - \(frameLayout == lastFrameLayout) - \(fitSize)")
+						
 						if !frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
 							frameContentSize.height = fitSize.height
 						}
@@ -524,6 +524,76 @@ public class StackFrameLayout: FrameLayout {
 				
 				break
 			case .bottom, .right:
+				var flexibleFrame: FrameLayout? = nil
+				var flexibleRightEdge: CGFloat = 0
+				
+				for frameLayout in invertedLayoutArray {
+					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+						continue
+					}
+					
+					if frameLayout.isFlexible {
+						flexibleFrame = frameLayout
+						flexibleRightEdge = containerFrame.size.width - usedSpace
+						break
+					}
+					
+					if frameLayout.isIntrinsicSizeEnabled == false && (frameLayout == lastFrameLayout) {
+						targetFrame.origin.x = edgeInsets.left
+						targetFrame.size.width = containerFrame.size.width - usedSpace
+					}
+					else {
+						frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
+						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+						
+						targetFrame.origin.x = max(containerFrame.maxX - frameContentSize.width - usedSpace, 0)
+						targetFrame.size.width = frameContentSize.width
+					}
+					
+					frameLayout.frame = targetFrame
+					space = frameContentSize.width > 0 ? spacing : 0
+					usedSpace += frameContentSize.width + space
+				}
+				
+				if flexibleFrame != nil {
+					space = 0
+					usedSpace = 0
+					
+					for frameLayout in frameLayouts {
+						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
+							continue
+						}
+						
+						frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
+						if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
+							let fitSize = frameLayout.sizeThatFits(frameContentSize)
+							
+							if frameLayout.isIntrinsicSizeEnabled && frameLayout == flexibleFrame {
+								frameContentSize.height = fitSize.height
+							}
+							else {
+								frameContentSize = fitSize
+							}
+						}
+						
+						targetFrame.origin.x = containerFrame.origin.x + usedSpace
+						
+						if frameLayout == flexibleFrame {
+							targetFrame.size.width = flexibleRightEdge - usedSpace
+						}
+						else {
+							targetFrame.size.width = frameContentSize.width
+						}
+						
+						frameLayout.frame = targetFrame
+						if frameLayout == flexibleFrame {
+							break
+						}
+						
+						space = frameContentSize.width > 0 ? spacing : 0
+						usedSpace += frameContentSize.width + space
+					}
+				}
 				break
 			case .split:
 				break

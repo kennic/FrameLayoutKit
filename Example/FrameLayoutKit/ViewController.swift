@@ -41,7 +41,7 @@ class ViewController: UIViewController {
 		label3.numberOfLines = 1
 		label3.font = UIFont.systemFont(ofSize: 10, weight: .medium)
 		
-		frameLayout = StackFrameLayout(direction: .horizontal, alignment: .top, views: [label1, imageView, label2, label3])
+		frameLayout = StackFrameLayout(direction: .horizontal, alignment: .right, views: [label1, imageView, label2, label3])
 //		frameLayout.append(view: imageView)
 //		frameLayout.append(view: label)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
@@ -67,7 +67,7 @@ class ViewController: UIViewController {
 		
 		let viewSize = self.view.bounds.size
 		let contentSize = frameLayout.sizeThatFits(viewSize)
-		frameLayout.frame = CGRect(x: (viewSize.width - contentSize.width)/2, y: (viewSize.height - contentSize.height)/2, width: contentSize.width, height: contentSize.height)
+		frameLayout.frame = self.view.bounds //CGRect(x: (viewSize.width - contentSize.width)/2, y: (viewSize.height - contentSize.height)/2, width: contentSize.width, height: contentSize.height)
 	}
 
 }
