@@ -63,7 +63,7 @@ class ViewController: UIViewController {
 		
 		let viewSize = self.view.bounds.size
 		let contentSize = frameLayout.sizeThatFits(viewSize)
-		frameLayout.frame = self.view.bounds //CGRect(x: (viewSize.width - contentSize.width)/2, y: (viewSize.height - contentSize.height)/2, width: contentSize.width, height: contentSize.height)
+		frameLayout.frame = CGRect(x: (viewSize.width - contentSize.width)/2, y: (viewSize.height - contentSize.height)/2, width: contentSize.width, height: contentSize.height)
 	}
 
 }
