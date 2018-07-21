@@ -34,9 +34,9 @@ public class FrameLayout: UIView {
 	public var contentVerticalAlignment: NKContentVerticalAlignment = .fill
 	public var contentHorizontalAlignment: NKContentHorizontalAlignment = .fill
 	public var allowContentVerticalGrowing: Bool = false
-	public var allowContentVerticalShrinking: Bool = true
+	public var allowContentVerticalShrinking: Bool = false
 	public var allowContentHorizontalGrowing: Bool = false
-	public var allowContentHorizontalShrinking: Bool = true
+	public var allowContentHorizontalShrinking: Bool = false
 	public var shouldCacheSize: Bool = false
 	public var isFlexible: Bool = false
 	public var isIntrinsicSizeEnabled: Bool = false
