@@ -212,7 +212,7 @@ public class StackFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	public func appendEmptySpace(size: CGSize) -> FrameLayout {
+	public func appendEmptySpace(size: CGSize = .zero) -> FrameLayout {
 		let frameLayout = append()
 		frameLayout.fixSize = size
 		return frameLayout
@@ -320,10 +320,10 @@ public class StackFrameLayout: FrameLayout {
 			var frameContentSize: CGSize
 			
 			let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
-			let layouts: [FrameLayout] = isInvertedAlignment ? frameLayouts.reversed() : frameLayouts
+			let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
 			
 			var lastFrameLayout: FrameLayout? = nil
-			for layout in layouts {
+			for layout in (isInvertedAlignment ? frameLayouts : invertedLayoutArray) {
 				if !layout.isHidden && !(layout.targetView?.isHidden ?? true) {
 					lastFrameLayout = layout
 					break
@@ -362,6 +362,7 @@ public class StackFrameLayout: FrameLayout {
 						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
 							continue
 						}
+						
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
 						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
@@ -375,7 +376,7 @@ public class StackFrameLayout: FrameLayout {
 					result.width = totalSpace
 				}
 				
-				result.height = min(maxHeight + horizontalEdgeValues, size.height)
+				result.height = min(maxHeight, size.height)
 			}
 			else {
 				var maxWidth: CGFloat = 0
@@ -439,10 +440,10 @@ public class StackFrameLayout: FrameLayout {
 		var targetFrame = containerFrame
 		
 		let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
-		let layouts: [FrameLayout] = isInvertedAlignment ? frameLayouts.reversed() : frameLayouts
+		let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
 		
 		var lastFrameLayout: FrameLayout? = nil
-		for layout in layouts {
+		for layout in (isInvertedAlignment ? frameLayouts : invertedLayoutArray) {
 			if !layout.isHidden && !(layout.targetView?.isHidden ?? true) {
 				lastFrameLayout = layout
 				break
@@ -475,7 +476,7 @@ public class StackFrameLayout: FrameLayout {
 					if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
 						let fitSize = frameLayout.sizeThatFits(frameContentSize)
 						
-						if frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
+						if !frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
 							frameContentSize.height = fitSize.height
 						}
 						else {
@@ -495,8 +496,7 @@ public class StackFrameLayout: FrameLayout {
 					space = 0
 					usedSpace = 0
 					
-					let invertedFrameArray = isInvertedAlignment ? layouts : frameLayouts.reversed()
-					for frameLayout in invertedFrameArray {
+					for frameLayout in invertedLayoutArray {
 						if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? true) {
 							continue
 						}
