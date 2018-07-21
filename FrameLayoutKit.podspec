@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
 	s.name             = 'FrameLayoutKit'
-	s.version          = '3.0.3'
-	s.summary          = 'An auto layout kit'
+	s.version          = '3.0.4'
+	s.summary          = 'FrameLayoutKit is a super fast and easy to use layout kit'
 	
 	# This description is used to generate tags and improve search results.
 	#   * Think: What does it do? Why did you write it? What is the focus?
