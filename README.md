@@ -11,8 +11,6 @@ Note: This is the Swift version of [NKFrameLayoutKit](http://github.com/kennic/N
 
 ## Example
 
-![Grid Example](/../master/example_grid.png?raw=true "GridFrameLayout example")
-
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
@@ -34,7 +32,7 @@ let image = UIImage(named: "earth.jpg")
 let label = UILabel()
 label.text = "Hello World"
 
-let layout = DoubleFrameLayout(direction: .horizontal, andViews: [image, label])
+let layout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [image, label])
 layout.spacing = 5
 layout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 layout.frame = self.bounds
