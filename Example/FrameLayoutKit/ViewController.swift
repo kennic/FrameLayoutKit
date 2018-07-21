@@ -10,47 +10,42 @@ import UIKit
 import FrameLayoutKit
 
 class ViewController: UIViewController {
-	let label1 = UILabel()
-	let label2 = UILabel()
-	let label3 = UILabel()
 	let imageView = UIImageView(image: #imageLiteral(resourceName: "earth_48x48"))
 	var frameLayout: StackFrameLayout!
+	
+	func createLabel(text: String, backgroundColor: UIColor) -> UILabel {
+		let label = UILabel()
+		label.text = text
+		label.textAlignment = .center
+		label.textColor = .white
+		label.backgroundColor = backgroundColor
+		label.numberOfLines = 1
+		label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+		return label
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		self.view.backgroundColor = .lightGray
 		
-		label1.text = "Hello World 1"
-		label1.textAlignment = .center
-		label1.textColor = .white
-		label1.backgroundColor = .red
-		label1.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+		let label1 = createLabel(text: "Hellow World 1", backgroundColor: .red)
+		let label2 = createLabel(text: "Hellow World 2", backgroundColor: .green)
+		let label3 = createLabel(text: "Hellow World 3", backgroundColor: .blue)
+		let label4 = createLabel(text: "Hellow World 4", backgroundColor: .black)
+		let label5 = createLabel(text: "Hellow World 5", backgroundColor: .purple)
 		
-		label2.text = "Hello World 2"
-		label2.textAlignment = .center
-		label2.textColor = .white
-		label2.backgroundColor = .green
-		label2.numberOfLines = 1
-		label2.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-		
-		label3.text = "Hello World 3"
-		label3.textAlignment = .center
-		label3.textColor = .white
-		label3.backgroundColor = .blue
-		label3.numberOfLines = 1
-		label3.font = UIFont.systemFont(ofSize: 10, weight: .medium)
-		
-		let labels = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label2, label3])
+		let labels = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
 		labels.spacing = 5
 		labels.isIntrinsicSizeEnabled = true
+		view.addSubview(labels)
 		
-		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top) // , views: [label1, imageView, label2, label3]
-		frameLayout.append(view: label1)
-		frameLayout.append(view: imageView).contentAlignment = (.center, .center)
-		frameLayout.append(frameLayout: labels)
-//		frameLayout.append(view: label2).isFlexible = true
-//		frameLayout.append(view: label3)
+		let labelsLayout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, labels])
+		labelsLayout.spacing = 5
+		labelsLayout.isIntrinsicSizeEnabled = true
+		
+		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top, views: [label1, label2, imageView, labelsLayout])
+		frameLayout.frameLayout(at: 2)?.contentAlignment = (.center, .center)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5
@@ -59,6 +54,8 @@ class ViewController: UIViewController {
 		view.addSubview(label1)
 		view.addSubview(label2)
 		view.addSubview(label3)
+		view.addSubview(label4)
+		view.addSubview(label5)
 		view.addSubview(imageView)
 		view.addSubview(frameLayout)
     }

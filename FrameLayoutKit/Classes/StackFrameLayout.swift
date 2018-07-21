@@ -145,7 +145,6 @@ public class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	public func append(frameLayout: FrameLayout) -> FrameLayout {
-		frameLayout.showFrameDebug = showFrameDebug
 		frameLayouts.append(frameLayout)
 		self.addSubview(frameLayout)
 		return frameLayout
@@ -162,7 +161,7 @@ public class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	public func appendEmptySpace(size: CGSize = .zero) -> FrameLayout {
-		let frameLayout = append()
+		let frameLayout = append(view: UIView())
 		frameLayout.fixSize = size
 		return frameLayout
 	}
@@ -177,7 +176,6 @@ public class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	public func insert(frameLayout: FrameLayout, at index: Int) -> FrameLayout {
-		frameLayout.showFrameDebug = showFrameDebug
 		frameLayouts.insert(frameLayout, at: index)
 		return frameLayout
 	}
