@@ -43,19 +43,13 @@ class ViewController: UIViewController {
 		
 		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top) // , views: [label1, imageView, label2, label3]
 		frameLayout.append(view: label1)
-		frameLayout.append(view: imageView).isFlexible = true
-		frameLayout.append(view: label2)
+		frameLayout.append(view: imageView)
+		frameLayout.append(view: label2).isFlexible = true
 		frameLayout.append(view: label3)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5
 		frameLayout.isIntrinsicSizeEnabled = true
-//		frameLayout.leftFrameLayout?.contentAlignment = (.center, .center)
-//		frameLayout.rightFrameLayout?.contentAlignment = (.center, .center)
-//		frameLayout.firstFrameLayout?.heightRatio = 1
-//		frameLayout.rightFrameLayout?.heightRatio = 1
-//		frameLayout.leftFrameLayout?.allowContentHorizontalGrowing = true
-//		frameLayout.leftFrameLayout?.allowContentVerticalGrowing = true
 		
 		view.addSubview(label1)
 		view.addSubview(label2)
