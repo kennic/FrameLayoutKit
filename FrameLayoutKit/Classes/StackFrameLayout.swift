@@ -145,14 +145,7 @@ public class StackFrameLayout: FrameLayout {
 		self.layoutAlignment = alignment
 		
 		if let views = views {
-			for view in views {
-				if view is FrameLayout && view.superview == nil {
-					self.append(frameLayout: view as! FrameLayout)
-				}
-				else {
-					self.append(view: view)
-				}
-			}
+			self.append(views: views)
 		}
 	}
 	
@@ -182,6 +175,17 @@ public class StackFrameLayout: FrameLayout {
 		frameLayouts.append(frameLayout)
 		self.addSubview(frameLayout)
 		return frameLayout
+	}
+	
+	public func append(views: [UIView]) {
+		for view in views {
+			if view is FrameLayout && view.superview == nil {
+				self.append(frameLayout: view as! FrameLayout)
+			}
+			else {
+				self.append(view: view)
+			}
+		}
 	}
 	
 	@discardableResult
@@ -830,7 +834,7 @@ public class StackFrameLayout: FrameLayout {
 					}
 					
 					frameContentSize = CGSize(width: containerFrame.size.width, height: cellSize)
-					//if (frameLayout.intrinsicSizeEnabled) frameContentSize = [frameLayout sizeThatFits:frameContentSize];
+					//if (frameLayout.isIntrinsicSizeEnabled) frameContentSize = [frameLayout sizeThatFits:frameContentSize];
 					
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
 					targetFrame.size.height = frameContentSize.height
