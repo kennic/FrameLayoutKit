@@ -111,6 +111,7 @@ public class DoubleFrameLayout: FrameLayout {
 				}
 				
 				if frameLayout1 != nil && frameLayout1 != self {
+					print("OK \(frameLayout2)")
 					self.addSubview(frameLayout1!)
 				}
 			}
@@ -175,27 +176,29 @@ public class DoubleFrameLayout: FrameLayout {
 		self.layoutDirection = direction
 		self.layoutAlignment = alignment
 		
-		if let views = views {
-			let count = views.count
-			
-			if count > 0 {
-				var targetView = views[0]
+		defer {
+			if let views = views {
+				let count = views.count
 				
-				if targetView is FrameLayout && targetView.superview == nil {
-					self.frameLayout1 = targetView as? FrameLayout
-				}
-				else {
-					self.frameLayout1?.targetView = targetView
-				}
-				
-				if count > 1 {
-					targetView = views[1]
+				if count > 0 {
+					var targetView = views[0]
 					
 					if targetView is FrameLayout && targetView.superview == nil {
-						self.frameLayout2 = targetView as? FrameLayout
+						self.frameLayout1 = targetView as? FrameLayout
 					}
 					else {
-						self.frameLayout2?.targetView = targetView
+						self.frameLayout1?.targetView = targetView
+					}
+					
+					if count > 1 {
+						targetView = views[1]
+						
+						if targetView is FrameLayout && targetView.superview == nil {
+							self.frameLayout2 = targetView as? FrameLayout
+						}
+						else {
+							self.frameLayout2?.targetView = targetView
+						}
 					}
 				}
 			}
@@ -219,15 +222,12 @@ public class DoubleFrameLayout: FrameLayout {
 	
 	override public func setNeedsLayout() {
 		super.setNeedsLayout()
+		
 		self.frameLayout1?.setNeedsLayout()
 		self.frameLayout2?.setNeedsLayout()
 	}
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
-		return self.sizeThatFits(size, intrinsic: isIntrinsicSizeEnabled)
-	}
-	
-	override public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
 		var result: CGSize = size
 		
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
@@ -254,7 +254,7 @@ public class DoubleFrameLayout: FrameLayout {
 					space = frame1ContentSize.width > 0 ? spacing : 0
 					
 					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: intrinsic || frameLayout2?.heightRatio == 0) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
 					break
 					
 				case .right, .bottom:
@@ -262,7 +262,7 @@ public class DoubleFrameLayout: FrameLayout {
 					space = frame2ContentSize.width > 0 ? spacing : 0
 					
 					frame1ContentSize = CGSize(width: contentSize.width - frame2ContentSize.width - space, height: contentSize.height)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: intrinsic || frameLayout1?.heightRatio == 0) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
 					break
 					
 				case .split:
@@ -280,11 +280,11 @@ public class DoubleFrameLayout: FrameLayout {
 					}
 					
 					frame1ContentSize = CGSize(width: (contentSize.width - spaceValue) * ratioValue, height: contentSize.height)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: intrinsic || frameLayout1?.heightRatio == 0) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
 					space = frame1ContentSize.width > 0 ? spaceValue : 0
 					
 					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: intrinsic || frameLayout2?.heightRatio == 0) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
 					
 					if frame1ContentSize.width > frame2ContentSize.width {
 						frame2ContentSize.width = frame1ContentSize.width
@@ -312,7 +312,7 @@ public class DoubleFrameLayout: FrameLayout {
 					break
 				}
 				
-				if intrinsic {
+				if isIntrinsicSizeEnabled {
 					space = frame1ContentSize.width > 0 && frame2ContentSize.width > 0 ? spacing : 0
 					result.width = frame1ContentSize.width + frame2ContentSize.width + space
 				}
@@ -417,7 +417,7 @@ public class DoubleFrameLayout: FrameLayout {
 					break
 				}
 				
-				result.width = intrinsic ? max(frame1ContentSize.width, frame2ContentSize.width) : size.width
+				result.width = isIntrinsicSizeEnabled ? max(frame1ContentSize.width, frame2ContentSize.width) : size.width
 				if heightRatio > 0 {
 					result.height = result.width * heightRatio
 				}

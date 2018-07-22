@@ -138,6 +138,7 @@ public class FrameLayout: UIView {
 		
 		self.backgroundColor = .clear
 		self.isUserInteractionEnabled = false
+		self.isIntrinsicSizeEnabled = true
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
@@ -166,11 +167,12 @@ public class FrameLayout: UIView {
 	}
 	#endif
 	
-	override public func sizeThatFits(_ size: CGSize) -> CGSize {
-		return sizeThatFits(size, intrinsic: true)
+	public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
+		isIntrinsicSizeEnabled =  intrinsic
+		return sizeThatFits(size)
 	}
 	
-	public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
+	override public func sizeThatFits(_ size: CGSize) -> CGSize {
 		guard self.isEmpty == false else {
 			return .zero
 		}
@@ -185,7 +187,7 @@ public class FrameLayout: UIView {
 		let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
 		
 		if heightRatio > 0 {
-			if intrinsic {
+			if isIntrinsicSizeEnabled {
 				result.width = contentSizeThatFits(size: contentSize).width
 			}
 			else {
