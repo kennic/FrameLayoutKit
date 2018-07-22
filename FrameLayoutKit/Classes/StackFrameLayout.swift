@@ -111,6 +111,31 @@ public class StackFrameLayout: FrameLayout {
 	
 	public fileprivate(set) var frameLayouts: [FrameLayout]! = []
 	
+	public var numberOfFrameLayouts: Int {
+		get {
+			return frameLayouts.count
+		}
+		set {
+			let count = frameLayouts.count
+			
+			if newValue == 0 {
+				removeAll()
+				return
+			}
+			
+			if newValue < count {
+				while frameLayouts.count > newValue {
+					removeFrameLayout(at: frameLayouts.count - 1)
+				}
+			}
+			else if newValue > count {
+				while frameLayouts.count < newValue {
+					append()
+				}
+			}
+		}
+	}
+	
 	// MARK: -
 	
 	convenience public init(direction: NKLayoutDirection, alignment: NKLayoutAlignment = .top, views: [UIView]? = nil) {
