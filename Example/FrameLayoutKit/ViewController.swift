@@ -35,20 +35,17 @@ class ViewController: UIViewController {
 		let label4 = createLabel(text: "Hello World 4", backgroundColor: .black)
 		let label5 = createLabel(text: "Hello World 5", backgroundColor: .purple)
 		
-		let labels = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
-		labels.spacing = 5
-		labels.isIntrinsicSizeEnabled = true
+		let label4_5 = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
+		label4_5.spacing = 5
 		
-		let labelsLayout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, labels])
-		labelsLayout.spacing = 5
-		labelsLayout.isIntrinsicSizeEnabled = true
+		let labels3_4_5 = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, label4_5])
+		labels3_4_5.spacing = 5
 		
-		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top, views: [label1, label2, imageView, labelsLayout])
+		frameLayout = StackFrameLayout(direction: .vertical, alignment: .top, views: [label1, label2, imageView, labels3_4_5])
 		frameLayout.frameLayout(at: 2)?.contentAlignment = (.center, .center)
 		frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 		frameLayout.showFrameDebug = true
 		frameLayout.spacing = 5
-		frameLayout.isIntrinsicSizeEnabled = true
 		
 		view.addSubview(label1)
 		view.addSubview(label2)
