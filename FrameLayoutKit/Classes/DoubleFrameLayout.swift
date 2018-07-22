@@ -249,11 +249,22 @@ public class DoubleFrameLayout: FrameLayout {
 			if direction == .horizontal {
 				switch layoutAlignment {
 				case .left, .top:
-					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
-					space = frame1ContentSize.width > 0 ? spacing : 0
+					if let frameLayout1 = frameLayout1 {
+						frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
+						space = frame1ContentSize.width > 0 ? spacing : 0
+					}
+					else {
+						frame1ContentSize = .zero
+						space = 0
+					}
 					
-					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
+					if let frameLayout2 = frameLayout2 {
+						frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
+						frame2ContentSize = frameLayout2.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2.heightRatio == 0)
+					}
+					else {
+						frame2ContentSize = .zero
+					}
 					break
 					
 				case .right, .bottom:
