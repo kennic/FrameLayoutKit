@@ -35,7 +35,7 @@ let label3 = createLabel(text: "Hello World 3", backgroundColor: .blue)
 let label4 = createLabel(text: "Hello World 4", backgroundColor: .black)
 let label5 = createLabel(text: "Hello World 5", backgroundColor: .purple)
 
-let label4_5 = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
+let label4_5 = DoubleFrameLayout(direction: .vertical, alignment: .top, views: [label4, label5])
 label4_5.spacing = 5
 
 let labels3_4_5 = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, label4_5])
