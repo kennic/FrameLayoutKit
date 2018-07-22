@@ -249,30 +249,17 @@ public class DoubleFrameLayout: FrameLayout {
 			if direction == .horizontal {
 				switch layoutAlignment {
 				case .left, .top:
-					if let frameLayout1 = frameLayout1 {
-						frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
-						space = frame1ContentSize.width > 0 ? spacing : 0
-					}
-					else {
-						frame1ContentSize = .zero
-						space = 0
-					}
+					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
+					space = frame1ContentSize.width > 0 ? spacing : 0
 					
-					if let frameLayout2 = frameLayout2 {
-						frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-						frame2ContentSize = frameLayout2.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2.heightRatio == 0)
-					}
-					else {
-						frame2ContentSize = .zero
-					}
+					frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
 					break
 					
 				case .right, .bottom:
 					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
 					space = frame2ContentSize.width > 0 ? spacing : 0
 					
-					frame1ContentSize = CGSize(width: contentSize.width - frame2ContentSize.width - space, height: contentSize.height)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(CGSize(width: contentSize.width - frame2ContentSize.width - space, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
 					break
 					
 				case .split:
@@ -289,12 +276,10 @@ public class DoubleFrameLayout: FrameLayout {
 						spaceValue = 0
 					}
 					
-					frame1ContentSize = CGSize(width: (contentSize.width - spaceValue) * ratioValue, height: contentSize.height)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(CGSize(width: (contentSize.width - spaceValue) * ratioValue, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout1?.heightRatio == 0) ?? .zero
 					space = frame1ContentSize.width > 0 ? spaceValue : 0
 					
-					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize, intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout2?.heightRatio == 0) ?? .zero
 					
 					if frame1ContentSize.width > frame2ContentSize.width {
 						frame2ContentSize.width = frame1ContentSize.width
@@ -317,8 +302,7 @@ public class DoubleFrameLayout: FrameLayout {
 					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
 					space = frame1ContentSize.width > 0 ? spacing : 0
 					
-					frame2ContentSize = CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height)) ?? .zero
 					break
 				}
 				
@@ -343,8 +327,7 @@ public class DoubleFrameLayout: FrameLayout {
 					frame1ContentSize = frameLayout1?.sizeThatFits(contentSize) ?? .zero
 					space = frame1ContentSize.height > 0 ? spacing : 0
 					
-					frame2ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)) ?? .zero
 					
 					if frame1ContentSize.width > frame2ContentSize.width {
 						if let heightRatio = frameLayout2?.heightRatio, heightRatio > 0 {
@@ -363,8 +346,7 @@ public class DoubleFrameLayout: FrameLayout {
 					frame2ContentSize = frameLayout2?.sizeThatFits(contentSize) ?? .zero
 					space = frame2ContentSize.height > 0 ? spacing : 0
 					
-					frame1ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame2ContentSize.height - space)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(CGSize(width: contentSize.width, height: contentSize.height - frame2ContentSize.height - space)) ?? .zero
 					
 					if frame1ContentSize.width > frame2ContentSize.width {
 						if let heightRatio = frameLayout2?.heightRatio, heightRatio > 0 {
@@ -393,12 +375,10 @@ public class DoubleFrameLayout: FrameLayout {
 						spaceValue = 0
 					}
 					
-					frame1ContentSize = CGSize(width: contentSize.width, height: (contentSize.height - spaceValue) * ratioValue)
-					frame1ContentSize = frameLayout1?.sizeThatFits(frame1ContentSize) ?? .zero
+					frame1ContentSize = frameLayout1?.sizeThatFits(CGSize(width: contentSize.width, height: (contentSize.height - spaceValue) * ratioValue)) ?? .zero
 					space = frame1ContentSize.height > 0 ? spaceValue : 0
 					
-					frame2ContentSize = CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)
-					frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+					frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space)) ?? .zero
 					
 					if let heightRatio = frameLayout2?.heightRatio, heightRatio > 0 {
 						if frame1ContentSize.width > frame2ContentSize.width {
@@ -531,8 +511,7 @@ public class DoubleFrameLayout: FrameLayout {
 				frame1ContentSize = frameLayout1?.sizeThatFits(containerFrame.size) ?? .zero
 				space = frame1ContentSize.width > 0 ? spacing : 0
 				
-				frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
-				frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+				frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)) ?? .zero
 				
 				let totalWidth = frame1ContentSize.width + frame2ContentSize.width + space
 				targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - totalWidth)/2
@@ -592,8 +571,7 @@ public class DoubleFrameLayout: FrameLayout {
 				frame1ContentSize = frameLayout1?.sizeThatFits(containerFrame.size) ?? .zero
 				space = frame1ContentSize.height > 0 ? spacing : 0
 				
-				frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
-				frame2ContentSize = frameLayout2?.sizeThatFits(frame2ContentSize) ?? .zero
+				frame2ContentSize = frameLayout2?.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)) ?? .zero
 				
 				let totalHeight: CGFloat = frame1ContentSize.height + frame2ContentSize.height + space
 				targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - totalHeight)/2

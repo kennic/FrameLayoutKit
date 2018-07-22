@@ -85,7 +85,9 @@ public class FrameLayout: UIView {
 			
 			super.frame = newValue
 			self.setNeedsLayout()
+			#if DEBUG
 			self.setNeedsDisplay()
+			#endif
 			
 			if self.superview == nil {
 				self.layoutIfNeeded()
@@ -104,7 +106,9 @@ public class FrameLayout: UIView {
 			
 			super.bounds = newValue
 			self.setNeedsLayout()
+			#if DEBUG
 			self.setNeedsDisplay()
+			#endif
 			
 			if self.superview == nil {
 				self.layoutIfNeeded()
@@ -386,6 +390,11 @@ public class FrameLayout: UIView {
 	override public func setNeedsLayout() {
 		super.setNeedsLayout()
 		targetView?.setNeedsLayout()
+	}
+	
+	override public func layoutIfNeeded() {
+		super.layoutIfNeeded()
+		targetView?.layoutIfNeeded()
 	}
 	
 	// MARK: -
