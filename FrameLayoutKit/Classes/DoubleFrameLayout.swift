@@ -111,7 +111,6 @@ public class DoubleFrameLayout: FrameLayout {
 				}
 				
 				if frameLayout1 != nil && frameLayout1 != self {
-					print("OK \(frameLayout2)")
 					self.addSubview(frameLayout1!)
 				}
 			}
