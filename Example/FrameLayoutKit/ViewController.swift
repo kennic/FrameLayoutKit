@@ -10,7 +10,6 @@ import UIKit
 import FrameLayoutKit
 
 class ViewController: UIViewController {
-	let imageView = UIImageView(image: #imageLiteral(resourceName: "earth_48x48"))
 	var frameLayout: StackFrameLayout!
 	
 	func createLabel(text: String, backgroundColor: UIColor) -> UILabel {
@@ -28,6 +27,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 		
 		self.view.backgroundColor = .lightGray
+		
+		let imageView = UIImageView(image: #imageLiteral(resourceName: "earth_48x48"))
 		
 		let label1 = createLabel(text: "Hello World 1", backgroundColor: .red)
 		let label2 = createLabel(text: "Hello World 2", backgroundColor: .green)

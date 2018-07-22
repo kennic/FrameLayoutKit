@@ -29,13 +29,23 @@ pod "FrameLayoutKit"
 ```swift
 let image = UIImage(named: "earth.jpg")
 
-let label = UILabel()
-label.text = "Hello World"
+let label1 = createLabel(text: "Hello World 1", backgroundColor: .red)
+let label2 = createLabel(text: "Hello World 2", backgroundColor: .green)
+let label3 = createLabel(text: "Hello World 3", backgroundColor: .blue)
+let label4 = createLabel(text: "Hello World 4", backgroundColor: .black)
+let label5 = createLabel(text: "Hello World 5", backgroundColor: .purple)
 
-let layout = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [image, label])
-layout.spacing = 5
-layout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-layout.frame = self.bounds
+let label4_5 = DoubleFrameLayout(direction: .vertical, alignment: .left, views: [label4, label5])
+label4_5.spacing = 5
+
+let labels3_4_5 = DoubleFrameLayout(direction: .horizontal, alignment: .left, views: [label3, label4_5])
+labels3_4_5.spacing = 5
+
+frameLayout = StackFrameLayout(direction: .vertical, alignment: .top, views: [label1, label2, imageView, labels3_4_5])
+frameLayout.frameLayout(at: 2)?.contentAlignment = (.center, .center)
+frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+frameLayout.showFrameDebug = true
+frameLayout.spacing = 5
 ```
 ![Hello World](/helloWorld.png "Hello World")
 
