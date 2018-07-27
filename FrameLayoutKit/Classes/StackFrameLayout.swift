@@ -487,7 +487,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleLeftEdge: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
+					if (frameLayout.isHidden && ignoreHiddenView) || ((frameLayout.targetView?.isHidden ?? false) && frameLayout.ignoreHiddenView) {
 						continue
 					}
 					
@@ -554,7 +554,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleRightEdge: CGFloat = 0
 				
 				for frameLayout in invertedLayoutArray {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
+					if (frameLayout.isHidden && ignoreHiddenView) || ((frameLayout.targetView?.isHidden ?? false) && frameLayout.ignoreHiddenView) {
 						continue
 					}
 					
@@ -686,7 +686,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleTopEdge: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
+					if (frameLayout.isHidden && ignoreHiddenView) || ((frameLayout.targetView?.isHidden ?? false) && frameLayout.ignoreHiddenView) {
 						continue
 					}
 					
@@ -753,7 +753,7 @@ public class StackFrameLayout: FrameLayout {
 				var flexibleBottomEdge: CGFloat = 0
 				
 				for frameLayout in invertedLayoutArray {
-					if frameLayout.isHidden || (frameLayout.targetView?.isHidden ?? false) {
+					if (frameLayout.isHidden && ignoreHiddenView) || ((frameLayout.targetView?.isHidden ?? false) && frameLayout.ignoreHiddenView) {
 						continue
 					}
 					
