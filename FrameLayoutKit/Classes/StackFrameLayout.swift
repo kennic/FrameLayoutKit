@@ -671,8 +671,7 @@ public class StackFrameLayout: FrameLayout {
 						continue
 					}
 					
-					targetFrame = frameLayout.frame
-					targetFrame.origin.x += spaceToCenter
+					targetFrame = CGRect(x: frameLayout.frame.origin.x + spaceToCenter, y: frameLayout.frame.origin.y, width: frameLayout.frame.size.width, height: frameLayout.frame.size.height)
 					frameLayout.frame = targetFrame
 				}
 				
