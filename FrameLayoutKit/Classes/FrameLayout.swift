@@ -126,7 +126,7 @@ public class FrameLayout: UIView {
 	
 	internal var isEmpty: Bool {
 		get {
-			return targetView == nil || (targetView!.isHidden && ignoreHiddenView) || self.isHidden
+			return ((targetView?.isHidden ?? false || self.isHidden) && ignoreHiddenView)
 		}
 	}
 	
@@ -177,7 +177,7 @@ public class FrameLayout: UIView {
 	}
 	
 	override public func sizeThatFits(_ size: CGSize) -> CGSize {
-		guard self.isEmpty == false else {
+		guard self.targetView != nil && self.isEmpty == false else {
 			return .zero
 		}
 		
