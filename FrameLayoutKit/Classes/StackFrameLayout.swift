@@ -649,12 +649,7 @@ public class StackFrameLayout: FrameLayout {
 					
 					frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
 					let fitSize = frameLayout.sizeThatFits(frameContentSize)
-					if frameLayout.isIntrinsicSizeEnabled {
-						frameContentSize = fitSize
-					}
-					else {
-						frameContentSize.width = fitSize.width
-					}
+					frameContentSize.width = fitSize.width
 					
 					targetFrame.origin.x = containerFrame.origin.x + usedSpace
 					targetFrame.size = frameContentSize
@@ -851,12 +846,7 @@ public class StackFrameLayout: FrameLayout {
 					
 					frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - usedSpace)
 					let fitSize = frameLayout.sizeThatFits(frameContentSize)
-					if frameLayout.isIntrinsicSizeEnabled {
-						frameContentSize = fitSize
-					}
-					else {
-						frameContentSize.height = fitSize.height
-					}
+					frameContentSize.height = fitSize.height
 					
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
 					targetFrame.size = frameContentSize
