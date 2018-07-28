@@ -13,8 +13,6 @@ For Objective-C version: [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayo
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
-## Requirements
-
 ## Installation
 
 FrameLayoutKit is available through [CocoaPods](http://cocoapods.org). To install
