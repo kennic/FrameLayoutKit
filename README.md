@@ -53,6 +53,14 @@ FrameLayoutKit is one of the fastest layout libraries.
 
 See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutFrameworkBenchmark)
 
+## Todo
+
+- [x] CocoaPods support
+- [x] Objective-C version
+- [x] Swift version
+- [ ] Examples
+- [ ] Documents
+
 ## Author
 
 Nam Kennic, namkennic@me.com
