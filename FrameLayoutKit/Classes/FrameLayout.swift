@@ -23,7 +23,7 @@ public enum NKContentHorizontalAlignment : Int {
 	case fit
 }
 
-public class FrameLayout: UIView {
+open class FrameLayout: UIView {
 	
 	public var targetView: UIView? = nil
 	public var ignoreHiddenView: Bool = true
@@ -74,7 +74,7 @@ public class FrameLayout: UIView {
 		}
 	}
 	
-	public override var frame: CGRect {
+	override open var frame: CGRect {
 		get {
 			return super.frame
 		}
@@ -95,7 +95,7 @@ public class FrameLayout: UIView {
 		}
 	}
 	
-	public override var bounds: CGRect {
+	override open var bounds: CGRect {
 		get {
 			return super.bounds
 		}
@@ -116,7 +116,7 @@ public class FrameLayout: UIView {
 		}
 	}
 	
-	public override var description: String {
+	open override var description: String {
 		return "[\(super.description)]-targetView: \(String(describing: targetView))"
 	}
 	
@@ -151,7 +151,7 @@ public class FrameLayout: UIView {
 	
 	// MARK: -
 	#if DEBUG
-	override public func draw(_ rect: CGRect) {
+	override open func draw(_ rect: CGRect) {
 		guard showFrameDebug else {
 			super.draw(rect)
 			return
@@ -176,7 +176,7 @@ public class FrameLayout: UIView {
 		return sizeThatFits(size)
 	}
 	
-	override public func sizeThatFits(_ size: CGSize) -> CGSize {
+	override open func sizeThatFits(_ size: CGSize) -> CGSize {
 		guard self.targetView != nil && self.isEmpty == false else {
 			return .zero
 		}
@@ -227,7 +227,7 @@ public class FrameLayout: UIView {
 		return result
 	}
 	
-	override public func layoutSubviews() {
+	override open func layoutSubviews() {
 		super.layoutSubviews()
 		
 		guard let targetView = targetView, !targetView.isHidden, !self.isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
@@ -387,12 +387,12 @@ public class FrameLayout: UIView {
 		}
 	}
 	
-	override public func setNeedsLayout() {
+	override open func setNeedsLayout() {
 		super.setNeedsLayout()
 		targetView?.setNeedsLayout()
 	}
 	
-	override public func layoutIfNeeded() {
+	override open func layoutIfNeeded() {
 		super.layoutIfNeeded()
 		targetView?.layoutIfNeeded()
 	}

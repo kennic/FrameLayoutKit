@@ -22,7 +22,7 @@ public enum NKLayoutAlignment : Int {
     case center
 }
 
-public class DoubleFrameLayout: FrameLayout {
+open class DoubleFrameLayout: FrameLayout {
 	
 	public var layoutAlignment: NKLayoutAlignment = .top
 	public var layoutDirection: NKLayoutDirection = .auto
@@ -36,68 +36,68 @@ public class DoubleFrameLayout: FrameLayout {
 	}
 	public var splitRatio: CGFloat = 0.5
 	
-	override public var ignoreHiddenView: Bool {
+	override open var ignoreHiddenView: Bool {
 		didSet {
 			self.frameLayout1.ignoreHiddenView = ignoreHiddenView
 			self.frameLayout2.ignoreHiddenView = ignoreHiddenView
 		}
 	}
 	
-	override public var shouldCacheSize: Bool {
+	override open var shouldCacheSize: Bool {
 		didSet {
 			self.frameLayout1.shouldCacheSize = shouldCacheSize
 			self.frameLayout2.shouldCacheSize = shouldCacheSize
 		}
 	}
 	
-	override public var showFrameDebug: Bool {
+	override open var showFrameDebug: Bool {
 		didSet {
 			self.frameLayout1.showFrameDebug = showFrameDebug
 			self.frameLayout2.showFrameDebug = showFrameDebug
 		}
 	}
 	
-	override public var allowContentVerticalGrowing: Bool {
+	override open var allowContentVerticalGrowing: Bool {
 		didSet {
 			self.frameLayout1.allowContentVerticalGrowing = allowContentVerticalGrowing
 			self.frameLayout2.allowContentVerticalGrowing = allowContentVerticalGrowing
 		}
 	}
 	
-	override public var allowContentVerticalShrinking: Bool {
+	override open var allowContentVerticalShrinking: Bool {
 		didSet {
 			self.frameLayout1.allowContentVerticalShrinking = allowContentVerticalShrinking
 			self.frameLayout2.allowContentVerticalShrinking = allowContentVerticalShrinking
 		}
 	}
 	
-	override public var allowContentHorizontalGrowing: Bool {
+	override open var allowContentHorizontalGrowing: Bool {
 		didSet {
 			self.frameLayout1.allowContentHorizontalGrowing = allowContentHorizontalGrowing
 			self.frameLayout2.allowContentHorizontalGrowing = allowContentHorizontalGrowing
 		}
 	}
 	
-	override public var allowContentHorizontalShrinking: Bool {
+	override open var allowContentHorizontalShrinking: Bool {
 		didSet {
 			self.frameLayout1.allowContentHorizontalShrinking = allowContentHorizontalShrinking
 			self.frameLayout2.allowContentHorizontalShrinking = allowContentHorizontalShrinking
 		}
 	}
 	
-	override public var frame: CGRect {
+	override open var frame: CGRect {
 		didSet {
 			self.setNeedsLayout()
 		}
 	}
 	
-	override public var bounds: CGRect {
+	override open var bounds: CGRect {
 		didSet {
 			self.setNeedsLayout()
 		}
 	}
 	
-	public override var description: String {
+	override open var description: String {
 		return "[\(super.description)]\n[frameLayout1: \(String(describing: self.frameLayout1))]\n-[frameLayout2: \(String(describing: self.frameLayout2))]"
 	}
 	
@@ -217,14 +217,14 @@ public class DoubleFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	override public func setNeedsLayout() {
+	override open func setNeedsLayout() {
 		super.setNeedsLayout()
 		
 		self.frameLayout1.setNeedsLayout()
 		self.frameLayout2.setNeedsLayout()
 	}
 	
-	override public func sizeThatFits(_ size: CGSize) -> CGSize {
+	override open func sizeThatFits(_ size: CGSize) -> CGSize {
 		var result: CGSize = size
 		
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
@@ -441,7 +441,7 @@ public class DoubleFrameLayout: FrameLayout {
 		return result
 	}
 	
-	override public func layoutSubviews() {
+	override open func layoutSubviews() {
 		super.layoutSubviews()
 		
 		let containerFrame: CGRect = UIEdgeInsetsInsetRect(bounds, edgeInsets)
