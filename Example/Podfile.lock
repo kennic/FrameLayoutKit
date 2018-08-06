@@ -1,5 +1,5 @@
 PODS:
-  - FrameLayoutKit (0.1.0)
+  - FrameLayoutKit (3.1)
 
 DEPENDENCIES:
   - FrameLayoutKit (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FrameLayoutKit: b446d3812f181a9231e8de3c3830c1ad58445c69
+  FrameLayoutKit: fc3fe45337f4509fc6a328b06f1741772025e1b8
 
 PODFILE CHECKSUM: d06e8862c7548a3a189ad3f3a8be86589241f732
 

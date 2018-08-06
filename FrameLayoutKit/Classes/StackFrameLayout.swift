@@ -371,9 +371,7 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
-						if isIntrinsicSizeEnabled {
-							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
-						}
+						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
 						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
 						totalSpace += frameContentSize.width + space
@@ -410,10 +408,9 @@ open class StackFrameLayout: FrameLayout {
 					if frameLayout.isEmpty {
 						continue
 					}
+					
 					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
-					if isIntrinsicSizeEnabled {
-						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
-					}
+					frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 					
 					space = frameContentSize.height > 0 && frameLayout != lastFrameLayout ? spacing : 0
 					totalSpace += frameContentSize.height + space
