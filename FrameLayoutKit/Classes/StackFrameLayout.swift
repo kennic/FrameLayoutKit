@@ -189,9 +189,9 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func appendEmptySpace(size: CGSize = .zero) -> FrameLayout {
+	open func appendEmptySpace(size: CGFloat = 0) -> FrameLayout {
 		let frameLayout = append(view: UIView())
-		frameLayout.fixSize = size
+		frameLayout.fixSize = CGSize(width: size, height: size)
 		return frameLayout
 	}
 	
