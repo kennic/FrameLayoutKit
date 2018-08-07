@@ -40,12 +40,10 @@ let labels3_4_5 = DoubleFrameLayout(direction: .horizontal, alignment: .left, vi
 labels3_4_5.spacing = 5
 
 frameLayout = StackFrameLayout(direction: .vertical, alignment: .top)
-
 frameLayout.append(view: label1)
 frameLayout.append(view: label2)
 frameLayout.append(view: imageView).contentAlignment = (.center, .center)
 frameLayout.append(frameLayout: labels3_4_5)
-
 frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
 frameLayout.showFrameDebug = true
 frameLayout.spacing = 5
