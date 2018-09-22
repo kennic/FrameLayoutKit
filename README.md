@@ -1,4 +1,4 @@
-# FrameLayoutKit
+![](https://github.com/kennic/FrameLayoutKit/blob/master/banner.jpg)
 
 [![CI Status](http://img.shields.io/travis/kennic/FrameLayoutKit.svg?style=flat)](https://travis-ci.org/kennic/FrameLayoutKit)
 [![Version](https://img.shields.io/cocoapods/v/FrameLayoutKit.svg?style=flat)](http://cocoapods.org/pods/FrameLayoutKit)
