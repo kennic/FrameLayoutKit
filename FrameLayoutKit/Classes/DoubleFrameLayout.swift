@@ -444,7 +444,7 @@ open class DoubleFrameLayout: FrameLayout {
 	override open func layoutSubviews() {
 		super.layoutSubviews()
 		
-		let containerFrame: CGRect = UIEdgeInsetsInsetRect(bounds, edgeInsets)
+		let containerFrame: CGRect = bounds.inset(by: edgeInsets)
 		guard containerFrame.size.width > 0 && containerFrame.size.height > 0 else {
 			return
 		}

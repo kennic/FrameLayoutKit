@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
 	s.name             = 'FrameLayoutKit'
-	s.version          = '3.2.2'
+	s.version          = '3.3'
 	s.summary          = 'FrameLayoutKit is a super fast and easy to use layout kit'
 	
 	# This description is used to generate tags and improve search results.
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
 	s.platform          = :tvos, "9.0"
 	s.ios.deployment_target = '8.0'
 	s.tvos.deployment_target = '9.0'
-	s.swift_version 	= "4.1"
+	s.swift_version 	= "4.2"
 	s.source_files 		= 'FrameLayoutKit/Classes/*.*'
 	
 	# s.resource_bundles = {

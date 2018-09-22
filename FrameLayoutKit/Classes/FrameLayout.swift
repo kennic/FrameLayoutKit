@@ -235,7 +235,7 @@ open class FrameLayout: UIView {
 		}
 		
 		var targetFrame: CGRect = .zero
-		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
+		let containerFrame = bounds.inset(by: edgeInsets)
 		var contentSize = contentHorizontalAlignment != .fill || contentVerticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
 		if heightRatio > 0 {
 			contentSize.height = contentSize.width * heightRatio
