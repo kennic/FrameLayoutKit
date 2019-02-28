@@ -19,7 +19,7 @@ class ViewController: UIViewController {
 		label.textColor = .white
 		label.backgroundColor = backgroundColor
 		label.numberOfLines = 0
-		label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+		label.font = UIFont.systemFont(ofSize: 16, weight: UIFont.Weight.light)
 		return label
 	}
 

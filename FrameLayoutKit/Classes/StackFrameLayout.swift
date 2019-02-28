@@ -365,7 +365,14 @@ open class StackFrameLayout: FrameLayout {
 				
 				switch layoutAlignment {
 				case .left, .right, .top, .bottom:
+					var flexibleFrame: FrameLayout? = nil
 					for frameLayout in frameLayouts {
+						if frameLayout.isFlexible {
+							flexibleFrame = frameLayout
+							lastFrameLayout = flexibleFrame
+							continue
+						}
+						
 						if frameLayout.isEmpty {
 							continue
 						}
@@ -377,11 +384,27 @@ open class StackFrameLayout: FrameLayout {
 						totalSpace += frameContentSize.width + space
 						maxHeight = max(maxHeight, frameContentSize.height)
 					}
+					
+					if let flexibleFrame = flexibleFrame {
+						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
+						frameContentSize = flexibleFrame.sizeThatFits(frameContentSize)
+						
+						totalSpace += frameContentSize.width
+						maxHeight = max(maxHeight, frameContentSize.height)
+					}
+					
 					break
 					
 				case .split, .center:
+					var flexibleFrame: FrameLayout? = nil
 					frameContentSize = CGSize(width: contentSize.width / CGFloat(numberOfVisibleFrames()), height: contentSize.height)
 					for frameLayout in frameLayouts {
+						if frameLayout.isFlexible {
+							flexibleFrame = frameLayout
+							lastFrameLayout = flexibleFrame
+							continue
+						}
+						
 						if frameLayout.isEmpty {
 							continue
 						}
@@ -392,6 +415,15 @@ open class StackFrameLayout: FrameLayout {
 						totalSpace += frameContentSize.width + space
 						maxHeight = max(maxHeight, frameContentSize.height)
 					}
+					
+					if let flexibleFrame = flexibleFrame {
+						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
+						frameContentSize = flexibleFrame.sizeThatFits(frameContentSize)
+						
+						totalSpace += frameContentSize.width
+						maxHeight = max(maxHeight, frameContentSize.height)
+					}
+					
 					break
 				}
 				
@@ -403,8 +435,14 @@ open class StackFrameLayout: FrameLayout {
 			}
 			else {
 				var maxWidth: CGFloat = 0
-				
+				var flexibleFrame: FrameLayout? = nil
 				for frameLayout in frameLayouts {
+					if frameLayout.isFlexible {
+						flexibleFrame = frameLayout
+						lastFrameLayout = flexibleFrame
+						continue
+					}
+					
 					if frameLayout.isEmpty {
 						continue
 					}
@@ -414,6 +452,14 @@ open class StackFrameLayout: FrameLayout {
 					
 					space = frameContentSize.height > 0 && frameLayout != lastFrameLayout ? spacing : 0
 					totalSpace += frameContentSize.height + space
+					maxWidth = max(maxWidth, frameContentSize.width)
+				}
+				
+				if let flexibleFrame = flexibleFrame {
+					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
+					frameContentSize = flexibleFrame.sizeThatFits(frameContentSize)
+					
+					totalSpace += frameContentSize.height
 					maxWidth = max(maxWidth, frameContentSize.width)
 				}
 				
