@@ -501,7 +501,12 @@ open class StackFrameLayout: FrameLayout {
 			return
 		}
 		
+		#if swift(>=4.2)
 		let containerFrame = bounds.inset(by: edgeInsets)
+		#else
+		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
+		#endif
+		
 		var space: CGFloat = 0
 		var usedSpace: CGFloat = 0
 		var frameContentSize: CGSize = .zero
