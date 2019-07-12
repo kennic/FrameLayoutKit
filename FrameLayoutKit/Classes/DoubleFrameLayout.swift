@@ -7,25 +7,45 @@
 
 import UIKit
 
-public enum NKLayoutDirection : Int {
-    case horizontal = 0 // left - right
+public enum NKLayoutAxis {
+    case horizontal // left - right
     case vertical // top - bottom
     case auto
 }
 
-public enum NKLayoutAlignment : Int {
-	case top = 0
+public enum NKLayoutDistribution {
+	case top
     case bottom
-    public static let left: NKLayoutAlignment = .top
-    public static let right: NKLayoutAlignment = .bottom
-    case split
+    case equal
     case center
+	
+	public static let left: NKLayoutDistribution = .top
+	public static let right: NKLayoutDistribution = .bottom
 }
 
 open class DoubleFrameLayout: FrameLayout {
+	public var distribution: NKLayoutDistribution = .top
+	public var axis: NKLayoutAxis = .auto
 	
-	public var layoutAlignment: NKLayoutAlignment = .top
-	public var layoutDirection: NKLayoutDirection = .auto
+	@available(*, deprecated, renamed: "axis")
+	public var layoutDirection: NKLayoutAxis {
+		get {
+			return axis
+		}
+		set {
+			axis = newValue
+		}
+	}
+	
+	@available(*, deprecated, renamed: "distribution")
+	public var layoutAlignment: NKLayoutDistribution {
+		get {
+			return distribution
+		}
+		set {
+			distribution = newValue
+		}
+	}
 	
 	public var spacing: CGFloat = 0 {
 		didSet {
@@ -169,11 +189,16 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	convenience public init(direction: NKLayoutDirection, alignment: NKLayoutAlignment = .top, views: [UIView]? = nil) {
+	@available(*, deprecated, renamed: "init(axis:distribution:views:)")
+	convenience public init(direction: NKLayoutAxis, alignment: NKLayoutDistribution = .top, views: [UIView]? = nil) {
+		self.init(axis: direction, distribution: alignment, views: views)
+	}
+	
+	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {
 		self.init()
 		
-		self.layoutDirection = direction
-		self.layoutAlignment = alignment
+		self.axis = axis
+		self.distribution = distribution
 		
 		defer {
 			if let views = views {
@@ -198,6 +223,12 @@ open class DoubleFrameLayout: FrameLayout {
 						else {
 							self.frameLayout2.targetView = targetView
 						}
+						
+						#if DEBUG
+						if count > 2 {
+							print("[\(self)] This DoubleFrameLayout should has only 2 target views, currently set \(count) views. Switch to StackFrameLayout to handle multi views.")
+						}
+						#endif
 					}
 				}
 			}
@@ -239,13 +270,13 @@ open class DoubleFrameLayout: FrameLayout {
 			var frame1ContentSize: CGSize = .zero
 			var frame2ContentSize: CGSize = .zero
 			var space: CGFloat = 0
-			var direction: NKLayoutDirection = layoutDirection
-			if layoutDirection == .auto {
+			var direction: NKLayoutAxis = axis
+			if axis == .auto {
 				direction = size.width < size.height ? .vertical : .horizontal
 			}
 			
 			if direction == .horizontal {
-				switch layoutAlignment {
+				switch distribution {
 				case .left, .top:
 					frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
 					space = frame1ContentSize.width > 0 ? spacing : 0
@@ -260,7 +291,7 @@ open class DoubleFrameLayout: FrameLayout {
 					frame1ContentSize = frameLayout1.sizeThatFits(CGSize(width: contentSize.width - frame2ContentSize.width - space, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout1.heightRatio == 0)
 					break
 					
-				case .split:
+				case .equal:
 					var ratioValue: CGFloat = splitRatio
 					var spaceValue: CGFloat = spacing
 					
@@ -320,7 +351,7 @@ open class DoubleFrameLayout: FrameLayout {
 				}
 			}
 			else {
-				switch layoutAlignment {
+				switch distribution {
 				case .top, .left:
 					frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
 					space = frame1ContentSize.height > 0 ? spacing : 0
@@ -359,7 +390,7 @@ open class DoubleFrameLayout: FrameLayout {
 					
 					break
 					
-				case .split:
+				case .equal:
 					var ratioValue: CGFloat = splitRatio
 					var spaceValue: CGFloat = spacing
 					
@@ -459,14 +490,14 @@ open class DoubleFrameLayout: FrameLayout {
 		var targetFrame1: CGRect = containerFrame
 		var targetFrame2: CGRect = containerFrame
 		var space: CGFloat = 0
-		var direction: NKLayoutDirection = layoutDirection
-		if layoutDirection == .auto {
+		var direction: NKLayoutAxis = axis
+		if axis == .auto {
 			let size = self.bounds.size
 			direction = size.width < size.height ? .vertical : .horizontal
 		}
 		
 		if direction == .horizontal {
-			switch layoutAlignment {
+			switch distribution {
 			case .top, .left:
 				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
 				targetFrame1.size.width = frame1ContentSize.width
@@ -487,7 +518,7 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame1.size.width = frame1ContentSize.width
 				break
 				
-			case .split:
+			case .equal:
 				var ratioValue = splitRatio
 				var spaceValue = spacing
 				
@@ -526,7 +557,7 @@ open class DoubleFrameLayout: FrameLayout {
 			}
 		}
 		else {
-			switch layoutAlignment {
+			switch distribution {
 			case .top, .left:
 				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size, intrinsic: frameLayout1.heightRatio == 0)
 				targetFrame1.size.height = frame1ContentSize.height
@@ -547,7 +578,7 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame1.size.height = frame1ContentSize.height
 				break
 				
-			case .split:
+			case .equal:
 				var ratioValue = splitRatio
 				var spaceValue = spacing
 				

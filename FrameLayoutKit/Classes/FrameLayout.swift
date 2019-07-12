@@ -24,7 +24,6 @@ public enum NKContentHorizontalAlignment : Int {
 }
 
 open class FrameLayout: UIView {
-	
 	public var targetView: UIView? = nil
 	public var ignoreHiddenView: Bool = true
 	public var edgeInsets: UIEdgeInsets = .zero
@@ -68,7 +67,7 @@ open class FrameLayout: UIView {
 		}
 	}
 	
-	public var configurationBlock: ((_ frameLayout:FrameLayout) -> Void)? = nil {
+	public var configurationBlock: ((_ frameLayout: FrameLayout) -> Void)? = nil {
 		didSet {
 			configurationBlock?(self)
 		}

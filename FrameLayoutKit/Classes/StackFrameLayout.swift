@@ -8,9 +8,28 @@
 import UIKit
 
 open class StackFrameLayout: FrameLayout {
+	public var distribution: NKLayoutDistribution = .top
+	public var axis: NKLayoutAxis = .auto
 	
-	public var layoutAlignment: NKLayoutAlignment = .top
-	public var layoutDirection: NKLayoutDirection = .auto
+	@available(*, deprecated, renamed: "axis")
+	public var layoutDirection: NKLayoutAxis {
+		get {
+			return axis
+		}
+		set {
+			axis = newValue
+		}
+	}
+	
+	@available(*, deprecated, renamed: "distribution")
+	public var layoutAlignment: NKLayoutDistribution {
+		get {
+			return distribution
+		}
+		set {
+			distribution = newValue
+		}
+	}
 	
 	public var spacing: CGFloat = 0 {
 		didSet {
@@ -138,11 +157,23 @@ open class StackFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	convenience public init(direction: NKLayoutDirection, alignment: NKLayoutAlignment = .top, views: [UIView]? = nil) {
+	@available(*, deprecated, renamed: "init(axis:distribution:views:)")
+	convenience public init(direction: NKLayoutAxis, alignment: NKLayoutDistribution = .top, views: [UIView]? = nil) {
 		self.init()
 		
-		self.layoutDirection = direction
-		self.layoutAlignment = alignment
+		self.axis = direction
+		self.distribution = alignment
+		
+		if let views = views {
+			self.append(views: views)
+		}
+	}
+	
+	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {
+		self.init()
+		
+		self.axis = axis
+		self.distribution = distribution
 		
 		if let views = views {
 			self.append(views: views)
@@ -344,7 +375,7 @@ open class StackFrameLayout: FrameLayout {
 			var totalSpace: CGFloat = 0
 			var frameContentSize: CGSize
 			
-			let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
+			let isInvertedAlignment = distribution == .bottom || distribution == .right
 			let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
 			
 			var lastFrameLayout: FrameLayout? = nil
@@ -355,15 +386,15 @@ open class StackFrameLayout: FrameLayout {
 				}
 			}
 			
-			var direction: NKLayoutDirection = layoutDirection
-			if layoutDirection == .auto {
+			var direction: NKLayoutAxis = axis
+			if axis == .auto {
 				direction = size.width < size.height ? .vertical : .horizontal
 			}
 			
 			if direction == .horizontal {
 				var maxHeight: CGFloat = 0
 				
-				switch layoutAlignment {
+				switch distribution {
 				case .left, .right, .top, .bottom:
 					var flexibleFrame: FrameLayout? = nil
 					for frameLayout in frameLayouts {
@@ -395,7 +426,7 @@ open class StackFrameLayout: FrameLayout {
 					
 					break
 					
-				case .split, .center:
+				case .equal, .center:
 					var flexibleFrame: FrameLayout? = nil
 					frameContentSize = CGSize(width: contentSize.width / CGFloat(numberOfVisibleFrames()), height: contentSize.height)
 					for frameLayout in frameLayouts {
@@ -512,7 +543,7 @@ open class StackFrameLayout: FrameLayout {
 		var frameContentSize: CGSize = .zero
 		var targetFrame = containerFrame
 		
-		let isInvertedAlignment = layoutAlignment == .bottom || layoutAlignment == .right
+		let isInvertedAlignment = distribution == .bottom || distribution == .right
 		let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
 		
 		var lastFrameLayout: FrameLayout? = nil
@@ -523,13 +554,13 @@ open class StackFrameLayout: FrameLayout {
 			}
 		}
 		
-		var direction: NKLayoutDirection = layoutDirection
-		if layoutDirection == .auto {
+		var direction: NKLayoutAxis = axis
+		if axis == .auto {
 			direction = frame.size.width < frame.size.height ? .vertical : .horizontal
 		}
 		
 		if direction == .horizontal {
-			switch layoutAlignment {
+			switch distribution {
 			case .top, .left:
 				var flexibleFrame: FrameLayout? = nil
 				var flexibleLeftEdge: CGFloat = 0
@@ -670,7 +701,7 @@ open class StackFrameLayout: FrameLayout {
 				}
 				break
 				
-			case .split:
+			case .equal:
 				let visibleFrameCount = numberOfVisibleFrames()
 				let spaces: CGFloat = CGFloat(visibleFrameCount - 1) * spacing
 				let cellSize = (containerFrame.size.width - spaces) / CGFloat(Float(visibleFrameCount))
@@ -722,7 +753,7 @@ open class StackFrameLayout: FrameLayout {
 			}
 		}
 		else {
-			switch layoutAlignment {
+			switch distribution {
 			case .top, .left:
 				var flexibleFrame: FrameLayout? = nil
 				var flexibleTopEdge: CGFloat = 0
@@ -865,7 +896,7 @@ open class StackFrameLayout: FrameLayout {
 				}
 				break
 				
-			case .split:
+			case .equal:
 				let visibleFramecount = numberOfVisibleFrames()
 				let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
 				let cellSize = (containerFrame.size.height - spaces) / CGFloat(Float(visibleFramecount))
