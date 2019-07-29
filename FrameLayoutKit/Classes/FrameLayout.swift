@@ -38,7 +38,7 @@ open class FrameLayout: UIView {
 	public var allowContentHorizontalShrinking: Bool = false
 	public var shouldCacheSize: Bool = false
 	public var isFlexible: Bool = false
-	public var isIntrinsicSizeEnabled: Bool = false
+	public var isIntrinsicSizeEnabled: Bool = true
 	
 	public var showFrameDebug: Bool = false {
 		didSet {
@@ -171,7 +171,7 @@ open class FrameLayout: UIView {
 	#endif
 	
 	public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
-		isIntrinsicSizeEnabled =  intrinsic
+		isIntrinsicSizeEnabled = intrinsic
 		return sizeThatFits(size)
 	}
 	
@@ -201,6 +201,10 @@ open class FrameLayout: UIView {
 		}
 		else {
 			result = contentSizeThatFits(size: contentSize)
+			
+			if !isIntrinsicSizeEnabled {
+				result.width = contentSize.width
+			}
 		}
 		
 		result.width = max(minSize.width, result.width)

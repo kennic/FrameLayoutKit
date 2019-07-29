@@ -187,6 +187,12 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
+	public var isOverlapped: Bool = false {
+		didSet {
+			setNeedsLayout()
+		}
+	}
+	
 	// MARK: -
 	
 	@available(*, deprecated, renamed: "init(axis:distribution:views:)")
@@ -269,6 +275,23 @@ open class DoubleFrameLayout: FrameLayout {
 			
 			var frame1ContentSize: CGSize = .zero
 			var frame2ContentSize: CGSize = .zero
+			
+			if isOverlapped {
+				frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
+				frame2ContentSize = frameLayout2.sizeThatFits(contentSize)
+				
+				result.width = isIntrinsicSizeEnabled ? max(frame1ContentSize.width, frame2ContentSize.width) : size.width
+				
+				if heightRatio > 0 {
+					result.height = result.width * heightRatio
+				}
+				else {
+					result.height = max(frame1ContentSize.height, frame2ContentSize.height)
+				}
+				
+				return result
+			}
+			
 			var space: CGFloat = 0
 			var direction: NKLayoutAxis = axis
 			if axis == .auto {
@@ -501,58 +524,89 @@ open class DoubleFrameLayout: FrameLayout {
 			case .top, .left:
 				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
 				targetFrame1.size.width = frame1ContentSize.width
-				space = frame1ContentSize.width > 0 ? spacing : 0
 				
-				frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
-				targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
-				targetFrame2.size.width = frame2ContentSize.width
+				if isOverlapped {
+					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+					targetFrame2.size.width = frame2ContentSize.width
+				}
+				else {
+					space = frame1ContentSize.width > 0 ? spacing : 0
+					
+					frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
+					targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
+					targetFrame2.size.width = frame2ContentSize.width
+				}
 				break
 				
 			case .bottom, .right:
-				frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+				frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size, intrinsic: true)
 				targetFrame2.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame2ContentSize.width)
 				targetFrame2.size.width = frame2ContentSize.width
-				space = frame2ContentSize.width > 0 ? spacing : 0
 				
-				frame1ContentSize = CGSize(width: containerFrame.size.width - frame2ContentSize.width - space, height: containerFrame.size.height)
-				targetFrame1.size.width = frame1ContentSize.width
+				if isOverlapped {
+					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
+					targetFrame1.size.width = frame1ContentSize.width
+					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame1ContentSize.width)
+				}
+				else {
+					space = frame2ContentSize.width > 0 ? spacing : 0
+					
+					frame1ContentSize = CGSize(width: containerFrame.size.width - frame2ContentSize.width - space, height: containerFrame.size.height)
+					targetFrame1.size.width = frame1ContentSize.width
+				}
 				break
 				
 			case .equal:
-				var ratioValue = splitRatio
-				var spaceValue = spacing
-				
-				if frameLayout1.isEmpty {
-					ratioValue = 0
-					spaceValue = 0
+				if isOverlapped {
+					targetFrame1 = containerFrame
+					targetFrame2 = containerFrame
 				}
-				
-				if frameLayout2.isEmpty {
-					ratioValue = 1
-					spaceValue = 0
+				else {
+					var ratioValue = splitRatio
+					var spaceValue = spacing
+					
+					if frameLayout1.isEmpty {
+						ratioValue = 0
+						spaceValue = 0
+					}
+					
+					if frameLayout2.isEmpty {
+						ratioValue = 1
+						spaceValue = 0
+					}
+					
+					frame1ContentSize = CGSize(width: (containerFrame.size.width - spaceValue) * ratioValue, height: containerFrame.size.height)
+					targetFrame1.size.width = frame1ContentSize.width
+					space = frame1ContentSize.width > 0 ? spaceValue : 0
+					
+					frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
+					targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
+					targetFrame2.size.width = frame2ContentSize.width
 				}
-				
-				frame1ContentSize = CGSize(width: (containerFrame.size.width - spaceValue) * ratioValue, height: containerFrame.size.height)
-				targetFrame1.size.width = frame1ContentSize.width
-				space = frame1ContentSize.width > 0 ? spaceValue : 0
-				
-				frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
-				targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
-				targetFrame2.size.width = frame2ContentSize.width
 				break
 				
 			case .center:
-				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
-				space = frame1ContentSize.width > 0 ? spacing : 0
-				
-				frame2ContentSize = frameLayout2.sizeThatFits(CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height))
-				
-				let totalWidth = frame1ContentSize.width + frame2ContentSize.width + space
-				targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - totalWidth)/2
-				targetFrame1.size.width = frame1ContentSize.width
-				
-				targetFrame2.origin.x = targetFrame1.origin.x + frame1ContentSize.width + space
-				targetFrame2.size.width = frame2ContentSize.width
+				if isOverlapped {
+					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
+					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+					targetFrame1.size.width = frame1ContentSize.width
+					targetFrame2.size.width = frame2ContentSize.width
+					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame1ContentSize.width)/2
+					targetFrame2.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame2ContentSize.width)/2
+				}
+				else {
+					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
+					space = frame1ContentSize.width > 0 ? spacing : 0
+					
+					frame2ContentSize = frameLayout2.sizeThatFits(CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height))
+					
+					let totalWidth = frame1ContentSize.width + frame2ContentSize.width + space
+					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - totalWidth)/2
+					targetFrame1.size.width = frame1ContentSize.width
+					
+					targetFrame2.origin.x = targetFrame1.origin.x + frame1ContentSize.width + space
+					targetFrame2.size.width = frame2ContentSize.width
+				}
 				break
 			}
 		}
@@ -561,58 +615,89 @@ open class DoubleFrameLayout: FrameLayout {
 			case .top, .left:
 				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size, intrinsic: frameLayout1.heightRatio == 0)
 				targetFrame1.size.height = frame1ContentSize.height
-				space = frame1ContentSize.height > 0 ? spacing : 0
 				
-				frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
-				targetFrame2.origin.y = containerFrame.origin.y + frame1ContentSize.height + space
-				targetFrame2.size.height = frame2ContentSize.height
+				if isOverlapped {
+					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size, intrinsic: frameLayout2.heightRatio == 0)
+					targetFrame2.size.height = frame2ContentSize.height
+				}
+				else {
+					space = frame1ContentSize.height > 0 ? spacing : 0
+					
+					frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
+					targetFrame2.origin.y = containerFrame.origin.y + frame1ContentSize.height + space
+					targetFrame2.size.height = frame2ContentSize.height
+				}
 				break
 				
 			case .bottom, .right:
 				frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size, intrinsic: frameLayout2.heightRatio == 0)
 				targetFrame2.origin.y = containerFrame.origin.y + (containerFrame.size.height - frame2ContentSize.height)
 				targetFrame2.size.height = frame2ContentSize.height
-				space = frame2ContentSize.height > 0 ? spacing : 0
 				
-				frame1ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame2ContentSize.height - space)
-				targetFrame1.size.height = frame1ContentSize.height
+				if isOverlapped {
+					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size, intrinsic: frameLayout1.heightRatio == 0)
+					targetFrame1.size.width = frame1ContentSize.width
+					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame1ContentSize.width)
+				}
+				else {
+					space = frame2ContentSize.height > 0 ? spacing : 0
+					
+					frame1ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame2ContentSize.height - space)
+					targetFrame1.size.height = frame1ContentSize.height
+				}
 				break
 				
 			case .equal:
-				var ratioValue = splitRatio
-				var spaceValue = spacing
-				
-				if frameLayout1.isEmpty {
-					ratioValue = 0
-					spaceValue = 0
+				if isOverlapped {
+					targetFrame1 = containerFrame
+					targetFrame2 = containerFrame
 				}
-				
-				if frameLayout2.isEmpty {
-					ratioValue = 1
-					spaceValue = 0
+				else {
+					var ratioValue = splitRatio
+					var spaceValue = spacing
+					
+					if frameLayout1.isEmpty {
+						ratioValue = 0
+						spaceValue = 0
+					}
+					
+					if frameLayout2.isEmpty {
+						ratioValue = 1
+						spaceValue = 0
+					}
+					
+					frame1ContentSize = CGSize(width: containerFrame.size.width, height: (containerFrame.size.height - spaceValue) * ratioValue)
+					targetFrame1.size.height = frame1ContentSize.height
+					space = frame1ContentSize.height > 0 ? spaceValue : 0
+					
+					frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
+					targetFrame2.origin.y = containerFrame.origin.y + targetFrame1.size.height + space
+					targetFrame2.size.height = frame2ContentSize.height
 				}
-				
-				frame1ContentSize = CGSize(width: containerFrame.size.width, height: (containerFrame.size.height - spaceValue) * ratioValue)
-				targetFrame1.size.height = frame1ContentSize.height
-				space = frame1ContentSize.height > 0 ? spaceValue : 0
-				
-				frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
-				targetFrame2.origin.y = containerFrame.origin.y + targetFrame1.size.height + space
-				targetFrame2.size.height = frame2ContentSize.height
 				break
 				
 			case .center:
-				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
-				space = frame1ContentSize.height > 0 ? spacing : 0
-				
-				frame2ContentSize = frameLayout2.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space))
-				
-				let totalHeight: CGFloat = frame1ContentSize.height + frame2ContentSize.height + space
-				targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - totalHeight)/2
-				targetFrame1.size.height = frame1ContentSize.height
-				
-				targetFrame2.origin.y = targetFrame1.origin.y + frame1ContentSize.height + space
-				targetFrame2.size.height = frame2ContentSize.height
+				if isOverlapped {
+					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
+					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+					targetFrame1.size.height = frame1ContentSize.height
+					targetFrame2.size.height = frame2ContentSize.height
+					targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - frame1ContentSize.height)/2
+					targetFrame2.origin.y = containerFrame.origin.y + (containerFrame.size.height - frame2ContentSize.height)/2
+				}
+				else {
+					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
+					space = frame1ContentSize.height > 0 ? spacing : 0
+					
+					frame2ContentSize = frameLayout2.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space))
+					
+					let totalHeight: CGFloat = frame1ContentSize.height + frame2ContentSize.height + space
+					targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - totalHeight)/2
+					targetFrame1.size.height = frame1ContentSize.height
+					
+					targetFrame2.origin.y = targetFrame1.origin.y + frame1ContentSize.height + space
+					targetFrame2.size.height = frame2ContentSize.height
+				}
 				break
 			}
 		}
