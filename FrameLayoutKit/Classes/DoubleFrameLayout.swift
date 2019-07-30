@@ -526,8 +526,13 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame1.size.width = frame1ContentSize.width
 				
 				if isOverlapped {
-					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
-					targetFrame2.size.width = frame2ContentSize.width
+					if frameLayout2.isIntrinsicSizeEnabled {
+						frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+						targetFrame2.size.width = min(frame2ContentSize.width, containerFrame.size.width)
+					}
+					else {
+						targetFrame2.size.width = containerFrame.size.width
+					}
 				}
 				else {
 					space = frame1ContentSize.width > 0 ? spacing : 0
@@ -544,9 +549,14 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame2.size.width = frame2ContentSize.width
 				
 				if isOverlapped {
-					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
-					targetFrame1.size.width = frame1ContentSize.width
-					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame1ContentSize.width)
+					if frameLayout1.isIntrinsicSizeEnabled {
+						frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
+						targetFrame1.size.width = min(frame1ContentSize.width, containerFrame.size.width)
+						targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame1.size.width)
+					}
+					else {
+						targetFrame1.size.width = containerFrame.size.width
+					}
 				}
 				else {
 					space = frame2ContentSize.width > 0 ? spacing : 0
@@ -589,10 +599,10 @@ open class DoubleFrameLayout: FrameLayout {
 				if isOverlapped {
 					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
 					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
-					targetFrame1.size.width = frame1ContentSize.width
-					targetFrame2.size.width = frame2ContentSize.width
-					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame1ContentSize.width)/2
-					targetFrame2.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame2ContentSize.width)/2
+					targetFrame1.size.width = min(frame1ContentSize.width, containerFrame.size.width)
+					targetFrame2.size.width = min(frame2ContentSize.width, containerFrame.size.width)
+					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame1.size.width)/2
+					targetFrame2.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame2.size.width)/2
 				}
 				else {
 					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
@@ -617,8 +627,13 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame1.size.height = frame1ContentSize.height
 				
 				if isOverlapped {
-					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size, intrinsic: frameLayout2.heightRatio == 0)
-					targetFrame2.size.height = frame2ContentSize.height
+					if frameLayout2.isIntrinsicSizeEnabled {
+						frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size, intrinsic: frameLayout2.heightRatio == 0)
+						targetFrame2.size.height = min(frame2ContentSize.height, containerFrame.size.height)
+					}
+					else {
+						targetFrame2.size.height = containerFrame.size.height
+					}
 				}
 				else {
 					space = frame1ContentSize.height > 0 ? spacing : 0
@@ -635,9 +650,14 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame2.size.height = frame2ContentSize.height
 				
 				if isOverlapped {
-					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size, intrinsic: frameLayout1.heightRatio == 0)
-					targetFrame1.size.width = frame1ContentSize.width
-					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - frame1ContentSize.width)
+					if frameLayout1.isIntrinsicSizeEnabled {
+						frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size, intrinsic: frameLayout1.heightRatio == 0)
+						targetFrame1.size.height = min(frame1ContentSize.height, containerFrame.size.height)
+						targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame1.size.height)
+					}
+					else {
+						targetFrame1.size.height = containerFrame.size.height
+					}
 				}
 				else {
 					space = frame2ContentSize.height > 0 ? spacing : 0
@@ -680,10 +700,10 @@ open class DoubleFrameLayout: FrameLayout {
 				if isOverlapped {
 					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
 					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
-					targetFrame1.size.height = frame1ContentSize.height
-					targetFrame2.size.height = frame2ContentSize.height
-					targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - frame1ContentSize.height)/2
-					targetFrame2.origin.y = containerFrame.origin.y + (containerFrame.size.height - frame2ContentSize.height)/2
+					targetFrame1.size.height = min(frame1ContentSize.height, containerFrame.size.height)
+					targetFrame2.size.height = min(frame2ContentSize.height, containerFrame.size.height)
+					targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame1.size.height)/2
+					targetFrame2.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame2.size.height)/2
 				}
 				else {
 					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
