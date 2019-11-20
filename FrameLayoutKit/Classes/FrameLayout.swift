@@ -42,12 +42,12 @@ open class FrameLayout: UIView {
 	
 	public var showFrameDebug: Bool = false {
 		didSet {
-			self.setNeedsDisplay()
+			setNeedsDisplay()
 		}
 	}
 	public var debugColor: UIColor? = nil {
 		didSet {
-			self.setNeedsDisplay()
+			setNeedsDisplay()
 		}
 	}
 	
@@ -73,6 +73,11 @@ open class FrameLayout: UIView {
 		}
 	}
 	
+	/// Block will be called before calling sizeThatFits
+	public var preSizeThatFitsConfigurationBlock: ((_ frameLayout: FrameLayout) -> Void)?
+	/// Block will be called before calling layoutSubviews
+	public var preLayoutConfigurationBlock: ((_ frameLayout: FrameLayout) -> Void)?
+	
 	override open var frame: CGRect {
 		get {
 			return super.frame
@@ -83,13 +88,13 @@ open class FrameLayout: UIView {
 			}
 			
 			super.frame = newValue
-			self.setNeedsLayout()
+			setNeedsLayout()
 			#if DEBUG
-			self.setNeedsDisplay()
+			setNeedsDisplay()
 			#endif
 			
-			if self.superview == nil {
-				self.layoutIfNeeded()
+			if superview == nil {
+				layoutIfNeeded()
 			}
 		}
 	}
@@ -104,13 +109,13 @@ open class FrameLayout: UIView {
 			}
 			
 			super.bounds = newValue
-			self.setNeedsLayout()
+			setNeedsLayout()
 			#if DEBUG
-			self.setNeedsDisplay()
+			setNeedsDisplay()
 			#endif
 			
-			if self.superview == nil {
-				self.layoutIfNeeded()
+			if superview == nil {
+				layoutIfNeeded()
 			}
 		}
 	}
@@ -124,9 +129,7 @@ open class FrameLayout: UIView {
 	}()
 	
 	internal var isEmpty: Bool {
-		get {
-			return ((targetView?.isHidden ?? false || self.isHidden) && ignoreHiddenView)
-		}
+		return ((targetView?.isHidden ?? false || isHidden) && ignoreHiddenView)
 	}
 	
 	// MARK: -
@@ -139,9 +142,9 @@ open class FrameLayout: UIView {
 	public init() {
 		super.init(frame: .zero)
 		
-		self.backgroundColor = .clear
-		self.isUserInteractionEnabled = false
-		self.isIntrinsicSizeEnabled = true
+		backgroundColor = .clear
+		isUserInteractionEnabled = false
+		isIntrinsicSizeEnabled = true
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
@@ -164,9 +167,15 @@ open class FrameLayout: UIView {
 			context.saveGState()
 			context.setStrokeColor(debugColor!.cgColor)
 			context.setLineDash(phase: 0, lengths: [4.0, 2.0])
-			context.stroke(self.bounds)
+			context.stroke(bounds)
 			context.restoreGState()
 		}
+	}
+	
+	fileprivate func randomColor() -> UIColor {
+		let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
+		let randomIndex = Int(arc4random()) % colors.count
+		return colors[randomIndex]
 	}
 	#endif
 	
@@ -176,7 +185,8 @@ open class FrameLayout: UIView {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
-		guard self.targetView != nil && self.isEmpty == false else {
+		preSizeThatFitsConfigurationBlock?(self)
+		guard targetView != nil && isEmpty == false else {
 			return .zero
 		}
 		
@@ -231,9 +241,10 @@ open class FrameLayout: UIView {
 	}
 	
 	override open func layoutSubviews() {
+		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, !targetView.isHidden, !self.isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
+		guard let targetView = targetView, !targetView.isHidden, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
 			return
 		}
 		
@@ -444,12 +455,6 @@ open class FrameLayout: UIView {
 		}
 		
 		return result
-	}
-	
-	fileprivate func randomColor() -> UIColor {
-		let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
-		let randomIndex = Int(arc4random()) % colors.count
-		return colors[randomIndex]
 	}
 	
 }

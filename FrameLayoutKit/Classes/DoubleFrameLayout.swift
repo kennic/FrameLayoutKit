@@ -58,67 +58,67 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	override open var ignoreHiddenView: Bool {
 		didSet {
-			self.frameLayout1.ignoreHiddenView = ignoreHiddenView
-			self.frameLayout2.ignoreHiddenView = ignoreHiddenView
+			frameLayout1.ignoreHiddenView = ignoreHiddenView
+			frameLayout2.ignoreHiddenView = ignoreHiddenView
 		}
 	}
 	
 	override open var shouldCacheSize: Bool {
 		didSet {
-			self.frameLayout1.shouldCacheSize = shouldCacheSize
-			self.frameLayout2.shouldCacheSize = shouldCacheSize
+			frameLayout1.shouldCacheSize = shouldCacheSize
+			frameLayout2.shouldCacheSize = shouldCacheSize
 		}
 	}
 	
 	override open var showFrameDebug: Bool {
 		didSet {
-			self.frameLayout1.showFrameDebug = showFrameDebug
-			self.frameLayout2.showFrameDebug = showFrameDebug
+			frameLayout1.showFrameDebug = showFrameDebug
+			frameLayout2.showFrameDebug = showFrameDebug
 		}
 	}
 	
 	override open var allowContentVerticalGrowing: Bool {
 		didSet {
-			self.frameLayout1.allowContentVerticalGrowing = allowContentVerticalGrowing
-			self.frameLayout2.allowContentVerticalGrowing = allowContentVerticalGrowing
+			frameLayout1.allowContentVerticalGrowing = allowContentVerticalGrowing
+			frameLayout2.allowContentVerticalGrowing = allowContentVerticalGrowing
 		}
 	}
 	
 	override open var allowContentVerticalShrinking: Bool {
 		didSet {
-			self.frameLayout1.allowContentVerticalShrinking = allowContentVerticalShrinking
-			self.frameLayout2.allowContentVerticalShrinking = allowContentVerticalShrinking
+			frameLayout1.allowContentVerticalShrinking = allowContentVerticalShrinking
+			frameLayout2.allowContentVerticalShrinking = allowContentVerticalShrinking
 		}
 	}
 	
 	override open var allowContentHorizontalGrowing: Bool {
 		didSet {
-			self.frameLayout1.allowContentHorizontalGrowing = allowContentHorizontalGrowing
-			self.frameLayout2.allowContentHorizontalGrowing = allowContentHorizontalGrowing
+			frameLayout1.allowContentHorizontalGrowing = allowContentHorizontalGrowing
+			frameLayout2.allowContentHorizontalGrowing = allowContentHorizontalGrowing
 		}
 	}
 	
 	override open var allowContentHorizontalShrinking: Bool {
 		didSet {
-			self.frameLayout1.allowContentHorizontalShrinking = allowContentHorizontalShrinking
-			self.frameLayout2.allowContentHorizontalShrinking = allowContentHorizontalShrinking
+			frameLayout1.allowContentHorizontalShrinking = allowContentHorizontalShrinking
+			frameLayout2.allowContentHorizontalShrinking = allowContentHorizontalShrinking
 		}
 	}
 	
 	override open var frame: CGRect {
 		didSet {
-			self.setNeedsLayout()
+			setNeedsLayout()
 		}
 	}
 	
 	override open var bounds: CGRect {
 		didSet {
-			self.setNeedsLayout()
+			setNeedsLayout()
 		}
 	}
 	
 	override open var description: String {
-		return "[\(super.description)]\n[frameLayout1: \(String(describing: self.frameLayout1))]\n-[frameLayout2: \(String(describing: self.frameLayout2))]"
+		return "[\(super.description)]\n[frameLayout1: \(String(describing: frameLayout1))]\n-[frameLayout2: \(String(describing: frameLayout2))]"
 	}
 	
 	// MARK: -
@@ -131,7 +131,7 @@ open class DoubleFrameLayout: FrameLayout {
 				}
 				
 				if frameLayout1 != self {
-					self.addSubview(frameLayout1)
+					addSubview(frameLayout1)
 				}
 			}
 		}
@@ -145,7 +145,7 @@ open class DoubleFrameLayout: FrameLayout {
 				}
 				
 				if frameLayout2 != self {
-					self.addSubview(frameLayout2)
+					addSubview(frameLayout2)
 				}
 			}
 		}
@@ -153,37 +153,37 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	public var topFrameLayout: FrameLayout {
 		get {
-			return self.frameLayout1
+			return frameLayout1
 		}
 		set {
-			self.frameLayout1 = newValue
+			frameLayout1 = newValue
 		}
 	}
 	
 	public var leftFrameLayout: FrameLayout {
 		get {
-			return self.frameLayout1
+			return frameLayout1
 		}
 		set {
-			self.frameLayout1 = newValue
+			frameLayout1 = newValue
 		}
 	}
 	
 	public var bottomFrameLayout: FrameLayout {
 		get {
-			return self.frameLayout2
+			return frameLayout2
 		}
 		set {
-			self.frameLayout2 = newValue
+			frameLayout2 = newValue
 		}
 	}
 	
 	public var rightFrameLayout: FrameLayout {
 		get {
-			return self.frameLayout2
+			return frameLayout2
 		}
 		set {
-			self.frameLayout2 = newValue
+			frameLayout2 = newValue
 		}
 	}
 	
@@ -214,20 +214,20 @@ open class DoubleFrameLayout: FrameLayout {
 					var targetView = views[0]
 					
 					if targetView is FrameLayout && targetView.superview == nil {
-						self.frameLayout1 = targetView as! FrameLayout
+						frameLayout1 = targetView as! FrameLayout
 					}
 					else {
-						self.frameLayout1.targetView = targetView
+						frameLayout1.targetView = targetView
 					}
 					
 					if count > 1 {
 						targetView = views[1]
 						
 						if targetView is FrameLayout && targetView.superview == nil {
-							self.frameLayout2 = targetView as! FrameLayout
+							frameLayout2 = targetView as! FrameLayout
 						}
 						else {
-							self.frameLayout2.targetView = targetView
+							frameLayout2.targetView = targetView
 						}
 						
 						#if DEBUG
@@ -244,8 +244,8 @@ open class DoubleFrameLayout: FrameLayout {
 	override public init() {
 		super.init()
 		
-		self.addSubview(frameLayout1)
-		self.addSubview(frameLayout2)
+		addSubview(frameLayout1)
+		addSubview(frameLayout2)
 	}
 	
 	public required init?(coder aDecoder: NSCoder) {
@@ -257,8 +257,8 @@ open class DoubleFrameLayout: FrameLayout {
 	override open func setNeedsLayout() {
 		super.setNeedsLayout()
 		
-		self.frameLayout1.setNeedsLayout()
-		self.frameLayout2.setNeedsLayout()
+		frameLayout1.setNeedsLayout()
+		frameLayout2.setNeedsLayout()
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -515,7 +515,7 @@ open class DoubleFrameLayout: FrameLayout {
 		var space: CGFloat = 0
 		var direction: NKLayoutAxis = axis
 		if axis == .auto {
-			let size = self.bounds.size
+			let size = bounds.size
 			direction = size.width < size.height ? .vertical : .horizontal
 		}
 		

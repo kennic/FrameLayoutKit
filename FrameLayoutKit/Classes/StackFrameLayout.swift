@@ -104,13 +104,13 @@ open class StackFrameLayout: FrameLayout {
 	
 	override open var frame: CGRect {
 		didSet {
-			self.setNeedsLayout()
+			setNeedsLayout()
 		}
 	}
 	
 	override open var bounds: CGRect {
 		didSet {
-			self.setNeedsLayout()
+			setNeedsLayout()
 		}
 	}
 	
@@ -171,7 +171,7 @@ open class StackFrameLayout: FrameLayout {
 		self.distribution = alignment
 		
 		if let views = views {
-			self.append(views: views)
+			append(views: views)
 		}
 	}
 	
@@ -182,7 +182,7 @@ open class StackFrameLayout: FrameLayout {
 		self.distribution = distribution
 		
 		if let views = views {
-			self.append(views: views)
+			append(views: views)
 		}
 	}
 	
@@ -201,7 +201,7 @@ open class StackFrameLayout: FrameLayout {
 	@discardableResult
 	open func append(frameLayout: FrameLayout) -> FrameLayout {
 		frameLayouts.append(frameLayout)
-		self.addSubview(frameLayout)
+		addSubview(frameLayout)
 		return frameLayout
 	}
 	
@@ -210,17 +210,17 @@ open class StackFrameLayout: FrameLayout {
 		let frameLayout = FrameLayout(targetView: view)
 		frameLayout.showFrameDebug = showFrameDebug
 		frameLayouts.append(frameLayout)
-		self.addSubview(frameLayout)
+		addSubview(frameLayout)
 		return frameLayout
 	}
 	
 	open func append(views: [UIView]) {
 		for view in views {
 			if view is FrameLayout && view.superview == nil {
-				self.append(frameLayout: view as! FrameLayout)
+				append(frameLayout: view as! FrameLayout)
 			}
 			else {
-				self.append(view: view)
+				append(view: view)
 			}
 		}
 	}
@@ -294,10 +294,10 @@ open class StackFrameLayout: FrameLayout {
 				}
 				
 				frameLayouts.insert(frameLayout, at: index)
-				self.addSubview(frameLayout)
+				addSubview(frameLayout)
 			}
 			else if index == count {
-				self.insert(view: nil, at: index)
+				insert(view: nil, at: index)
 			}
 		}
 		else {
