@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum NKContentVerticalAlignment : Int {
+public enum NKContentVerticalAlignment {
 	case center
 	case top
 	case bottom
@@ -15,7 +15,7 @@ public enum NKContentVerticalAlignment : Int {
 	case fit
 }
 
-public enum NKContentHorizontalAlignment : Int {
+public enum NKContentHorizontalAlignment {
 	case center
 	case left
 	case right
@@ -25,20 +25,20 @@ public enum NKContentHorizontalAlignment : Int {
 
 open class FrameLayout: UIView {
 	public var targetView: UIView? = nil
-	public var ignoreHiddenView: Bool = true
+	public var ignoreHiddenView = true
 	public var edgeInsets: UIEdgeInsets = .zero
 	public var minSize: CGSize = .zero
 	public var maxSize: CGSize = .zero
 	public var heightRatio: CGFloat = 0
 	public var contentVerticalAlignment: NKContentVerticalAlignment = .fill
 	public var contentHorizontalAlignment: NKContentHorizontalAlignment = .fill
-	public var allowContentVerticalGrowing: Bool = false
-	public var allowContentVerticalShrinking: Bool = false
-	public var allowContentHorizontalGrowing: Bool = false
-	public var allowContentHorizontalShrinking: Bool = false
-	public var shouldCacheSize: Bool = false
-	public var isFlexible: Bool = false
-	public var isIntrinsicSizeEnabled: Bool = true
+	public var allowContentVerticalGrowing = false
+	public var allowContentVerticalShrinking = false
+	public var allowContentHorizontalGrowing = false
+	public var allowContentHorizontalShrinking = false
+	public var shouldCacheSize = false
+	public var isFlexible = false
+	public var isIntrinsicSizeEnabled = true
 	
 	public var showFrameDebug: Bool = false {
 		didSet {
@@ -90,7 +90,9 @@ open class FrameLayout: UIView {
 			super.frame = newValue
 			setNeedsLayout()
 			#if DEBUG
-			setNeedsDisplay()
+			if showFrameDebug {
+				setNeedsDisplay()
+			}
 			#endif
 			
 			if superview == nil {
@@ -111,7 +113,9 @@ open class FrameLayout: UIView {
 			super.bounds = newValue
 			setNeedsLayout()
 			#if DEBUG
-			setNeedsDisplay()
+			if showFrameDebug {
+				setNeedsDisplay()
+			}
 			#endif
 			
 			if superview == nil {
@@ -163,13 +167,12 @@ open class FrameLayout: UIView {
 			debugColor = randomColor()
 		}
 		
-		if let context = UIGraphicsGetCurrentContext() {
-			context.saveGState()
-			context.setStrokeColor(debugColor!.cgColor)
-			context.setLineDash(phase: 0, lengths: [4.0, 2.0])
-			context.stroke(bounds)
-			context.restoreGState()
-		}
+		guard let context = UIGraphicsGetCurrentContext() else { return }
+		context.saveGState()
+		context.setStrokeColor(debugColor!.cgColor)
+		context.setLineDash(phase: 0, lengths: [4.0, 2.0])
+		context.stroke(bounds)
+		context.restoreGState()
 	}
 	
 	fileprivate func randomColor() -> UIColor {
@@ -200,13 +203,7 @@ open class FrameLayout: UIView {
 		let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
 		
 		if heightRatio > 0 {
-			if isIntrinsicSizeEnabled {
-				result.width = contentSizeThatFits(size: contentSize).width
-			}
-			else {
-				result.width = contentSize.width
-			}
-			
+			result.width = isIntrinsicSizeEnabled ? contentSizeThatFits(size: contentSize).width : contentSize.width
 			result.height = result.width * heightRatio
 		}
 		else {
@@ -244,9 +241,7 @@ open class FrameLayout: UIView {
 		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, !targetView.isHidden, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
-			return
-		}
+		guard let targetView = targetView, !targetView.isHidden, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else { return }
 		
 		var targetFrame: CGRect = .zero
 		#if swift(>=4.2)
@@ -385,23 +380,21 @@ open class FrameLayout: UIView {
 		if targetView.superview == self {
 			targetView.frame = targetFrame
 		}
-		else if targetView.superview != nil {
-			if window == nil {
-				targetFrame.origin.x = frame.origin.x
-				targetFrame.origin.y = frame.origin.y
-				var superView: UIView? = superview
-				
-				while superView != nil && (superView is FrameLayout) {
-					targetFrame.origin.x += superView!.frame.origin.x
-					targetFrame.origin.y += superView!.frame.origin.y
-					superView = superView!.superview
-				}
-				
-				targetView.frame = targetFrame
+		else if targetView.window != nil {
+			targetView.frame = convert(targetFrame, to: targetView.superview)
+		}
+		else {
+			targetFrame.origin.x = frame.origin.x
+			targetFrame.origin.y = frame.origin.y
+			var superView: UIView? = superview
+			
+			while superView != nil && (superView is FrameLayout) {
+				targetFrame.origin.x += superView!.frame.origin.x
+				targetFrame.origin.y += superView!.frame.origin.y
+				superView = superView!.superview
 			}
-			else {
-				targetView.frame = convert(targetFrame, to: targetView.superview)
-			}
+			
+			targetView.frame = targetFrame
 		}
 	}
 	
@@ -417,16 +410,21 @@ open class FrameLayout: UIView {
 	
 	// MARK: -
 	
+	fileprivate func addressOf<T: AnyObject>(_ o: T) -> String {
+		let addr = unsafeBitCast(o, to: Int.self)
+		return String(format: "%p", addr)
+	}
+	
 	fileprivate func contentSizeThatFits(size: CGSize) -> CGSize {
 		var result: CGSize
 		
-		if minSize.equalTo(maxSize) && minSize.width > 0 && minSize.height > 0 {
+		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
 			result = minSize // fixSize
 		}
 		else {
 			if let targetView = targetView {
 				if shouldCacheSize {
-					let key = "\(targetView)\(size)"
+					let key = "\(addressOf(targetView))_\(size)"
 					if let value = sizeCacheData[key] {
 						return value
 					}

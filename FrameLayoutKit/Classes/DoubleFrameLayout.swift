@@ -262,6 +262,8 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		preSizeThatFitsConfigurationBlock?(self)
+		
 		var result: CGSize = size
 		
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
@@ -293,12 +295,11 @@ open class DoubleFrameLayout: FrameLayout {
 			}
 			
 			var space: CGFloat = 0
-			var direction: NKLayoutAxis = axis
 			if axis == .auto {
-				direction = size.width < size.height ? .vertical : .horizontal
+				axis = size.width < size.height ? .vertical : .horizontal
 			}
 			
-			if direction == .horizontal {
+			if axis == .horizontal {
 				switch distribution {
 				case .left, .top:
 					frame1ContentSize = frameLayout1.sizeThatFits(contentSize)

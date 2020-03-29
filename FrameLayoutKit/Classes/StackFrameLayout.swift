@@ -224,9 +224,14 @@ open class StackFrameLayout: FrameLayout {
 			}
 		}
 	}
-	
+	@available(*, deprecated, renamed: "appendSpace(size:)")
 	@discardableResult
 	open func appendEmptySpace(size: CGFloat = 0) -> FrameLayout {
+		return appendSpace(size: size)
+	}
+	
+	@discardableResult
+	open func appendSpace(size: CGFloat = 0) -> FrameLayout {
 		let frameLayout = append(view: UIView())
 		frameLayout.fixSize = CGSize(width: size, height: size)
 		return frameLayout
@@ -247,9 +252,7 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	open func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) {
-		guard index >= 0 && index < frameLayouts.count else {
-			return
-		}
+		guard index >= 0 && index < frameLayouts.count else { return }
 		
 		let frameLayout = frameLayouts[index]
 		if frameLayout.superview == self {
@@ -280,38 +283,35 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	open func replace(frameLayout: FrameLayout?, at index: Int) {
-		if let frameLayout = frameLayout {
-			let count = frameLayouts.count
-			var currentFrameLayout: FrameLayout? = nil
-			
-			if index < count {
-				currentFrameLayout = frameLayouts[index]
-			}
-			
-			if let currentFrameLayout = currentFrameLayout, currentFrameLayout != frameLayout {
-				if currentFrameLayout.superview == self {
-					currentFrameLayout.removeFromSuperview()
-				}
-				
-				frameLayouts.insert(frameLayout, at: index)
-				addSubview(frameLayout)
-			}
-			else if index == count {
-				insert(view: nil, at: index)
-			}
-		}
-		else {
+		guard let frameLayout = frameLayout else {
 			removeFrameLayout(at: index)
+			return
+		}
+		
+		let count = frameLayouts.count
+		var currentFrameLayout: FrameLayout? = nil
+		
+		if index < count {
+			currentFrameLayout = frameLayouts[index]
+		}
+		
+		if let currentFrameLayout = currentFrameLayout, currentFrameLayout != frameLayout {
+			if currentFrameLayout.superview == self {
+				currentFrameLayout.removeFromSuperview()
+			}
+			
+			frameLayouts.insert(frameLayout, at: index)
+			addSubview(frameLayout)
+		}
+		else if index == count {
+			insert(view: nil, at: index)
 		}
 	}
 	
 	// MARK: -
 	
 	public func frameLayout(at index: Int) -> FrameLayout? {
-		guard index >= 0 && index < frameLayouts.count else {
-			return nil
-		}
-		
+		guard index >= 0 && index < frameLayouts.count else { return nil }
 		return frameLayouts[index]
 	}
 	
@@ -353,21 +353,14 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	fileprivate func numberOfVisibleFrames() -> Int {
-		var count: Int = 0
-		for layout in frameLayouts {
-			if layout.isEmpty {
-				continue
-			}
-			
-			count += 1
-		}
-		
-		return count
+		return frameLayouts.filter { !$0.isEmpty }.count
 	}
 	
 	// MARK: -
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		preSizeThatFitsConfigurationBlock?(self)
+		
 		var result: CGSize = size
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
