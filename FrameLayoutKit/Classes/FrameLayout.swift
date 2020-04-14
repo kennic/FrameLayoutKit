@@ -29,7 +29,6 @@ open class FrameLayout: UIView {
 	public var edgeInsets: UIEdgeInsets = .zero
 	public var minSize: CGSize = .zero
 	public var maxSize: CGSize = .zero
-	public var heightRatio: CGFloat = 0
 	public var contentVerticalAlignment: NKContentVerticalAlignment = .fill
 	public var contentHorizontalAlignment: NKContentHorizontalAlignment = .fill
 	public var allowContentVerticalGrowing = false
@@ -39,6 +38,13 @@ open class FrameLayout: UIView {
 	public var shouldCacheSize = false
 	public var isFlexible = false
 	public var isIntrinsicSizeEnabled = true
+	public var heightRatio: CGFloat = 0 {
+		didSet {
+			if heightRatio > 0 {
+				isIntrinsicSizeEnabled = false
+			}
+		}
+	}
 	
 	public var showFrameDebug: Bool = false {
 		didSet {
