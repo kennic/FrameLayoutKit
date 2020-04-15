@@ -386,12 +386,13 @@ open class FrameLayout: UIView {
 		if targetView.superview == self {
 			targetView.frame = targetFrame
 		}
-		else if targetView.window != nil {
-			targetView.frame = convert(targetFrame, to: targetView.superview)
-		}
+//		else if targetView.window != nil {
+//			targetView.frame = convert(targetFrame, to: targetView.superview)
+//		}
 		else {
 			targetFrame.origin.x = frame.origin.x
 			targetFrame.origin.y = frame.origin.y
+			/*
 			var superView: UIView? = superview
 			
 			while superView != nil && (superView is FrameLayout) {
@@ -400,6 +401,7 @@ open class FrameLayout: UIView {
 				superView = superView!.superview
 			}
 			
+			*/
 			targetView.frame = targetFrame
 		}
 	}
