@@ -370,7 +370,6 @@ open class StackFrameLayout: FrameLayout {
 		}
 		else if heightRatio > 0 && !isIntrinsicSizeEnabled {
 			result.height = result.width * heightRatio
-			return result
 		}
 		else {
 			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))

@@ -272,6 +272,9 @@ open class DoubleFrameLayout: FrameLayout {
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
 			result = minSize
 		}
+		else if heightRatio > 0 && !isIntrinsicSizeEnabled {
+			result.height = result.width * heightRatio
+		}
 		else {
 			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
 			
