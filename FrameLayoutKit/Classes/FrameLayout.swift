@@ -386,24 +386,35 @@ open class FrameLayout: UIView {
 		if targetView.superview == self {
 			targetView.frame = targetFrame
 		}
-//		else if targetView.window != nil {
-//			targetView.frame = convert(targetFrame, to: targetView.superview)
-//		}
+		else if superview == nil {
+			targetFrame.origin.x = frame.origin.x
+			targetFrame.origin.y = frame.origin.y
+			targetView.frame = targetFrame
+		}
 		else {
 			targetFrame.origin.x = frame.origin.x
 			targetFrame.origin.y = frame.origin.y
-			/*
-			var superView: UIView? = superview
-			
-			while superView != nil && (superView is FrameLayout) {
-				targetFrame.origin.x += superView!.frame.origin.x
-				targetFrame.origin.y += superView!.frame.origin.y
-				superView = superView!.superview
-			}
-			
-			*/
-			targetView.frame = targetFrame
+			targetView.frame = convert(targetFrame, to: targetView)
 		}
+		
+//		else if targetView.window != nil {
+//			targetView.frame = convert(targetFrame, to: targetView.superview)
+//		}
+//		else {
+//			targetFrame.origin.x = frame.origin.x
+//			targetFrame.origin.y = frame.origin.y
+//			/*
+//			var superView: UIView? = superview
+//
+//			while superView != nil && (superView is FrameLayout) {
+//				targetFrame.origin.x += superView!.frame.origin.x
+//				targetFrame.origin.y += superView!.frame.origin.y
+//				superView = superView!.superview
+//			}
+//
+//			*/
+//			targetView.frame = targetFrame
+//		}
 	}
 	
 	override open func setNeedsLayout() {
