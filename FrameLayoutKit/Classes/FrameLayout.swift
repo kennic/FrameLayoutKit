@@ -394,7 +394,7 @@ open class FrameLayout: UIView {
 		else {
 			targetFrame.origin.x = frame.origin.x
 			targetFrame.origin.y = frame.origin.y
-			targetView.frame = convert(targetFrame, to: targetView)
+			targetView.frame = convert(targetFrame, to: targetView.superview)
 		}
 		
 //		else if targetView.window != nil {
