@@ -387,7 +387,7 @@ open class FrameLayout: UIView {
 			targetView.frame = targetFrame
 		}
 		else {
-			if superview == nil || window == nil {
+			if superview == nil {
 				if let targetSuperview = targetView.superview {
 					targetView.frame = targetSuperview.convert(targetFrame, to: targetView.superview)
 				}
