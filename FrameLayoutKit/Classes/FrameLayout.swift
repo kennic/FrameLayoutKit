@@ -410,6 +410,10 @@ open class FrameLayout: UIView {
 		setNeedsLayout()
 	}
 	
+	open override func didMoveToSuperview() {
+		setNeedsLayout()
+	}
+	
 	override open func setNeedsLayout() {
 		super.setNeedsLayout()
 		targetView?.setNeedsLayout()
