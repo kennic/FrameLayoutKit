@@ -383,7 +383,7 @@ open class FrameLayout: UIView {
 	
 		targetFrame = targetFrame.integral
 		
-		if targetView.superview == self {
+		if targetView.superview == self || superview == nil {
 			targetView.frame = targetFrame
 		}
 		else {
