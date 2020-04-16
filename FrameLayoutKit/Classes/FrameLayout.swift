@@ -387,19 +387,25 @@ open class FrameLayout: UIView {
 			targetView.frame = targetFrame
 		}
 		else {
-			/*
-			targetFrame.origin.x = frame.origin.x
-			targetFrame.origin.y = frame.origin.y
-			
-			var superView: UIView? = superview
-			while superView != nil && (superView is FrameLayout) && superView != targetView.superview {
-				targetFrame.origin.x += superView!.frame.origin.x
-				targetFrame.origin.y += superView!.frame.origin.y
-				superView = superView!.superview
+			if superview == nil || window == nil {
+				if let targetSuperview = targetView.superview {
+					targetView.frame = targetSuperview.convert(targetFrame, to: targetView.superview)
+				}
+				else {
+					targetFrame.origin.x = frame.origin.x
+					targetFrame.origin.y = frame.origin.y
+					
+					var superView: UIView? = superview
+					while superView != nil && (superView is FrameLayout) && superView != targetView.superview {
+						targetFrame.origin.x += superView!.frame.origin.x
+						targetFrame.origin.y += superView!.frame.origin.y
+						superView = superView!.superview
+					}
+				}
 			}
-			*/
-				
-			targetView.frame = convert(targetFrame, to: targetView.superview)
+			else {
+				targetView.frame = convert(targetFrame, to: targetView.superview)
+			}
 		}
 	}
 	
