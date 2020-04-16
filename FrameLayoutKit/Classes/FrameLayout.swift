@@ -387,8 +387,6 @@ open class FrameLayout: UIView {
 			targetView.frame = targetFrame
 		}
 		else {
-			targetView.frame = convert(targetFrame, to: targetView.superview)
-			/*
 			if superview == nil {
 				targetFrame.origin.x = frame.origin.x
 				targetFrame.origin.y = frame.origin.y
@@ -405,8 +403,11 @@ open class FrameLayout: UIView {
 			else {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
 			}
-			*/
 		}
+	}
+	
+	open override func didMoveToWindow() {
+		setNeedsLayout()
 	}
 	
 	override open func setNeedsLayout() {
