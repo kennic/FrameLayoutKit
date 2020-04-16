@@ -397,6 +397,8 @@ open class FrameLayout: UIView {
 					targetFrame.origin.y += superView!.frame.origin.y
 					superView = superView!.superview
 				}
+				
+				targetView.frame = targetFrame
 			}
 			else {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
