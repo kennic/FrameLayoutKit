@@ -7,7 +7,7 @@
 
 FrameLayout is a super fast and easy to use layout library for iOS and tvOS.
 
-For Objective-C version: [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayoutKit)
+For Objective-C version: [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayoutKit) (Deprecated, not recommended)
 
 ## Example
 
