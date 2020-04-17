@@ -2,10 +2,4 @@ use_frameworks!
 
 target 'FrameLayoutKit_Example' do
   pod 'FrameLayoutKit', :path => '../'
-
-  target 'FrameLayoutKit_Tests' do
-    inherit! :search_paths
-
-    
-  end
 end
