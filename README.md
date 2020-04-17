@@ -22,31 +22,28 @@ it, simply add the following line to your Podfile:
 pod "FrameLayoutKit"
 ```
 
-## Hello world
+## Example
+This is how FrameLayoutKit layout the card view below:
 
 ```swift
-let image = UIImage(named: "earth.jpg")
+let imageLayout = StackFrameLayout(axis: .vertical)
+imageLayout.append(view: earthImageView).contentAlignment = (.top, .center)
+imageLayout.appendSpace(size: 10).isFlexible = true
+imageLayout.append(view: rocketImageView).contentAlignment = (.center, .center)
 
-let label1 = createLabel(text: "Hello World 1", backgroundColor: .red)
-let label2 = createLabel(text: "Hello World 2", backgroundColor: .green)
-let label3 = createLabel(text: "Hello World 3", backgroundColor: .blue)
-let label4 = createLabel(text: "Hello World 4", backgroundColor: .black)
-let label5 = createLabel(text: "Hello World 5", backgroundColor: .purple)
+let labelLayout = StackFrameLayout(axis: .vertical, distribution: .top)
+labelLayout.append(view: nameLabel)
+labelLayout.append(view: dateLabel)
+labelLayout.appendSpace(size: 10.0)
+labelLayout.append(view: messageLabel)
+labelLayout.spacing = 5.0
 
-let label4_5 = DoubleFrameLayout(axis: .vertical, distribution: .top, views: [label4, label5])
-label4_5.spacing = 5
-
-let label3_4_5 = DoubleFrameLayout(axis: .horizontal, distribution: .left, views: [label3, label4_5])
-label3_4_5.spacing = 5
-
-frameLayout = StackFrameLayout(axis: .vertical, distribution: .top)
-frameLayout.append(view: label1)
-frameLayout.append(view: label2)
-frameLayout.append(view: imageView).contentAlignment = (.center, .center)
-frameLayout.append(frameLayout: label3_4_5)
-frameLayout.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+let frameLayout = StackFrameLayout(axis: .horizontal)
+frameLayout.append(frameLayout: imageLayout)
+frameLayout.append(frameLayout: contentLayout)
+frameLayout.spacing = 15.0
+frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.showFrameDebug = true
-frameLayout.spacing = 5
 ```
 ![Hello World](/helloWorld.png "Hello World")
 
@@ -61,7 +58,7 @@ See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutF
 - [x] CocoaPods support
 - [x] Objective-C version
 - [x] Swift version
-- [ ] Examples
+- [x] Examples
 - [ ] Documents
 
 ## Author
