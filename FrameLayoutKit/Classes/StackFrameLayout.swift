@@ -224,6 +224,7 @@ open class StackFrameLayout: FrameLayout {
 			}
 		}
 	}
+	
 	@available(*, deprecated, renamed: "appendSpace(size:)")
 	@discardableResult
 	open func appendEmptySpace(size: CGFloat = 0) -> FrameLayout {
@@ -232,7 +233,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	open func appendSpace(size: CGFloat = 0) -> FrameLayout {
-		let frameLayout = append(view: UIView())
+		let frameLayout = append(view: nil)
 		frameLayout.fixSize = CGSize(width: size, height: size)
 		return frameLayout
 	}

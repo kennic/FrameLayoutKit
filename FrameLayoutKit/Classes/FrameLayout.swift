@@ -195,9 +195,7 @@ open class FrameLayout: UIView {
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
 		preSizeThatFitsConfigurationBlock?(self)
-		guard targetView != nil && isEmpty == false else {
-			return .zero
-		}
+		guard isEmpty == false else { return .zero }
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
 			return minSize
