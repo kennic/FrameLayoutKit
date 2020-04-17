@@ -83,15 +83,15 @@ class CardView: UIView {
 		imageLayout.appendSpace(size: 10).isFlexible = true
 		imageLayout.append(view: rocketImageView).contentAlignment = (.center, .center)
 		
-		let contentLayout = StackFrameLayout(axis: .vertical, distribution: .top)
-		contentLayout.append(view: nameLabel)
-		contentLayout.append(view: dateLabel)
-		contentLayout.appendSpace(size: 10.0)
-		contentLayout.append(view: messageLabel)
-		contentLayout.spacing = 5.0
+		let labelLayout = StackFrameLayout(axis: .vertical, distribution: .top)
+		labelLayout.append(view: nameLabel)
+		labelLayout.append(view: dateLabel)
+		labelLayout.appendSpace(size: 10.0)
+		labelLayout.append(view: messageLabel)
+		labelLayout.spacing = 5.0
 		
 		frameLayout.append(frameLayout: imageLayout)
-		frameLayout.append(frameLayout: contentLayout)
+		frameLayout.append(frameLayout: labelLayout)
 		frameLayout.spacing = 15.0
 		frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
 		frameLayout.showFrameDebug = true
