@@ -28,7 +28,7 @@ This is how FrameLayoutKit layout the card view below:
 ```swift
 let imageLayout = StackFrameLayout(axis: .vertical)
 imageLayout.append(view: earthImageView).contentAlignment = (.top, .center)
-imageLayout.appendSpace(size: 10).isFlexible = true
+imageLayout.appendSpace().isFlexible = true
 imageLayout.append(view: rocketImageView).contentAlignment = (.center, .center)
 
 let labelLayout = StackFrameLayout(axis: .vertical, distribution: .top)
