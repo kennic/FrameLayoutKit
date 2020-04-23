@@ -44,6 +44,22 @@ frameLayout.append(frameLayout: contentLayout)
 frameLayout.spacing = 15.0
 frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.showFrameDebug = true
+
+
+// New nested way (since v4.9.0):
+
+frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical).with {
+	$0.append(view: earthImageView).contentAlignment = (.top, .center)
+	$0.appendSpace(size: 10).isFlexible = true
+	$0.append(view: rocketImageView).contentAlignment = (.center, .center)
+})
+frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical, distribution: .top).with {
+	$0.append(view: nameLabel)
+	$0.append(view: dateLabel)
+	$0.appendSpace(size: 10.0)
+	$0.append(view: messageLabel)
+	$0.spacing = 5.0
+})
 ```
 ![Hello World](/helloWorld.png "Hello World")
 
