@@ -61,10 +61,10 @@ class CardView: UIView {
 		layer.masksToBounds = false
 		
 		nameLabel.font = .systemFont(ofSize: 18, weight: .bold)
-		nameLabel.text = "FrameLayoutKit"
+		nameLabel.text = "John Appleseed"
 		
 		dateLabel.font = .systemFont(ofSize: 15, weight: .thin)
-		dateLabel.text = "Example"
+		dateLabel.text = "01/01/2020"
 		
 		messageLabel.font = .systemFont(ofSize: 18, weight: .regular)
 		messageLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
@@ -78,20 +78,19 @@ class CardView: UIView {
 			addSubview(view)
 		}
 		
-		let imageLayout = StackFrameLayout(axis: .vertical)
-		imageLayout.append(view: earthImageView).contentAlignment = (.top, .center)
-		imageLayout.appendSpace(size: 10).isFlexible = true
-		imageLayout.append(view: rocketImageView).contentAlignment = (.center, .center)
+		frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical).with {
+			$0.append(view: earthImageView).contentAlignment = (.top, .center)
+			$0.appendSpace(size: 10).isFlexible = true
+			$0.append(view: rocketImageView).contentAlignment = (.center, .center)
+		})
+		frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical, distribution: .top).with {
+			$0.append(view: nameLabel)
+			$0.append(view: dateLabel)
+			$0.appendSpace(size: 10.0)
+			$0.append(view: messageLabel)
+			$0.spacing = 5.0
+		})
 		
-		let labelLayout = StackFrameLayout(axis: .vertical, distribution: .top)
-		labelLayout.append(view: nameLabel)
-		labelLayout.append(view: dateLabel)
-		labelLayout.appendSpace(size: 10.0)
-		labelLayout.append(view: messageLabel)
-		labelLayout.spacing = 5.0
-		
-		frameLayout.append(frameLayout: imageLayout)
-		frameLayout.append(frameLayout: labelLayout)
 		frameLayout.spacing = 15.0
 		frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
 		frameLayout.showFrameDebug = true

@@ -38,7 +38,6 @@ open class StackFrameLayout: FrameLayout {
 			}
 		}
 	}
-	public var splitRatio: CGFloat = 0.5
 	
 	public var isOverlapped: Bool = false {
 		didSet {

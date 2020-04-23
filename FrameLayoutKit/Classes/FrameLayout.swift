@@ -73,6 +73,7 @@ open class FrameLayout: UIView {
 		}
 	}
 	
+	@available(*, deprecated, message: "use `with` instead")
 	public var configurationBlock: ((_ frameLayout: FrameLayout) -> Void)? = nil {
 		didSet {
 			configurationBlock?(self)
@@ -470,3 +471,33 @@ open class FrameLayout: UIView {
 	}
 	
 }
+
+public protocol With {}
+extension With where Self: FrameLayout {
+	
+	/// Add ability to set properties with closures just after initializing.
+	///
+	///     let frameLayout = FrameLayout().with {
+	///       $0.contentAlignment = (.top, .center)
+	///       $0.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+	///     }
+	///
+	/// So you can also nest a block of FrameLayout into another by:
+	///
+	///		let stack = StackFrameLayout(axis: .vertical)
+	///		stack.append(frameLayout: StackFrameLayout(.horizontal).with {
+	///			$0.append(view: label)
+	///			$0.append(view: imageView)
+	///		})
+	///		stack.append(view: textField)
+	///
+	///
+	@discardableResult
+	public func with(_ block: (Self) throws -> Void) rethrows -> Self {
+		try block(self)
+		return self
+	}
+	
+}
+
+extension FrameLayout: With {}
