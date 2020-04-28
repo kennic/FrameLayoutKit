@@ -102,3 +102,33 @@ open class VStackLayout: StackFrameLayout {
 	}
 	
 }
+
+public protocol With {}
+extension With where Self: FrameLayout {
+	
+	/// Add ability to set properties with closures just after initializing.
+	///
+	///     let frameLayout = FrameLayout().with {
+	///       $0.contentAlignment = (.top, .center)
+	///       $0.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+	///     }
+	///
+	/// So you can also nest a block of FrameLayout into another by:
+	///
+	///		let stack = StackFrameLayout(axis: .vertical)
+	///		stack.add(StackFrameLayout(.horizontal).with {
+	///			$0.add(label)
+	///			$0.add(imageView)
+	///		})
+	///		stack.add(textField)
+	///
+	///
+	@discardableResult
+	public func with(_ block: (Self) throws -> Void) rethrows -> Self {
+		try block(self)
+		return self
+	}
+	
+}
+
+extension FrameLayout: With {}
