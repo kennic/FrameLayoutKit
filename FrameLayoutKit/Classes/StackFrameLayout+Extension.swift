@@ -32,12 +32,12 @@ public extension StackFrameLayout {
 	
 }
 
-infix operator <=
-infix operator =>
+infix operator <--
+infix operator -->
 
 public extension DoubleFrameLayout {
 	
-	static func <=(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+	static func <--(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.leftFrameLayout = frameLayout
 		}
@@ -46,7 +46,7 @@ public extension DoubleFrameLayout {
 		}
 	}
 	
-	static func =>(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+	static func -->(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.rightFrameLayout = frameLayout
 		}
