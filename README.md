@@ -26,42 +26,87 @@ pod "FrameLayoutKit"
 This is how FrameLayoutKit layout the card view below:
 
 ```swift
+frameLayout += VStackLayout {
+	($0 += earthImageView).alignment = (.top, .center)
+	($0 --- 10).flexible() // $0.addSpace(10).flexible()
+	($0 += rocketImageView).alignment = (.center, .center)
+}
+frameLayout += VStackLayout {
+	$0 ++ [nameLabel, dateLabel]
+	$0 --- 0 // $0.addSpace()
+	$0 += messageLabel
+	$0.spacing = 5.0
+}
+
+frameLayout.spacing = 15.0
+frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
+frameLayout.debug = true
+```
+![Hello World](/helloWorld.png "Hello World")
+
+## Code style migration
+
+Version 4.0.0 introduce new operator style as well as VStackLayout and HStackLayout for shorter code
+
+```swift
+// Old style
 let imageLayout = StackFrameLayout(axis: .vertical)
-imageLayout.append(view: earthImageView).contentAlignment = (.top, .center)
+imageLayout.add(earthImageView).contentAlignment = (.top, .center)
 imageLayout.appendSpace().isFlexible = true
-imageLayout.append(view: rocketImageView).contentAlignment = (.center, .center)
+imageLayout.add(rocketImageView).contentAlignment = (.center, .center)
 
 let labelLayout = StackFrameLayout(axis: .vertical, distribution: .top)
-labelLayout.append(view: nameLabel)
-labelLayout.append(view: dateLabel)
-labelLayout.appendSpace(size: 10.0)
-labelLayout.append(view: messageLabel)
+labelLayout.add(nameLabel)
+labelLayout.add(dateLabel)
+labelLayout.appendSpace(10.0)
+labelLayout.add(messageLabel)
 labelLayout.spacing = 5.0
 
 let frameLayout = StackFrameLayout(axis: .horizontal)
-frameLayout.append(frameLayout: imageLayout)
-frameLayout.append(frameLayout: contentLayout)
+frameLayout.add(imageLayout)
+frameLayout.add(contentLayout)
 frameLayout.spacing = 15.0
 frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.showFrameDebug = true
+```
 
+Nested style (v3.9.0):
 
-// New nested way (since v4.9.0):
-
-frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical).with {
-	$0.append(view: earthImageView).contentAlignment = (.top, .center)
+```swift
+frameLayout.add(StackFrameLayout(axis: .vertical).with {
+	$0.add(earthImageView).contentAlignment = (.top, .center)
 	$0.appendSpace(size: 10).isFlexible = true
-	$0.append(view: rocketImageView).contentAlignment = (.center, .center)
+	$0.add(rocketImageView).contentAlignment = (.center, .center)
 })
-frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical, distribution: .top).with {
-	$0.append(view: nameLabel)
-	$0.append(view: dateLabel)
+frameLayout.add(StackFrameLayout(axis: .vertical, distribution: .top).with {
+	$0.add(nameLabel)
+	$0.add(dateLabel)
 	$0.appendSpace(size: 10.0)
-	$0.append(view: messageLabel)
+	$0.add(messageLabel)
 	$0.spacing = 5.0
 })
 ```
-![Hello World](/helloWorld.png "Hello World")
+
+Latest style (since v4.0.0):
+
+```swift
+frameLayout += VStackLayout {
+	($0 += earthImageView).alignment = (.top, .center)
+	($0 --- 10).flexible() // $0.addSpace(10).flexible()
+	($0 += rocketImageView).alignment = (.center, .center)
+}
+frameLayout += VStackLayout {
+	$0 ++ [nameLabel, dateLabel]
+	$0 --- 0 // $0.addSpace()
+	$0 += messageLabel
+	$0.spacing = 5.0
+}
+
+frameLayout.spacing = 15.0
+frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
+frameLayout.debug = true
+```
+
 
 ## Benchmark
 FrameLayoutKit is one of the fastest layout libraries.

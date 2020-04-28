@@ -46,11 +46,22 @@ open class FrameLayout: UIView {
 		}
 	}
 	
-	public var showFrameDebug: Bool = false {
+	@available(*, deprecated, renamed: "debug")
+	public var showFrameDebug: Bool {
+		get {
+			return debug
+		}
+		set {
+			debug = newValue
+		}
+	}
+	
+	public var debug: Bool = false {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
+	
 	public var debugColor: UIColor? = nil {
 		didSet {
 			setNeedsDisplay()
@@ -64,10 +75,20 @@ open class FrameLayout: UIView {
 		}
 	}
 	
-	public var contentAlignment: (NKContentVerticalAlignment, NKContentHorizontalAlignment) = (.fill, .fill) {
+	@available(*, deprecated, renamed: "alignment")
+	public var contentAlignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
 		didSet {
-			contentVerticalAlignment = contentAlignment.0
-			contentHorizontalAlignment = contentAlignment.1
+			contentVerticalAlignment = contentAlignment.vertical
+			contentHorizontalAlignment = contentAlignment.horizontal
+			
+			setNeedsLayout()
+		}
+	}
+	
+	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
+		didSet {
+			contentVerticalAlignment = alignment.vertical
+			contentHorizontalAlignment = alignment.horizontal
 			
 			setNeedsLayout()
 		}
@@ -97,7 +118,7 @@ open class FrameLayout: UIView {
 			super.frame = newValue
 			setNeedsLayout()
 			#if DEBUG
-			if showFrameDebug {
+			if debug {
 				setNeedsDisplay()
 			}
 			#endif
@@ -120,7 +141,7 @@ open class FrameLayout: UIView {
 			super.bounds = newValue
 			setNeedsLayout()
 			#if DEBUG
-			if showFrameDebug {
+			if debug {
 				setNeedsDisplay()
 			}
 			#endif
@@ -145,6 +166,12 @@ open class FrameLayout: UIView {
 	
 	// MARK: -
 	
+	@discardableResult
+	public convenience init(_ block: (FrameLayout) throws -> Void) rethrows {
+		self.init()
+		try block(self)
+	}
+	
 	convenience public init(targetView: UIView? = nil) {
 		self.init()
 		self.targetView = targetView
@@ -163,9 +190,22 @@ open class FrameLayout: UIView {
 	}
 	
 	// MARK: -
+	
+	open func flexible() {
+		isFlexible = true
+	}
+	
+	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+	}
+	
+	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
+	}
+	
 	#if DEBUG
 	override open func draw(_ rect: CGRect) {
-		guard showFrameDebug else {
+		guard debug else {
 			super.draw(rect)
 			return
 		}
@@ -472,6 +512,7 @@ open class FrameLayout: UIView {
 	
 }
 
+/*
 public protocol With {}
 extension With where Self: FrameLayout {
 	
@@ -485,11 +526,11 @@ extension With where Self: FrameLayout {
 	/// So you can also nest a block of FrameLayout into another by:
 	///
 	///		let stack = StackFrameLayout(axis: .vertical)
-	///		stack.append(frameLayout: StackFrameLayout(.horizontal).with {
-	///			$0.append(view: label)
-	///			$0.append(view: imageView)
+	///		stack.add(StackFrameLayout(.horizontal).with {
+	///			$0.add(label)
+	///			$0.add(imageView)
 	///		})
-	///		stack.append(view: textField)
+	///		stack.add(textField)
 	///
 	///
 	@discardableResult
@@ -501,3 +542,4 @@ extension With where Self: FrameLayout {
 }
 
 extension FrameLayout: With {}
+*/

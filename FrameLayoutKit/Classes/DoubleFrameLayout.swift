@@ -70,10 +70,18 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
+	@available(*, deprecated, renamed: "debug")
 	override open var showFrameDebug: Bool {
 		didSet {
-			frameLayout1.showFrameDebug = showFrameDebug
-			frameLayout2.showFrameDebug = showFrameDebug
+			frameLayout1.debug = showFrameDebug
+			frameLayout2.debug = showFrameDebug
+		}
+	}
+	
+	override open var debug: Bool {
+		didSet {
+			frameLayout1.debug = debug
+			frameLayout2.debug = debug
 		}
 	}
 	
@@ -198,6 +206,12 @@ open class DoubleFrameLayout: FrameLayout {
 	@available(*, deprecated, renamed: "init(axis:distribution:views:)")
 	convenience public init(direction: NKLayoutAxis, alignment: NKLayoutDistribution = .top, views: [UIView]? = nil) {
 		self.init(axis: direction, distribution: alignment, views: views)
+	}
+	
+	@discardableResult
+	public convenience init(_ block: (DoubleFrameLayout) throws -> Void) rethrows {
+		self.init()
+		try block(self)
 	}
 	
 	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {

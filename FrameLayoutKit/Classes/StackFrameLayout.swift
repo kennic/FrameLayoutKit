@@ -61,10 +61,19 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
+	@available(*, deprecated, renamed: "debug")
 	override open var showFrameDebug: Bool {
 		didSet {
 			for layout in frameLayouts {
-				layout.showFrameDebug = showFrameDebug
+				layout.debug = showFrameDebug
+			}
+		}
+	}
+	
+	override open var debug: Bool {
+		didSet {
+			for layout in frameLayouts {
+				layout.debug = debug
 			}
 		}
 	}
@@ -154,7 +163,7 @@ open class StackFrameLayout: FrameLayout {
 			}
 			else if newValue > count {
 				while frameLayouts.count < newValue {
-					append()
+					add()
 				}
 			}
 		}
@@ -197,6 +206,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
+	@available(*, deprecated, renamed: "add(view:)")
 	@discardableResult
 	open func append(frameLayout: FrameLayout) -> FrameLayout {
 		frameLayouts.append(frameLayout)
@@ -204,50 +214,63 @@ open class StackFrameLayout: FrameLayout {
 		return frameLayout
 	}
 	
+	@available(*, deprecated, renamed: "add(view:)")
 	@discardableResult
 	open func append(view: UIView? = nil) -> FrameLayout {
 		let frameLayout = FrameLayout(targetView: view)
-		frameLayout.showFrameDebug = showFrameDebug
+		frameLayout.debug = debug
 		frameLayouts.append(frameLayout)
 		addSubview(frameLayout)
 		return frameLayout
 	}
 	
 	open func append(views: [UIView]) {
-		for view in views {
-			if view is FrameLayout && view.superview == nil {
-				append(frameLayout: view as! FrameLayout)
-			}
-			else {
-				append(view: view)
-			}
+		views.forEach { (view) in
+			add(view)
 		}
 	}
 	
-	@available(*, deprecated, renamed: "appendSpace(size:)")
 	@discardableResult
-	open func appendEmptySpace(size: CGFloat = 0) -> FrameLayout {
-		return appendSpace(size: size)
+	open func add(_ view: UIView? = nil) -> FrameLayout {
+		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			frameLayouts.append(frameLayout)
+			addSubview(frameLayout)
+			return frameLayout
+		}
+		else {
+			let frameLayout = FrameLayout(targetView: view)
+			frameLayout.debug = debug
+			frameLayouts.append(frameLayout)
+			addSubview(frameLayout)
+			return frameLayout
+		}
 	}
 	
+	@discardableResult
+	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
+		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			frameLayouts.insert(frameLayout, at: index)
+			addSubview(frameLayout)
+			return frameLayout
+		}
+		else {
+			let frameLayout = FrameLayout(targetView: view)
+			frameLayout.debug = debug
+			frameLayouts.insert(frameLayout, at: index)
+			return frameLayout
+		}
+	}
+	
+	@available(*, deprecated, renamed: "addSpace(size:)")
 	@discardableResult
 	open func appendSpace(size: CGFloat = 0) -> FrameLayout {
-		let frameLayout = append(view: nil)
+		return addSpace(size)
+	}
+	
+	@discardableResult
+	open func addSpace(_ size: CGFloat = 0) -> FrameLayout {
+		let frameLayout = add()
 		frameLayout.fixSize = CGSize(width: size, height: size)
-		return frameLayout
-	}
-	
-	@discardableResult
-	open func insert(view: UIView? = nil, at index: Int) -> FrameLayout {
-		let frameLayout = FrameLayout(targetView: view)
-		frameLayout.showFrameDebug = showFrameDebug
-		frameLayouts.insert(frameLayout, at: index)
-		return frameLayout
-	}
-	
-	@discardableResult
-	open func insert(frameLayout: FrameLayout, at index: Int) -> FrameLayout {
-		frameLayouts.insert(frameLayout, at: index)
 		return frameLayout
 	}
 	
@@ -304,7 +327,7 @@ open class StackFrameLayout: FrameLayout {
 			addSubview(frameLayout)
 		}
 		else if index == count {
-			insert(view: nil, at: index)
+			insert(nil, at: index)
 		}
 	}
 	
@@ -375,12 +398,12 @@ open class StackFrameLayout: FrameLayout {
 			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
 			
 			if isOverlapped {
-				for layout in frameLayouts {
-					if layout.isEmpty {
+				for frameLayout in frameLayouts {
+					if frameLayout.isEmpty {
 						continue
 					}
 					
-					let frameSize = layout.sizeThatFits(contentSize)
+					let frameSize = frameLayout.sizeThatFits(contentSize)
 					result.width = isIntrinsicSizeEnabled ? max(result.width, frameSize.width) : size.width
 					result.height = max(result.height, frameSize.height)
 				}
@@ -589,9 +612,9 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = frameLayout.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height))
+						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.origin.x = containerFrame.origin.x
-						targetFrame.size.width = frameContentSize.width
+						targetFrame.size.width = frameLayout.isFlexible ? containerFrame.size.width : frameContentSize.width
 						targetFrame.size.height = min(frameContentSize.height, containerFrame.size.height)
 						frameLayout.frame = targetFrame
 					}
@@ -671,8 +694,8 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = frameLayout.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height))
-						targetFrame.size.width = frameContentSize.width
+						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
+						targetFrame.size.width = frameLayout.isFlexible ? containerFrame.size.width : frameContentSize.width
 						targetFrame.size.height = min(frameContentSize.height, containerFrame.size.height)
 						targetFrame.origin.x = containerFrame.size.width - targetFrame.size.width
 						frameLayout.frame = targetFrame
@@ -789,10 +812,10 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = frameLayout.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height))
-						targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - frameContentSize.width)/2
-						targetFrame.size.width = frameContentSize.width
+						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
+						targetFrame.size.width = frameLayout.isFlexible ? containerFrame.size.width : frameContentSize.width
 						targetFrame.size.height = min(frameContentSize.height, containerFrame.size.height)
+						targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame.size.width)/2
 						frameLayout.frame = targetFrame
 					}
 					return
@@ -838,10 +861,10 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = frameLayout.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height))
+						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.origin.y = containerFrame.origin.y
-						targetFrame.size.width = containerFrame.size.width
-						targetFrame.size.height = min(frameContentSize.height, containerFrame.size.height)
+						targetFrame.size.width = min(frameContentSize.width, containerFrame.size.width)
+						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : containerFrame.size.height
 						frameLayout.frame = targetFrame
 					}
 					return
@@ -920,10 +943,10 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = frameLayout.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height))
-						targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - frameContentSize.height)
-						targetFrame.size.width = containerFrame.size.width
-						targetFrame.size.height = min(frameContentSize.height, containerFrame.size.height)
+						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
+						targetFrame.size.width = min(frameContentSize.width, containerFrame.size.width)
+						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : containerFrame.size.height
+						targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.height)
 						frameLayout.frame = targetFrame
 					}
 					return
@@ -1042,10 +1065,10 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = frameLayout.sizeThatFits(CGSize(width: containerFrame.size.width, height: containerFrame.size.height))
-						targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - frameContentSize.height)/2
+						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.size.width = min(frameContentSize.width, containerFrame.size.width)
-						targetFrame.size.height = min(frameContentSize.height, containerFrame.size.height)
+						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : min(frameContentSize.height, containerFrame.size.height)
+						targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.width)/2
 						frameLayout.frame = targetFrame
 					}
 					return
@@ -1090,3 +1113,4 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 }
+
