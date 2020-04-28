@@ -179,7 +179,7 @@ open class StackFrameLayout: FrameLayout {
 		self.distribution = alignment
 		
 		if let views = views {
-			append(views: views)
+			append(views)
 		}
 	}
 	
@@ -190,7 +190,7 @@ open class StackFrameLayout: FrameLayout {
 		self.distribution = distribution
 		
 		if let views = views {
-			append(views: views)
+			append(views)
 		}
 	}
 	
