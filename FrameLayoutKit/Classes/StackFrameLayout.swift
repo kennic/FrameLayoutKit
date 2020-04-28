@@ -863,8 +863,8 @@ open class StackFrameLayout: FrameLayout {
 						
 						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.origin.y = containerFrame.origin.y
-						targetFrame.size.width = min(frameContentSize.width, containerFrame.size.width)
-						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : containerFrame.size.height
+						targetFrame.size.width = frameLayout.isIntrinsicSizeEnabled ? min(frameContentSize.width, containerFrame.size.width) : containerFrame.size.width
+						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : frameContentSize.height
 						frameLayout.frame = targetFrame
 					}
 					return
@@ -944,8 +944,8 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
-						targetFrame.size.width = min(frameContentSize.width, containerFrame.size.width)
-						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : containerFrame.size.height
+						targetFrame.size.width = frameLayout.isIntrinsicSizeEnabled ? min(frameContentSize.width, containerFrame.size.width) : containerFrame.size.width
+						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : frameContentSize.height
 						targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.height)
 						frameLayout.frame = targetFrame
 					}
@@ -1066,7 +1066,7 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						frameContentSize = frameLayout.sizeThatFits(containerFrame.size)
-						targetFrame.size.width = min(frameContentSize.width, containerFrame.size.width)
+						targetFrame.size.width = frameLayout.isIntrinsicSizeEnabled ? min(frameContentSize.width, containerFrame.size.width) : containerFrame.size.width
 						targetFrame.size.height = frameLayout.isFlexible ? containerFrame.size.height : min(frameContentSize.height, containerFrame.size.height)
 						targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.width)/2
 						frameLayout.frame = targetFrame
