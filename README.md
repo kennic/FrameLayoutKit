@@ -46,7 +46,7 @@ frameLayout.debug = true
 
 ## Code style migration
 
-Version 4.0.0 introduce new operator style as well as VStackLayout and HStackLayout for shorter code
+Version 4.0.0 introduce new operand style as well as VStackLayout and HStackLayout for shorter code
 
 ```swift
 // Old style
@@ -87,7 +87,7 @@ frameLayout.add(StackFrameLayout(axis: .vertical, distribution: .top).with {
 })
 ```
 
-Latest style (since v4.0.0):
+Operand style (since v4.x):
 
 ```swift
 frameLayout += VStackLayout {
