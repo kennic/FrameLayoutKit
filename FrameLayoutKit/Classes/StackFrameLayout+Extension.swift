@@ -31,6 +31,31 @@ public extension StackFrameLayout {
 	
 }
 
+infix operator <=
+infix operator =>
+
+public extension DoubleFrameLayout {
+	
+	static func <=(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
+			lhs.leftFrameLayout = frameLayout
+		}
+		else {
+			lhs.leftFrameLayout.targetView = rhs
+		}
+	}
+	
+	static func =>(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
+			lhs.rightFrameLayout = frameLayout
+		}
+		else {
+			lhs.rightFrameLayout.targetView = rhs
+		}
+	}
+	
+}
+
 // MARK: -
 
 open class Stack: StackFrameLayout {
