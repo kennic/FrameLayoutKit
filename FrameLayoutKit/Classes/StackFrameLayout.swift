@@ -224,7 +224,7 @@ open class StackFrameLayout: FrameLayout {
 		return frameLayout
 	}
 	
-	open func append(views: [UIView]) {
+	open func append(_ views: [UIView]) {
 		views.forEach { (view) in
 			add(view)
 		}
