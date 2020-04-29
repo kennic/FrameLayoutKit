@@ -224,10 +224,14 @@ open class StackFrameLayout: FrameLayout {
 		return frameLayout
 	}
 	
-	open func append(_ views: [UIView]) {
+	@discardableResult
+	open func append(_ views: [UIView]) -> [FrameLayout] {
+		var results = [FrameLayout]()
 		views.forEach { (view) in
-			add(view)
+			results.append(add(view))
 		}
+		
+		return results
 	}
 	
 	@discardableResult

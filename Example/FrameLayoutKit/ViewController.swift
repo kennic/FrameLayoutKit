@@ -78,17 +78,36 @@ class CardView: UIView {
 			addSubview(view)
 		}
 		
+		// Standard syntax:
+		
+		frameLayout.add(VStackLayout {
+			$0.add(earthImageView).alignment = (.top, .center)
+			$0.addSpace().flexible()
+			$0.add(rocketImageView).alignment = (.center, .center)
+		})
+		
+		frameLayout.add(VStackLayout {
+			$0.append([nameLabel, dateLabel])
+			$0.addSpace(10)
+			$0.add(messageLabel)
+			$0.spacing = 5.0
+		})
+		
+		/*
+		// Operand syntax:
+		
 		frameLayout += VStackLayout {
 			($0 += earthImageView).alignment = (.top, .center)
-			($0 --- 10).flexible() // $0.addSpace(10).flexible()
+			($0 --- 0).flexible()
 			($0 += rocketImageView).alignment = (.center, .center)
 		}
 		frameLayout += VStackLayout {
 			$0 ++ [nameLabel, dateLabel]
-			$0 --- 0 // $0.addSpace()
+			$0 --- 10
 			$0 += messageLabel
 			$0.spacing = 5.0
 		}
+		*/
 		
 		frameLayout.spacing = 15.0
 		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)

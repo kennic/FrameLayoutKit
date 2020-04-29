@@ -26,14 +26,36 @@ pod "FrameLayoutKit"
 This is how FrameLayoutKit layout the card view below:
 
 ```swift
+frameLayout.add(VStackLayout {
+	$0.add(earthImageView).alignment = (.top, .center)
+	$0.addSpace().flexible()
+	$0.add(rocketImageView).alignment = (.center, .center)
+})
+		
+frameLayout.add(VStackLayout {
+	$0.append([nameLabel, dateLabel])
+	$0.addSpace(10)
+	$0.add(messageLabel)
+	$0.spacing = 5.0
+})
+
+frameLayout.spacing = 15.0
+frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
+frameLayout.debug = true
+```
+![Hello World](/helloWorld.png "Hello World")
+
+Or you can use operand syntax:
+
+```swift
 frameLayout += VStackLayout {
 	($0 += earthImageView).alignment = (.top, .center)
-	($0 --- 10).flexible() // $0.addSpace(10).flexible()
+	($0 --- 0).flexible()
 	($0 += rocketImageView).alignment = (.center, .center)
 }
 frameLayout += VStackLayout {
 	$0 ++ [nameLabel, dateLabel]
-	$0 --- 0 // $0.addSpace()
+	$0 --- 10
 	$0 += messageLabel
 	$0.spacing = 5.0
 }
@@ -42,11 +64,10 @@ frameLayout.spacing = 15.0
 frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.debug = true
 ```
-![Hello World](/helloWorld.png "Hello World")
 
 ## Code style migration
 
-Version 4.0.0 introduce new operand style as well as VStackLayout and HStackLayout for shorter code
+Version 4.x.x introduces new operand syntax as well as VStackLayout and HStackLayout for shorter code
 
 ```swift
 // Old style
@@ -65,12 +86,13 @@ labelLayout.spacing = 5.0
 let frameLayout = StackFrameLayout(axis: .horizontal)
 frameLayout.add(imageLayout)
 frameLayout.add(contentLayout)
+
 frameLayout.spacing = 15.0
 frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.showFrameDebug = true
 ```
 
-Nested style (v3.9.0):
+Nested syntax (v3.9.0):
 
 ```swift
 frameLayout.add(StackFrameLayout(axis: .vertical).with {
@@ -85,9 +107,34 @@ frameLayout.add(StackFrameLayout(axis: .vertical, distribution: .top).with {
 	$0.add(messageLabel)
 	$0.spacing = 5.0
 })
+
+frameLayout.spacing = 15.0
+frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+frameLayout.showFrameDebug = true
 ```
 
-Operand style (since v4.x):
+New standard syntax (since v4.x.x):
+
+```swift
+frameLayout.add(VStackLayout {
+	$0.add(earthImageView).alignment = (.top, .center)
+	$0.addSpace().flexible()
+	$0.add(rocketImageView).alignment = (.center, .center)
+})
+		
+frameLayout.add(VStackLayout {
+	$0.append([nameLabel, dateLabel])
+	$0.addSpace(10)
+	$0.add(messageLabel)
+	$0.spacing = 5.0
+})
+
+frameLayout.spacing = 15.0
+frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
+frameLayout.debug = true
+```
+
+Operand syntax (since v4.x.x):
 
 ```swift
 frameLayout += VStackLayout {

@@ -268,6 +268,40 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
+	@discardableResult
+	open func setToLeft(_ view: UIView?) -> FrameLayout {
+		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			self.frameLayout1 = frameLayout
+			return frameLayout
+		}
+		
+		frameLayout1.targetView = view
+		return frameLayout1
+	}
+	
+	@discardableResult
+	open func setToRight(_ view: UIView?) -> FrameLayout {
+		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			self.frameLayout2 = frameLayout
+			return frameLayout
+		}
+		
+		frameLayout2.targetView = view
+		return frameLayout2
+	}
+	
+	@discardableResult
+	open func setToTop(_ view: UIView?) -> FrameLayout {
+		return setToLeft(view)
+	}
+	
+	@discardableResult
+	open func setToBottom(_ view: UIView?) -> FrameLayout {
+		return setToRight(view)
+	}
+	
+	// MARK: -
+	
 	override open func setNeedsLayout() {
 		super.setNeedsLayout()
 		
@@ -544,7 +578,7 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame1.size.width = frame1ContentSize.width
 				
 				if isOverlapped {
-					if frameLayout2.isIntrinsicSizeEnabled {
+					if frameLayout2.isIntrinsicSizeEnabled && !frameLayout2.isFlexible {
 						frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
 						targetFrame2.size.width = min(frame2ContentSize.width, containerFrame.size.width)
 					}
@@ -567,7 +601,7 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame2.size.width = frame2ContentSize.width
 				
 				if isOverlapped {
-					if frameLayout1.isIntrinsicSizeEnabled {
+					if frameLayout1.isIntrinsicSizeEnabled && !frameLayout1.isFlexible {
 						frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
 						targetFrame1.size.width = min(frame1ContentSize.width, containerFrame.size.width)
 						targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame1.size.width)
@@ -615,8 +649,8 @@ open class DoubleFrameLayout: FrameLayout {
 				
 			case .center:
 				if isOverlapped {
-					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
-					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+					frame1ContentSize = frameLayout1.isFlexible ? containerFrame.size : frameLayout1.sizeThatFits(containerFrame.size)
+					frame2ContentSize = frameLayout2.isFlexible ? containerFrame.size : frameLayout2.sizeThatFits(containerFrame.size)
 					targetFrame1.size.width = min(frame1ContentSize.width, containerFrame.size.width)
 					targetFrame2.size.width = min(frame2ContentSize.width, containerFrame.size.width)
 					targetFrame1.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame1.size.width)/2
@@ -645,7 +679,7 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame1.size.height = frame1ContentSize.height
 				
 				if isOverlapped {
-					if frameLayout2.isIntrinsicSizeEnabled {
+					if frameLayout2.isIntrinsicSizeEnabled && !frameLayout2.isFlexible {
 						frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size, intrinsic: frameLayout2.heightRatio == 0)
 						targetFrame2.size.height = min(frame2ContentSize.height, containerFrame.size.height)
 					}
@@ -668,7 +702,7 @@ open class DoubleFrameLayout: FrameLayout {
 				targetFrame2.size.height = frame2ContentSize.height
 				
 				if isOverlapped {
-					if frameLayout1.isIntrinsicSizeEnabled {
+					if frameLayout1.isIntrinsicSizeEnabled && !frameLayout1.isFlexible {
 						frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size, intrinsic: frameLayout1.heightRatio == 0)
 						targetFrame1.size.height = min(frame1ContentSize.height, containerFrame.size.height)
 						targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame1.size.height)
@@ -716,8 +750,8 @@ open class DoubleFrameLayout: FrameLayout {
 				
 			case .center:
 				if isOverlapped {
-					frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)
-					frame2ContentSize = frameLayout2.sizeThatFits(containerFrame.size)
+					frame1ContentSize = frameLayout1.isFlexible ? containerFrame.size : frameLayout1.sizeThatFits(containerFrame.size)
+					frame2ContentSize = frameLayout2.isFlexible ? containerFrame.size : frameLayout2.sizeThatFits(containerFrame.size)
 					targetFrame1.size.height = min(frame1ContentSize.height, containerFrame.size.height)
 					targetFrame2.size.height = min(frame2ContentSize.height, containerFrame.size.height)
 					targetFrame1.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame1.size.height)/2

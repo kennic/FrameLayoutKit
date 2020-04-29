@@ -24,10 +24,13 @@ public extension StackFrameLayout {
 		return lhs.add(rhs)
 	}
 	
-	static func ++(lhs: StackFrameLayout, rhs: [UIView]? = nil) {
+	@discardableResult
+	static func ++(lhs: StackFrameLayout, rhs: [UIView]? = nil) -> [FrameLayout] {
+		var results = [FrameLayout]()
 		rhs?.forEach({ (view) in
-			lhs.add(view)
+			results.append(lhs.add(view))
 		})
+		return results
 	}
 	
 }
