@@ -112,8 +112,8 @@ extension With where Self: FrameLayout {
 	/// Add ability to set properties with closures just after initializing.
 	///
 	///     let frameLayout = FrameLayout().with {
-	///       $0.contentAlignment = (.top, .center)
-	///       $0.edgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+	///       $0.alignment = (.top, .center)
+	///       $0.padding(top: 5, left: 5, bottom: 5, right: 5)
 	///     }
 	///
 	/// So you can also nest a block of FrameLayout into another by:
