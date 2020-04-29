@@ -96,16 +96,16 @@ frameLayout.showFrameDebug = true
 Nested syntax (v3.9.0):
 
 ```swift
-frameLayout.add(StackFrameLayout(axis: .vertical).with {
-	$0.add(earthImageView).contentAlignment = (.top, .center)
-	$0.appendSpace().isFlexible = true
-	$0.add(rocketImageView).contentAlignment = (.center, .center)
+frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical).with {
+	$0.append(view: earthImageView).contentAlignment = (.top, .center)
+	$0.appendEmptySpace().isFlexible = true
+	$0.append(view: rocketImageView).contentAlignment = (.center, .center)
 })
-frameLayout.add(StackFrameLayout(axis: .vertical, distribution: .top).with {
-	$0.add(nameLabel)
-	$0.add(dateLabel)
-	$0.appendSpace(size: 10.0)
-	$0.add(messageLabel)
+frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical, distribution: .top).with {
+	$0.append(view: nameLabel)
+	$0.append(view: dateLabel)
+	$0.appendEmptySpace(size: 10.0)
+	$0.append(view: messageLabel)
 	$0.spacing = 5.0
 })
 
