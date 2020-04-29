@@ -179,7 +179,7 @@ open class StackFrameLayout: FrameLayout {
 		self.distribution = alignment
 		
 		if let views = views {
-			append(views)
+			add(views)
 		}
 	}
 	
@@ -190,7 +190,7 @@ open class StackFrameLayout: FrameLayout {
 		self.distribution = distribution
 		
 		if let views = views {
-			append(views)
+			add(views)
 		}
 	}
 	
@@ -225,7 +225,7 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func append(_ views: [UIView]) -> [FrameLayout] {
+	open func add(_ views: [UIView]) -> [FrameLayout] {
 		var results = [FrameLayout]()
 		views.forEach { (view) in
 			results.append(add(view))
@@ -309,7 +309,7 @@ open class StackFrameLayout: FrameLayout {
 		frameLayouts.removeAll()
 	}
 	
-	open func replace(frameLayout: FrameLayout?, at index: Int) {
+	open func replace(_ frameLayout: FrameLayout?, at index: Int) {
 		guard let frameLayout = frameLayout else {
 			removeFrameLayout(at: index)
 			return

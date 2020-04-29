@@ -87,7 +87,7 @@ class CardView: UIView {
 		})
 		
 		frameLayout.add(VStackLayout {
-			$0.append([nameLabel, dateLabel])
+			$0.add([nameLabel, dateLabel])
 			$0.addSpace(10)
 			$0.add(messageLabel)
 			$0.spacing = 5.0
