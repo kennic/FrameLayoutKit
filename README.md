@@ -65,27 +65,28 @@ frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.debug = true
 ```
 
-## Code style migration
+## Code syntax migration
 
-Version 4.x.x introduces new operand syntax as well as VStackLayout and HStackLayout for shorter code
+Version 4.x.x introduces new operand syntax as well as VStackLayout and HStackLayout for shorter code.
+
+Old syntax:
 
 ```swift
-// Old style
 let imageLayout = StackFrameLayout(axis: .vertical)
-imageLayout.add(earthImageView).contentAlignment = (.top, .center)
-imageLayout.appendSpace().isFlexible = true
-imageLayout.add(rocketImageView).contentAlignment = (.center, .center)
+imageLayout.append(view: earthImageView).contentAlignment = (.top, .center)
+imageLayout.appendEmptySpace().isFlexible = true
+imageLayout.append(view: rocketImageView).contentAlignment = (.center, .center)
 
 let labelLayout = StackFrameLayout(axis: .vertical, distribution: .top)
-labelLayout.add(nameLabel)
-labelLayout.add(dateLabel)
-labelLayout.appendSpace(10.0)
-labelLayout.add(messageLabel)
+labelLayout.append(view: nameLabel)
+labelLayout.append(view: dateLabel)
+labelLayout.appendEmptySpace(10.0)
+labelLayout.append(view: messageLabel)
 labelLayout.spacing = 5.0
 
 let frameLayout = StackFrameLayout(axis: .horizontal)
-frameLayout.add(imageLayout)
-frameLayout.add(contentLayout)
+frameLayout.append(frameLayout: imageLayout)
+frameLayout.append(frameLayout: contentLayout)
 
 frameLayout.spacing = 15.0
 frameLayout.edgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
@@ -95,16 +96,16 @@ frameLayout.showFrameDebug = true
 Nested syntax (v3.9.0):
 
 ```swift
-frameLayout.add(StackFrameLayout(axis: .vertical).with {
-	$0.add(earthImageView).contentAlignment = (.top, .center)
-	$0.appendSpace(size: 10).isFlexible = true
-	$0.add(rocketImageView).contentAlignment = (.center, .center)
+frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical).with {
+	$0.append(view: earthImageView).contentAlignment = (.top, .center)
+	$0.appendEmptySpace().isFlexible = true
+	$0.append(view: rocketImageView).contentAlignment = (.center, .center)
 })
-frameLayout.add(StackFrameLayout(axis: .vertical, distribution: .top).with {
-	$0.add(nameLabel)
-	$0.add(dateLabel)
-	$0.appendSpace(size: 10.0)
-	$0.add(messageLabel)
+frameLayout.append(frameLayout: StackFrameLayout(axis: .vertical, distribution: .top).with {
+	$0.append(view: nameLabel)
+	$0.append(view: dateLabel)
+	$0.appendEmptySpace(size: 10.0)
+	$0.append(view: messageLabel)
 	$0.spacing = 5.0
 })
 
@@ -139,12 +140,12 @@ Operand syntax (since v4.x.x):
 ```swift
 frameLayout += VStackLayout {
 	($0 += earthImageView).alignment = (.top, .center)
-	($0 --- 10).flexible() // $0.addSpace(10).flexible()
+	($0 --- 0).flexible()
 	($0 += rocketImageView).alignment = (.center, .center)
 }
 frameLayout += VStackLayout {
 	$0 ++ [nameLabel, dateLabel]
-	$0 --- 0 // $0.addSpace()
+	$0 --- 10
 	$0 += messageLabel
 	$0.spacing = 5.0
 }
