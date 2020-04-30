@@ -50,21 +50,23 @@ let frameLayout = HStackLayout {
 Or you can use operand syntax:
 
 ```swift
-frameLayout += VStackLayout {
-	($0 += earthImageView).alignment = (.top, .center)
-	($0 --- 0).flexible()
-	($0 += rocketImageView).alignment = (.center, .center)
-}
-frameLayout += VStackLayout {
-	$0 ++ [nameLabel, dateLabel]
-	$0 --- 10
-	$0 += messageLabel
-	$0.spacing = 5.0
-}
+let frameLayout = HStackLayout {
+  $0 += VStackLayout {
+    ($0 += earthImageView).alignment = (.top, .center)
+    ($0 --- 0).flexible()
+    ($0 += rocketImageView).alignment = (.center, .center)
+  }
+  $0 += VStackLayout {
+    $0 ++ [nameLabel, dateLabel]
+    $0 --- 10
+    $0 += messageLabel
+    $0.spacing = 5.0
+  }
 
-frameLayout.spacing = 15.0
-frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-frameLayout.debug = true
+  $0.spacing = 15.0
+  $0.padding(top: 15, left: 15, bottom: 15, right: 15)
+  $0.debug = true
+}
 ```
 
 ## Code syntax migration
