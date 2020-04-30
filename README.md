@@ -168,8 +168,9 @@ See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutF
 
 ## Todo
 
+- [x] Swift Package Manager
 - [x] CocoaPods support
-- [x] Objective-C version
+- [x] Objective-C version (Deprecated - Not recommended)
 - [x] Swift version
 - [x] Examples
 - [ ] Documents
