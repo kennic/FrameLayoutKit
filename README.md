@@ -26,22 +26,24 @@ pod "FrameLayoutKit"
 This is how FrameLayoutKit layout the card view below:
 
 ```swift
-frameLayout.add(VStackLayout {
-	$0.add(earthImageView).alignment = (.top, .center)
-	$0.addSpace().flexible()
-	$0.add(rocketImageView).alignment = (.center, .center)
-})
+let frameLayout = HStackLayout {
+  $0.add(VStackLayout {
+    $0.add(earthImageView).alignment = (.top, .center)
+    $0.addSpace().flexible()
+    $0.add(rocketImageView).alignment = (.center, .center)
+  })
 		
-frameLayout.add(VStackLayout {
-	$0.add([nameLabel, dateLabel])
-	$0.addSpace(10)
-	$0.add(messageLabel)
-	$0.spacing = 5.0
-})
+  $0.add(VStackLayout {
+    $0.add([nameLabel, dateLabel])
+    $0.addSpace(10)
+    $0.add(messageLabel)
+    $0.spacing = 5.0
+  })
 
-frameLayout.spacing = 15.0
-frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-frameLayout.debug = true
+  $0.spacing = 15.0
+  $0.padding(top: 15, left: 15, bottom: 15, right: 15)
+  $0.debug = true
+}
 ```
 ![Hello World](/helloWorld.png "Hello World")
 
