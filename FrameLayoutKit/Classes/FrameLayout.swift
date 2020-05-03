@@ -29,8 +29,8 @@ open class FrameLayout: UIView {
 	public var edgeInsets: UIEdgeInsets = .zero
 	public var minSize: CGSize = .zero
 	public var maxSize: CGSize = .zero
-	public var contentVerticalAlignment: NKContentVerticalAlignment = .fill
-	public var contentHorizontalAlignment: NKContentHorizontalAlignment = .fill
+	public var verticalAlignment: NKContentVerticalAlignment = .fill
+	public var horizontalAlignment: NKContentHorizontalAlignment = .fill
 	public var allowContentVerticalGrowing = false
 	public var allowContentVerticalShrinking = false
 	public var allowContentHorizontalGrowing = false
@@ -78,8 +78,8 @@ open class FrameLayout: UIView {
 	@available(*, deprecated, renamed: "alignment")
 	public var contentAlignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
 		didSet {
-			contentVerticalAlignment = contentAlignment.vertical
-			contentHorizontalAlignment = contentAlignment.horizontal
+			verticalAlignment = contentAlignment.vertical
+			horizontalAlignment = contentAlignment.horizontal
 			
 			setNeedsLayout()
 		}
@@ -87,8 +87,8 @@ open class FrameLayout: UIView {
 	
 	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
 		didSet {
-			contentVerticalAlignment = alignment.vertical
-			contentHorizontalAlignment = alignment.horizontal
+			verticalAlignment = alignment.vertical
+			horizontalAlignment = alignment.horizontal
 			
 			setNeedsLayout()
 		}
@@ -294,12 +294,12 @@ open class FrameLayout: UIView {
 		#else
 		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
 		#endif
-		var contentSize = contentHorizontalAlignment != .fill || contentVerticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
+		var contentSize = horizontalAlignment != .fill || verticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
 		if heightRatio > 0 {
 			contentSize.height = contentSize.width * heightRatio
 		}
 		
-		switch contentHorizontalAlignment {
+		switch horizontalAlignment {
 		case .left:
 			if allowContentHorizontalGrowing {
 				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
@@ -360,7 +360,7 @@ open class FrameLayout: UIView {
 			
 		}
 		
-		switch contentVerticalAlignment {
+		switch verticalAlignment {
 		case .top:
 			if allowContentVerticalGrowing {
 				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)

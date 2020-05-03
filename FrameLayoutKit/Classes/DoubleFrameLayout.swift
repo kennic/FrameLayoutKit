@@ -269,7 +269,7 @@ open class DoubleFrameLayout: FrameLayout {
 	// MARK: -
 	
 	@discardableResult
-	open func setToLeft(_ view: UIView?) -> FrameLayout {
+	open func setLeft(_ view: UIView?) -> FrameLayout {
 		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
 			self.frameLayout1 = frameLayout
 			return frameLayout
@@ -280,7 +280,7 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func setToRight(_ view: UIView?) -> FrameLayout {
+	open func setRight(_ view: UIView?) -> FrameLayout {
 		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
 			self.frameLayout2 = frameLayout
 			return frameLayout
@@ -291,13 +291,13 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func setToTop(_ view: UIView?) -> FrameLayout {
-		return setToLeft(view)
+	open func setTop(_ view: UIView?) -> FrameLayout {
+		return setLeft(view)
 	}
 	
 	@discardableResult
-	open func setToBottom(_ view: UIView?) -> FrameLayout {
-		return setToRight(view)
+	open func setBottom(_ view: UIView?) -> FrameLayout {
+		return setRight(view)
 	}
 	
 	// MARK: -
