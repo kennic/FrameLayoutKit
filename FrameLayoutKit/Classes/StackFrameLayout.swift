@@ -236,19 +236,33 @@ open class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	open func add(_ view: UIView? = nil) -> FrameLayout {
-		let frameLayout = FrameLayout(targetView: view)
-		frameLayout.debug = debug
-		frameLayouts.append(frameLayout)
-		addSubview(frameLayout)
-		return frameLayout
+		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			frameLayouts.append(frameLayout)
+			addSubview(frameLayout)
+			return frameLayout
+		}
+		else {
+			let frameLayout = FrameLayout(targetView: view)
+			frameLayout.debug = debug
+			frameLayouts.append(frameLayout)
+			addSubview(frameLayout)
+			return frameLayout
+		}
 	}
 	
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
-		let frameLayout = FrameLayout(targetView: view)
-		frameLayout.debug = debug
-		frameLayouts.insert(frameLayout, at: index)
-		return frameLayout
+		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			frameLayouts.insert(frameLayout, at: index)
+			addSubview(frameLayout)
+			return frameLayout
+		}
+		else {
+			let frameLayout = FrameLayout(targetView: view)
+			frameLayout.debug = debug
+			frameLayouts.insert(frameLayout, at: index)
+			return frameLayout
+		}
 	}
 	
 	@available(*, deprecated, renamed: "addSpace(size:)")
