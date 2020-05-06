@@ -38,6 +38,7 @@ open class FrameLayout: UIView {
 	public var shouldCacheSize = false
 	public var isFlexible = false
 	public var isIntrinsicSizeEnabled = true
+	public var contentSize: CGSize = .zero
 	public var heightRatio: CGFloat = 0 {
 		didSet {
 			if heightRatio > 0 {
@@ -472,6 +473,10 @@ open class FrameLayout: UIView {
 	
 	fileprivate func contentSizeThatFits(size: CGSize) -> CGSize {
 		guard let targetView = targetView else { return .zero }
+		
+		if contentSize.width > 0 && contentSize.height > 0 {
+			return contentSize
+		}
 		
 		var result: CGSize
 		
