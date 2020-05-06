@@ -480,25 +480,33 @@ open class FrameLayout: UIView {
 		
 		var result: CGSize
 		
-		if shouldCacheSize {
-			let key = "\(addressOf(targetView))_\(size)"
-			if let value = sizeCacheData[key] {
-				return value
+		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
+			result = minSize // fixSize
+		}
+		else {
+			if shouldCacheSize {
+				let key = "\(addressOf(targetView))_\(size)"
+				if let value = sizeCacheData[key] {
+					return value
+				}
+				else {
+					result = targetView.sizeThatFits(size)
+					sizeCacheData[key] = result
+				}
 			}
 			else {
 				result = targetView.sizeThatFits(size)
-				sizeCacheData[key] = result
 			}
-		}
-		else {
-			result = targetView.sizeThatFits(size)
-		}
-		
-		if contentSize.width > 0 {
-			result.width = min(contentSize.width, result.width)
-		}
-		if contentSize.height > 0 {
-			result.height = min(contentSize.height, result.height)
+			
+			result.width = max(minSize.width, result.width)
+			result.height = max(minSize.height, result.height)
+			
+			if maxSize.width > 0 && maxSize.width >= minSize.width {
+				result.width = min(maxSize.width, result.width)
+			}
+			if maxSize.height > 0 && maxSize.height >= minSize.height {
+				result.height = min(maxSize.height, result.height)
+			}
 		}
 		
 		return result

@@ -62,10 +62,10 @@ public extension DoubleFrameLayout {
 
 // MARK: -
 
-open class Stack: StackFrameLayout {
+open class StackLayout: StackFrameLayout {
 	
 	@discardableResult
-	public init(_ block: (Stack) throws -> Void) rethrows {
+	public init(_ block: (StackLayout) throws -> Void) rethrows {
 		super.init()
 		try block(self)
 	}
