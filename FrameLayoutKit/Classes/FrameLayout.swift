@@ -471,40 +471,22 @@ open class FrameLayout: UIView {
 	}
 	
 	fileprivate func contentSizeThatFits(size: CGSize) -> CGSize {
+		guard let targetView = targetView else { return .zero }
+		
 		var result: CGSize
 		
-		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
-			result = minSize // fixSize
-		}
-		else {
-			if let targetView = targetView {
-				if shouldCacheSize {
-					let key = "\(addressOf(targetView))_\(size)"
-					if let value = sizeCacheData[key] {
-						return value
-					}
-					else {
-						result = targetView.sizeThatFits(size)
-						sizeCacheData[key] = result
-					}
-				}
-				else {
-					result = targetView.sizeThatFits(size)
-				}
+		if shouldCacheSize {
+			let key = "\(addressOf(targetView))_\(size)"
+			if let value = sizeCacheData[key] {
+				return value
 			}
 			else {
-				result = .zero
+				result = targetView.sizeThatFits(size)
+				sizeCacheData[key] = result
 			}
-			
-			result.width = max(minSize.width, result.width)
-			result.height = max(minSize.height, result.height)
-			
-			if maxSize.width > 0 && maxSize.width >= minSize.width {
-				result.width = min(maxSize.width, result.width)
-			}
-			if maxSize.height > 0 && maxSize.height >= minSize.height {
-				result.height = min(maxSize.height, result.height)
-			}
+		}
+		else {
+			result = targetView.sizeThatFits(size)
 		}
 		
 		return result
