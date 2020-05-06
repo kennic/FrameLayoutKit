@@ -494,6 +494,13 @@ open class FrameLayout: UIView {
 			result = targetView.sizeThatFits(size)
 		}
 		
+		if contentSize.width > 0 {
+			result.width = min(contentSize.width, result.width)
+		}
+		if contentSize.height > 0 {
+			result.height = min(contentSize.height, result.height)
+		}
+		
 		return result
 	}
 	
