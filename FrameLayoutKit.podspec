@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name             = 'FrameLayoutKit'
-	s.version          = '4.2.1'
+	s.version          = '4.3.0'
 	s.summary          = 'FrameLayoutKit is a super fast and easy to use layout kit'
 	s.description      = <<-DESC
 	An auto layout kit helps you to layout your UI easier and more effective

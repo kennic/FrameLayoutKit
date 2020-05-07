@@ -165,6 +165,10 @@ open class FrameLayout: UIView {
 		return ((targetView?.isHidden ?? false || isHidden) && ignoreHiddenView)
 	}
 	
+	open override var intrinsicContentSize: CGSize {
+		return contentSizeThatFits(size: bounds.size)
+	}
+	
 	// MARK: -
 	
 	@discardableResult

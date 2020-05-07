@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 infix operator ---
-infix operator ++
 
 public extension StackFrameLayout {
 	
@@ -20,12 +19,12 @@ public extension StackFrameLayout {
 	}
 	
 	@discardableResult
-	static func +=(lhs: StackFrameLayout, rhs: UIView? = nil) -> FrameLayout {
+	static func +(lhs: StackFrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		return lhs.add(rhs)
 	}
 	
 	@discardableResult
-	static func ++(lhs: StackFrameLayout, rhs: [UIView]? = nil) -> [FrameLayout] {
+	static func +(lhs: StackFrameLayout, rhs: [UIView]? = nil) -> [FrameLayout] {
 		var results = [FrameLayout]()
 		rhs?.forEach({ (view) in
 			results.append(lhs.add(view))
@@ -33,14 +32,29 @@ public extension StackFrameLayout {
 		return results
 	}
 	
+	@discardableResult
+	static func +(lhs: StackFrameLayout, rhs: CGFloat = 0) -> FrameLayout {
+		return lhs.addSpace(rhs)
+	}
+	
+	@discardableResult
+	static func +(lhs: StackFrameLayout, rhs: Double = 0) -> FrameLayout {
+		return lhs.addSpace(CGFloat(rhs))
+	}
+	
+	@discardableResult
+	static func +(lhs: StackFrameLayout, rhs: Int = 0) -> FrameLayout {
+		return lhs.addSpace(CGFloat(rhs))
+	}
+	
 }
 
-infix operator <--
-infix operator -->
+infix operator <+
+infix operator +>
 
 public extension DoubleFrameLayout {
 	
-	static func <--(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+	static func <+(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.leftFrameLayout = frameLayout
 		}
@@ -49,7 +63,7 @@ public extension DoubleFrameLayout {
 		}
 	}
 	
-	static func -->(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+	static func +>(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.rightFrameLayout = frameLayout
 		}
