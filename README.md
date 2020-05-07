@@ -51,15 +51,15 @@ Or you can use operand syntax:
 
 ```swift
 let frameLayout = HStackLayout {
-  $0 += VStackLayout {
-    ($0 += earthImageView).alignment = (.top, .center)
-    ($0 --- 0).flexible()
-    ($0 += rocketImageView).alignment = (.center, .center)
+  $0 + VStackLayout {
+    ($0 + earthImageView).alignment = (.top, .center)
+    ($0 + 0).flexible()
+    ($0 + rocketImageView).alignment = (.center, .center)
   }
-  $0 += VStackLayout {
-    $0 ++ [nameLabel, dateLabel]
-    $0 --- 10
-    $0 += messageLabel
+  $0 + VStackLayout {
+    $0 + [nameLabel, dateLabel]
+    $0 + 10
+    $0 + messageLabel
     $0.spacing = 5.0
   }
 
@@ -142,15 +142,15 @@ frameLayout.debug = true
 Operand syntax (since v4.x.x):
 
 ```swift
-frameLayout += VStackLayout {
-	($0 += earthImageView).alignment = (.top, .center)
-	($0 --- 0).flexible()
-	($0 += rocketImageView).alignment = (.center, .center)
+frameLayout + VStackLayout {
+	($0 + earthImageView).alignment = (.top, .center)
+	($0 + 0).flexible()
+	($0 + rocketImageView).alignment = (.center, .center)
 }
-frameLayout += VStackLayout {
-	$0 ++ [nameLabel, dateLabel]
-	$0 --- 10
-	$0 += messageLabel
+frameLayout + VStackLayout {
+	$0 + [nameLabel, dateLabel]
+	$0 + 10
+	$0 + messageLabel
 	$0.spacing = 5.0
 }
 
