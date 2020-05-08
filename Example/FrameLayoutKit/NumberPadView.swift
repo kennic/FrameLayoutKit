@@ -32,7 +32,8 @@ class NumberPadView: UIView {
 			return button
 		}
 		
-//		frameLayout.heightRatio = 1.0
+		frameLayout.heightRatio = 1.0
+		frameLayout.isIntrinsicSizeEnabled = true
 		frameLayout.views = buttons
 		backgroundColor = UIColor.black.withAlphaComponent(0.2)
 		addSubview(frameLayout)

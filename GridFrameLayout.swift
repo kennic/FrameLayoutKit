@@ -8,7 +8,11 @@
 import UIKit
 
 open class GridFrameLayout: FrameLayout {
-	public var axis: NKLayoutAxis = .horizontal
+	public var axis: NKLayoutAxis = .horizontal {
+		didSet {
+			arrangeViews()
+		}
+	}
 	
 	public override var isIntrinsicSizeEnabled: Bool {
 		get {
@@ -167,10 +171,32 @@ open class GridFrameLayout: FrameLayout {
 	
 	open func frameLayout(row: Int, column: Int) -> FrameLayout? {
 		guard row > -1, row < stackLayout.frameLayouts.count else { return nil }
-		if let rowLayout = stackLayout.frameLayouts[row] as? StackFrameLayout {
-			return rowLayout.frameLayout(at: column)
+		guard let rowLayout = stackLayout.frameLayouts[row] as? StackFrameLayout else { return nil }
+		return rowLayout.frameLayout(at: column)
+	}
+	
+	open func viewAt(row: Int, column: Int) -> UIView? {
+		return frameLayout(row: row, column: column)?.targetView
+	}
+	
+	open func viewsAt(row: Int) -> [UIView]? {
+		return rows(at: row)?.frameLayouts.compactMap( { return $0 } )
+	}
+	
+	open func viewsAt(column: Int) -> [UIView]? {
+		var results = [UIView]()
+		for r in 0..<rows {
+			if let view = viewAt(row: r, column: column) {
+				results.append(view)
+			}
 		}
-		return nil
+		
+		return results.isEmpty ? nil : results
+	}
+	
+	open func rows(at index: Int) -> StackFrameLayout? {
+		guard index > -1, index < stackLayout.frameLayouts.count, let frameLayout = stackLayout.frameLayouts[index] as? StackFrameLayout else { return nil }
+		return frameLayout
 	}
 	
 	@discardableResult
@@ -185,33 +211,41 @@ open class GridFrameLayout: FrameLayout {
 		stackLayout.removeFrameLayout(at: index)
 	}
 	
+	open func removeLastRow() {
+		guard stackLayout.frameLayouts.count > 0 else { return }
+		stackLayout.removeFrameLayout(at: stackLayout.frameLayouts.count - 1)
+	}
+	
 	open func removeAll() {
 		stackLayout.removeAll()
 	}
 	
 	open func arrangeViews() {
-		let counts = views.count
-		guard counts > 0 else { return }
+		let viewCount = views.count
+		guard viewCount > 0 else { return }
+		
+		let numberOfRows = stackLayout.frameLayouts.count
 		var i: Int = 0
 		
 		if axis == .horizontal || axis == .auto {
-			for r in 0..<rows {
-				for c in 0..<columns {
+			for r in 0..<numberOfRows {
+				guard let rowLayout = stackLayout.frameLayouts[r] as? StackFrameLayout else { continue }
+				for c in 0..<rowLayout.frameLayouts.count {
 					frameLayout(row: r, column: c)?.targetView = views[i]
 					i += 1
-					if i == counts { break }
+					if i == viewCount { break }
 				}
-				if i == counts { break }
+				if i == viewCount { break }
 			}
 		}
 		else {
 			for c in 0..<columns {
-				for r in 0..<rows {
+				for r in 0..<numberOfRows {
 					frameLayout(row: r, column: c)?.targetView = views[i]
 					i += 1
-					if i == counts { break }
+					if i == viewCount { break }
 				}
-				if i == counts { break }
+				if i == viewCount { break }
 			}
 		}
 		
