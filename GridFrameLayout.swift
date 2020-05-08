@@ -102,6 +102,26 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	public var horizontalSpacing: CGFloat {
+		get {
+			stackLayout.spacing
+		}
+		set {
+			stackLayout.spacing = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var verticalSpacing: CGFloat = 0 {
+		didSet {
+			stackLayout.frameLayouts.forEach { (frameLayout) in
+				if let layout = frameLayout as? StackFrameLayout {
+					layout.spacing = verticalSpacing
+				}
+			}
+		}
+	}
+	
 	public var rows: Int {
 		get {
 			return stackLayout.frameLayouts.count
@@ -146,9 +166,17 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	public var firstRowLayout: StackFrameLayout? {
+		return stackLayout.firstFrameLayout as? StackFrameLayout
+	}
+	
+	public var lastRowLayout: StackFrameLayout? {
+		return stackLayout.lastFrameLayout as? StackFrameLayout
+	}
+	
 	let stackLayout = StackFrameLayout(axis: .vertical, distribution: .equal)
 	
-	convenience public init(axis: NKLayoutAxis, rows: Int = 0, column: Int = 0) {
+	convenience public init(axis: NKLayoutAxis, column: Int = 0, rows: Int = 0) {
 		self.init()
 		
 		self.axis = axis
@@ -197,6 +225,19 @@ open class GridFrameLayout: FrameLayout {
 	open func rows(at index: Int) -> StackFrameLayout? {
 		guard index > -1, index < stackLayout.frameLayouts.count, let frameLayout = stackLayout.frameLayouts[index] as? StackFrameLayout else { return nil }
 		return frameLayout
+	}
+	
+	public func allFrameLayouts() -> [FrameLayout] {
+		var results = [FrameLayout]()
+		for r in 0..<stackLayout.frameLayouts.count {
+			guard let rowLayout = stackLayout.frameLayouts[r] as? StackFrameLayout else { continue }
+			for c in 0..<rowLayout.frameLayouts.count {
+				if let layout = frameLayout(row: r, column: c) {
+					results.append(layout)
+				}
+			}
+		}
+		return results
 	}
 	
 	@discardableResult

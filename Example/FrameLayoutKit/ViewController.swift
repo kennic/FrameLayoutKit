@@ -18,7 +18,7 @@ class ViewController: UIViewController {
 		view.backgroundColor = .lightGray
 		
 		#if targetEnvironment(macCatalyst)
-		for _ in 0..<3 {
+		for _ in 0..<1 {
 			let cardView = CardView()
 			view.addSubview(cardView)
 			frameLayout.add(cardView)
@@ -31,7 +31,10 @@ class ViewController: UIViewController {
 		
 		let numberPadView = NumberPadView()
 		view.addSubview(numberPadView)
-		frameLayout.add(numberPadView).alignment = (.center, .center)
+		frameLayout.add(numberPadView).with {
+			$0.alignment = (.center, .center)
+			$0.minSize = CGSize(width: 300, height: 300)
+		}
 		
 		frameLayout.spacing = 20
 		frameLayout.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)

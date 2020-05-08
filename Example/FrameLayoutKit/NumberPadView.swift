@@ -10,8 +10,8 @@ import UIKit
 import FrameLayoutKit
 
 class NumberPadView: UIView {
-	let frameLayout = GridFrameLayout(axis: .horizontal, rows: 4, column: 3)
-	let titleMap = "1 2 3 4 5 6 7 8 9 * 0 #"
+	let frameLayout = GridFrameLayout(axis: .horizontal, column: 3, rows: 4)
+	let titleMap = "1 2 3 4 5 6 7 8 9 0"
 	let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
 	
 	fileprivate func color(index: Int? = nil) -> UIColor {
@@ -32,9 +32,13 @@ class NumberPadView: UIView {
 			return button
 		}
 		
-		frameLayout.heightRatio = 1.0
-		frameLayout.isIntrinsicSizeEnabled = true
+//		frameLayout.heightRatio = 1.0
+//		frameLayout.isIntrinsicSizeEnabled = true
 		frameLayout.views = buttons
+		frameLayout.lastRowLayout?.distribution = .center
+		frameLayout.horizontalSpacing = 10
+		frameLayout.verticalSpacing = 10
+		frameLayout.isUserInteractionEnabled = true
 		backgroundColor = UIColor.black.withAlphaComponent(0.2)
 		addSubview(frameLayout)
 	}
