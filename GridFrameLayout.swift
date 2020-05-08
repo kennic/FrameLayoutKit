@@ -280,7 +280,26 @@ open class GridFrameLayout: FrameLayout {
 		stackLayout.removeAll()
 	}
 	
-	open func arrangeViews(autoColumns: Bool = true) {
+	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
+		guard let lastRows = lastRowLayout else { return nil }
+		if containsView {
+			let layouts = lastRows.frameLayouts.reversed()
+			for layout in layouts {
+				if layout.targetView != nil {
+					return layout
+				}
+			}
+			
+			return nil
+		}
+		else {
+			return lastRows.frameLayouts.last
+		}
+	}
+	
+	// MARK: -
+	
+	func arrangeViews(autoColumns: Bool = true) {
 		guard viewCount > 0 else { return }
 		
 		var numberOfRows = stackLayout.frameLayouts.count
