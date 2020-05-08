@@ -10,7 +10,7 @@ import UIKit
 import FrameLayoutKit
 
 class NumberPadView: UIView {
-	let frameLayout = GridFrameLayout(axis: .horizontal, column: 3, rows: 0)
+	let frameLayout = GridFrameLayout(axis: .horizontal, column: 3, rows: 4)
 	let titleMap = "1 2 3 4 5 6 7 8 9 * 0 #"
 	let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
 	
@@ -35,7 +35,7 @@ class NumberPadView: UIView {
 		frameLayout.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 		frameLayout.horizontalSpacing = 5
 		frameLayout.verticalSpacing = 5
-		frameLayout.autoRows = true
+		frameLayout.autoSize = false
 		frameLayout.views = buttons
 		frameLayout.isUserInteractionEnabled = true
 		backgroundColor = UIColor.black.withAlphaComponent(0.1)
