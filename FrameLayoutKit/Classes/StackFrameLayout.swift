@@ -142,7 +142,7 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
-	public fileprivate(set) var frameLayouts: [FrameLayout] = []
+	public internal(set) var frameLayouts: [FrameLayout] = []
 	
 	public var numberOfFrameLayouts: Int {
 		get {

@@ -99,6 +99,11 @@ open class HStackLayout: StackFrameLayout {
 		try block(self)
 	}
 	
+	override public init() {
+		super.init()
+		axis = .horizontal
+	}
+	
 	required public init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -112,6 +117,11 @@ open class VStackLayout: StackFrameLayout {
 		super.init()
 		axis = .vertical
 		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .vertical
 	}
 	
 	required public init?(coder aDecoder: NSCoder) {

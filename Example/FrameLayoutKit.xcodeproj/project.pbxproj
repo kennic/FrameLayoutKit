@@ -12,6 +12,8 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		632A5FA524651ACB008DD793 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632A5FA424651ACB008DD793 /* CardView.swift */; };
+		632A5FA724651B14008DD793 /* NumberPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632A5FA624651B14008DD793 /* NumberPadView.swift */; };
 		B0779CC809BA3EBEA8A7BA24 /* Pods_FrameLayoutKit_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88079A93676318D377A9E051 /* Pods_FrameLayoutKit_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +28,8 @@
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		632A5FA424651ACB008DD793 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		632A5FA624651B14008DD793 /* NumberPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberPadView.swift; sourceTree = "<group>"; };
 		6369D7AB2430D68E00C60584 /* FrameLayoutKit_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FrameLayoutKit_Example.entitlements; sourceTree = "<group>"; };
 		88079A93676318D377A9E051 /* Pods_FrameLayoutKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FrameLayoutKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A9D6655F23A4A71202D1A3A /* Pods-FrameLayoutKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FrameLayoutKit_Tests.debug.xcconfig"; path = "Target Support Files/Pods-FrameLayoutKit_Tests/Pods-FrameLayoutKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				632A5FA424651ACB008DD793 /* CardView.swift */,
+				632A5FA624651B14008DD793 /* NumberPadView.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
@@ -239,7 +245,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				632A5FA524651ACB008DD793 /* CardView.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				632A5FA724651B14008DD793 /* NumberPadView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
