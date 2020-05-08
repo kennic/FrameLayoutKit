@@ -14,12 +14,24 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	public var autoRows = false
+	
 	public override var isIntrinsicSizeEnabled: Bool {
 		get {
 			return stackLayout.isIntrinsicSizeEnabled
 		}
 		set {
 			stackLayout.isIntrinsicSizeEnabled = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	override public var edgeInsets: UIEdgeInsets {
+		get {
+			return stackLayout.edgeInsets
+		}
+		set {
+			stackLayout.edgeInsets = newValue
 			setNeedsLayout()
 		}
 	}
@@ -147,6 +159,7 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	private var initColumns: Int = 0
 	public var columns: Int = 0 {
 		didSet {
 			stackLayout.frameLayouts.forEach { (layout) in
@@ -157,11 +170,15 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	public fileprivate(set) var viewCount: Int = 0
 	public var views: [UIView] = [] {
 		didSet {
 			views.forEach { (view) in
-				addSubview(view)
+				if view.superview == nil {
+					addSubview(view)
+				}
 			}
+			viewCount = views.count
 			arrangeViews()
 		}
 	}
@@ -183,6 +200,7 @@ open class GridFrameLayout: FrameLayout {
 		defer {
 			self.rows = rows
 			self.columns = column
+			self.initColumns = column
 		}
 	}
 	
@@ -244,6 +262,7 @@ open class GridFrameLayout: FrameLayout {
 	open func addRow() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
 		layout.numberOfFrameLayouts = columns
+		layout.spacing = verticalSpacing
 		stackLayout.add(layout)
 		return layout
 	}
@@ -261,14 +280,32 @@ open class GridFrameLayout: FrameLayout {
 		stackLayout.removeAll()
 	}
 	
-	open func arrangeViews() {
-		let viewCount = views.count
+	open func arrangeViews(autoColumns: Bool = true) {
 		guard viewCount > 0 else { return }
 		
-		let numberOfRows = stackLayout.frameLayouts.count
+		var numberOfRows = stackLayout.frameLayouts.count
+		if autoRows, columns > 0 {
+			let fitRows = max(Int(ceil(Double(viewCount) / Double(columns))), 1)
+			if fitRows != rows {
+				rows = fitRows
+				numberOfRows = fitRows
+			}
+		}
+		
 		var i: Int = 0
 		
 		if axis == .horizontal || axis == .auto {
+			if autoColumns, maxColumnWidth > 0 {
+				var viewSize = stackLayout.bounds.size
+				if viewSize == .zero { viewSize = bounds.size }
+				let fitColumns = max(Int(viewSize.width / maxColumnWidth), max(initColumns, 1))
+				if columns != fitColumns {
+					columns = fitColumns
+					arrangeViews(autoColumns: false)
+					return
+				}
+			}
+			
 			for r in 0..<numberOfRows {
 				guard let rowLayout = stackLayout.frameLayouts[r] as? StackFrameLayout else { continue }
 				for c in 0..<rowLayout.frameLayouts.count {
@@ -291,13 +328,23 @@ open class GridFrameLayout: FrameLayout {
 		}
 		
 		setNeedsLayout()
+		layoutIfNeeded()
 	}
 	
 	// MARK: -
 	
+	private var lastSize: CGSize = .zero
 	open override func layoutSubviews() {
 		super.layoutSubviews()
-		stackLayout.frame = bounds
+		
+		if maxColumnWidth > 0, lastSize != bounds.size {
+			lastSize = bounds.size
+			arrangeViews()
+		}
+		
+		if stackLayout.frame != bounds {
+			stackLayout.frame = bounds
+		}
 	}
 	
 	open override func sizeThatFits(_ size: CGSize) -> CGSize {
