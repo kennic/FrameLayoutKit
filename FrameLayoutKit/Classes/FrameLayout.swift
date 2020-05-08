@@ -38,7 +38,8 @@ open class FrameLayout: UIView {
 	public var shouldCacheSize = false
 	public var isFlexible = false
 	public var isIntrinsicSizeEnabled = true
-	public var contentSize: CGSize = .zero
+	public var minContentSize: CGSize = .zero
+	public var maxContentSize: CGSize = .zero
 	public var heightRatio: CGFloat = 0 {
 		didSet {
 			if heightRatio > 0 {
@@ -478,8 +479,8 @@ open class FrameLayout: UIView {
 	fileprivate func contentSizeThatFits(size: CGSize) -> CGSize {
 		guard let targetView = targetView else { return .zero }
 		
-		if contentSize.width > 0 && contentSize.height > 0 {
-			return contentSize
+		if minContentSize == maxContentSize && minContentSize.width > 0 && minContentSize.height > 0 {
+			return minContentSize
 		}
 		
 		var result: CGSize
@@ -511,6 +512,16 @@ open class FrameLayout: UIView {
 			if maxSize.height > 0 && maxSize.height >= minSize.height {
 				result.height = min(maxSize.height, result.height)
 			}
+		}
+		
+		result.width = max(minContentSize.width, result.width)
+		result.height = max(minContentSize.height, result.height)
+		
+		if maxContentSize.width > 0 && maxContentSize.width >= minContentSize.width {
+			result.width = min(maxContentSize.width, result.width)
+		}
+		if maxContentSize.height > 0 && maxContentSize.height >= minContentSize.height {
+			result.height = min(maxContentSize.height, result.height)
 		}
 		
 		return result
