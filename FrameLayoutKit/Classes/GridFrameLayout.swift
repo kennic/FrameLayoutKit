@@ -14,7 +14,7 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var autoSize = false
+	public var autoSizing = false
 	
 	public override var isIntrinsicSizeEnabled: Bool {
 		get {
@@ -303,7 +303,7 @@ open class GridFrameLayout: FrameLayout {
 		guard viewCount > 0 else { return }
 		
 		var numberOfRows = stackLayout.frameLayouts.count
-		if autoSize {
+		if autoSizing {
 			if axis == .horizontal, columns > 0 {
 				let fitRows = max(Int(ceil(Double(viewCount) / Double(columns))), 1)
 				if fitRows != rows {

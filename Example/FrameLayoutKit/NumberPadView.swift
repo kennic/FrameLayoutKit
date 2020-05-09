@@ -35,7 +35,7 @@ class NumberPadView: UIView {
 		frameLayout.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 		frameLayout.horizontalSpacing = 5
 		frameLayout.verticalSpacing = 5
-		frameLayout.autoSize = false
+		frameLayout.autoSizing = false
 		frameLayout.views = buttons
 		frameLayout.isUserInteractionEnabled = true
 		backgroundColor = UIColor.black.withAlphaComponent(0.1)
