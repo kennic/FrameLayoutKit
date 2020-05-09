@@ -279,14 +279,22 @@ open class GridFrameLayout: FrameLayout {
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = verticalSpacing
 		
-		layout.minSize = CGSize(width: layout.minSize.width, height: minRowHeight)
-		layout.maxSize = CGSize(width: layout.maxSize.width, height: maxRowHeight)
-		layout.fixSize = CGSize(width: layout.fixSize.width, height: fixRowHeight)
+		if fixRowHeight > 0 {
+			layout.fixSize = CGSize(width: layout.fixSize.width, height: fixRowHeight)
+		}
+		else {
+			layout.minSize = CGSize(width: layout.minSize.width, height: minRowHeight)
+			layout.maxSize = CGSize(width: layout.maxSize.width, height: maxRowHeight)
+		}
 		
 		layout.frameLayouts.forEach { (layout) in
-			layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
-			layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
-			layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+			if fixColumnWidth > 0 {
+				layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+			}
+			else {
+				layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
+				layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+			}
 		}
 		
 		stackLayout.add(layout)
