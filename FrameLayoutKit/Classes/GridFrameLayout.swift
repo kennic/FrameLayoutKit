@@ -148,7 +148,7 @@ open class GridFrameLayout: FrameLayout {
 			let count = stackLayout.frameLayouts.count
 			
 			if newValue == 0 {
-				removeAll()
+				removeAllCells()
 				return
 			}
 			
@@ -208,7 +208,9 @@ open class GridFrameLayout: FrameLayout {
 	
 	let stackLayout = StackFrameLayout(axis: .vertical, distribution: .equal)
 	
-	convenience public init(axis: NKLayoutAxis, column: Int = 0, rows: Int = 0) {
+	// MARK: -
+	
+	public convenience init(axis: NKLayoutAxis, column: Int = 0, rows: Int = 0) {
 		self.init()
 		
 		self.axis = axis
@@ -222,6 +224,7 @@ open class GridFrameLayout: FrameLayout {
 	override public init() {
 		super.init()
 		
+		axis = .horizontal
 		isIntrinsicSizeEnabled = true
 		addSubview(stackLayout)
 	}
@@ -230,21 +233,17 @@ open class GridFrameLayout: FrameLayout {
 		super.init(coder: aDecoder)
 	}
 	
-	open func frameLayout(row: Int, column: Int) -> FrameLayout? {
-		guard row > -1, row < stackLayout.frameLayouts.count else { return nil }
-		guard let rowLayout = stackLayout.frameLayouts[row] as? StackFrameLayout else { return nil }
-		return rowLayout.frameLayout(at: column)
-	}
+	// MARK: -
 	
-	open func viewAt(row: Int, column: Int) -> UIView? {
+	public func viewAt(row: Int, column: Int) -> UIView? {
 		return frameLayout(row: row, column: column)?.targetView
 	}
 	
-	open func viewsAt(row: Int) -> [UIView]? {
+	public func viewsAt(row: Int) -> [UIView]? {
 		return rows(at: row)?.frameLayouts.compactMap( { return $0 } )
 	}
 	
-	open func viewsAt(column: Int) -> [UIView]? {
+	public func viewsAt(column: Int) -> [UIView]? {
 		var results = [UIView]()
 		for r in 0..<rows {
 			if let view = viewAt(row: r, column: column) {
@@ -255,9 +254,15 @@ open class GridFrameLayout: FrameLayout {
 		return results.isEmpty ? nil : results
 	}
 	
-	open func rows(at index: Int) -> StackFrameLayout? {
+	public func rows(at index: Int) -> StackFrameLayout? {
 		guard index > -1, index < stackLayout.frameLayouts.count, let frameLayout = stackLayout.frameLayouts[index] as? StackFrameLayout else { return nil }
 		return frameLayout
+	}
+	
+	public func frameLayout(row: Int, column: Int) -> FrameLayout? {
+		guard row > -1, row < stackLayout.frameLayouts.count else { return nil }
+		guard let rowLayout = stackLayout.frameLayouts[row] as? StackFrameLayout else { return nil }
+		return rowLayout.frameLayout(at: column)
 	}
 	
 	public func allFrameLayouts() -> [FrameLayout] {
@@ -273,8 +278,26 @@ open class GridFrameLayout: FrameLayout {
 		return results
 	}
 	
-	@discardableResult
-	open func addRow() -> StackFrameLayout {
+	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
+		guard let lastRows = lastRowLayout else { return nil }
+		if containsView {
+			let layouts = lastRows.frameLayouts.reversed()
+			for layout in layouts {
+				if layout.targetView != nil {
+					return layout
+				}
+			}
+			
+			return nil
+		}
+		else {
+			return lastRows.frameLayouts.last
+		}
+	}
+	
+	// MARK: -
+	
+	fileprivate func newRow() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = verticalSpacing
@@ -297,38 +320,92 @@ open class GridFrameLayout: FrameLayout {
 			}
 		}
 		
+		return layout
+	}
+	
+	@discardableResult
+	open func addRow() -> StackFrameLayout {
+		let layout = newRow()
 		stackLayout.add(layout)
+		setNeedsLayout()
+		return layout
+	}
+	
+	@discardableResult
+	open func insertRow(at index: Int) -> StackFrameLayout {
+		let layout = newRow()
+		stackLayout.insert(layout, at: index)
+		setNeedsLayout()
 		return layout
 	}
 	
 	open func removeRow(at index: Int) {
 		stackLayout.removeFrameLayout(at: index)
+		setNeedsLayout()
 	}
 	
 	open func removeLastRow() {
 		guard stackLayout.frameLayouts.count > 0 else { return }
 		stackLayout.removeFrameLayout(at: stackLayout.frameLayouts.count - 1)
+		setNeedsLayout()
 	}
 	
-	open func removeAll() {
-		stackLayout.removeAll()
-	}
+	// MARK: -
 	
-	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
-		guard let lastRows = lastRowLayout else { return nil }
-		if containsView {
-			let layouts = lastRows.frameLayouts.reversed()
-			for layout in layouts {
-				if layout.targetView != nil {
-					return layout
+	open func addColumn() {
+		stackLayout.frameLayouts.forEach { (layout) in
+			if let rowLayout = layout as? StackFrameLayout {
+				rowLayout.add().with {
+					if fixColumnWidth > 0 {
+						$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
+					}
+					else {
+						$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
+						$0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height)
+					}
 				}
 			}
-			
-			return nil
 		}
-		else {
-			return lastRows.frameLayouts.last
+		setNeedsLayout()
+	}
+	
+	open func insertColumn(at index: Int) {
+		stackLayout.frameLayouts.forEach { (layout) in
+			if let rowLayout = layout as? StackFrameLayout {
+				rowLayout.insert(nil, at: index).with {
+					if fixColumnWidth > 0 {
+						$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
+					}
+					else {
+						$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
+						$0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height)
+					}
+				}
+			}
 		}
+		setNeedsLayout()
+	}
+	
+	open func removeColumn(at index: Int) {
+		stackLayout.frameLayouts.forEach { (layout) in
+			if let rowLayout = layout as? StackFrameLayout {
+				rowLayout.removeFrameLayout(at: index)
+			}
+		}
+		setNeedsLayout()
+	}
+	
+	open func removeLastColumn() {
+		stackLayout.frameLayouts.forEach { (layout) in
+			if let rowLayout = layout as? StackFrameLayout {
+				rowLayout.removeFrameLayout(at: rowLayout.frameLayouts.count - 1)
+			}
+		}
+		setNeedsLayout()
+	}
+	
+	open func removeAllCells() {
+		stackLayout.removeAll()
 	}
 	
 	// MARK: -
@@ -394,7 +471,7 @@ open class GridFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	private var lastSize: CGSize = .zero
+	fileprivate var lastSize: CGSize = .zero
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
