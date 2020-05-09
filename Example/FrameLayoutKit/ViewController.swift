@@ -31,7 +31,7 @@ class ViewController: UIViewController {
 		
 		let numberPadView = NumberPadView()
 		view.addSubview(numberPadView)
-		frameLayout.add(numberPadView).minSize = CGSize(width: 300, height: 300)
+		frameLayout.add(numberPadView)
 		
 		frameLayout.spacing = 20
 		frameLayout.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)

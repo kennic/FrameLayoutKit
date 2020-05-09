@@ -82,7 +82,9 @@ open class GridFrameLayout: FrameLayout {
 		didSet {
 			stackLayout.frameLayouts.forEach { (frameLayout) in
 				if let layout = frameLayout as? StackFrameLayout {
-					layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
+					layout.frameLayouts.forEach { (layout) in
+						layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
+					}
 				}
 			}
 		}
@@ -92,7 +94,9 @@ open class GridFrameLayout: FrameLayout {
 		didSet {
 			stackLayout.frameLayouts.forEach { (frameLayout) in
 				if let layout = frameLayout as? StackFrameLayout {
-					layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+					layout.frameLayouts.forEach { (layout) in
+						layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+					}
 				}
 			}
 		}
@@ -102,7 +106,9 @@ open class GridFrameLayout: FrameLayout {
 		didSet {
 			stackLayout.frameLayouts.forEach { (frameLayout) in
 				if let layout = frameLayout as? StackFrameLayout {
-					layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+					layout.frameLayouts.forEach { (layout) in
+						layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+					}
 				}
 			}
 		}
@@ -165,6 +171,11 @@ open class GridFrameLayout: FrameLayout {
 			stackLayout.frameLayouts.forEach { (layout) in
 				if let layout = layout as? StackFrameLayout {
 					layout.numberOfFrameLayouts = columns
+					layout.frameLayouts.forEach { (layout) in
+						layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
+						layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+						layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+					}
 				}
 			}
 		}
@@ -263,6 +274,17 @@ open class GridFrameLayout: FrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = verticalSpacing
+		
+		layout.minSize = CGSize(width: layout.minSize.width, height: minRowHeight)
+		layout.maxSize = CGSize(width: layout.maxSize.width, height: maxRowHeight)
+		layout.fixSize = CGSize(width: layout.fixSize.width, height: fixRowHeight)
+		
+		layout.frameLayouts.forEach { (layout) in
+			layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
+			layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+			layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+		}
+		
 		stackLayout.add(layout)
 		return layout
 	}

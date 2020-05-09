@@ -35,6 +35,8 @@ class NumberPadView: UIView {
 		frameLayout.edgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 		frameLayout.horizontalSpacing = 5
 		frameLayout.verticalSpacing = 5
+//		frameLayout.minColumnWidth = 150
+		frameLayout.minRowHeight = 100
 		frameLayout.isAutoSize = false
 		frameLayout.views = buttons
 		frameLayout.isUserInteractionEnabled = true
