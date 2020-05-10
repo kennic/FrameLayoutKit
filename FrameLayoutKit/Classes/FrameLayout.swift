@@ -23,23 +23,41 @@ public enum NKContentHorizontalAlignment {
 	case fit
 }
 
+/**
+A single frameLayout handles size and position of a view
+*/
 open class FrameLayout: UIView {
+	/// Target view that handled by this frameLayout
 	public var targetView: UIView? = nil
+	/// If set to `true`, sizeThatFits(size:) will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
+	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
+	/// Minimum size of frameLayout
 	public var minSize: CGSize = .zero
+	/// Maximum size of frameLayout
 	public var maxSize: CGSize = .zero
+	/// Minimum size of targetView
+	public var minContentSize: CGSize = .zero
+	/// Maximum size of targetView
+	public var maxContentSize: CGSize = .zero
 	public var verticalAlignment: NKContentVerticalAlignment = .fill
 	public var horizontalAlignment: NKContentHorizontalAlignment = .fill
+	/// The width of targetView will stretchs out to fill frameLayout if the width of this frameLayout is larger than targetView's width
 	public var allowContentVerticalGrowing = false
+	/// The width of targetView will shrinking down to fit frameLayout if the width of this frameLayout is smaller than targetView's width
 	public var allowContentVerticalShrinking = false
+	/// The height of targetView will stretchs out to fill frameLayout if the height of this frameLayout is larger than targetView's height
 	public var allowContentHorizontalGrowing = false
+	/// The height of targetView will shrinking down to fit frameLayout if the height of this frameLayout is smaller than targetView's height
 	public var allowContentHorizontalShrinking = false
+	/// Value of sizeThatFits will be cached based on targetView's memory address
 	public var shouldCacheSize = false
+	/// Make it flexible in a `StackFrameLayout`, that means when it was added to a stack, this flexible stack will be stretched base on the stack size
 	public var isFlexible = false
+	/// if `true`, sizeThatFits will returns the intrinsic width of targetView
 	public var isIntrinsicSizeEnabled = true
-	public var minContentSize: CGSize = .zero
-	public var maxContentSize: CGSize = .zero
+	/// Returns height from sizeThatFits base on ratio of width. For example setting `1.0` will returns a square size from sizeThatFits
 	public var heightRatio: CGFloat = 0 {
 		didSet {
 			if heightRatio > 0 {
@@ -48,6 +66,7 @@ open class FrameLayout: UIView {
 		}
 	}
 	
+	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
 	@available(*, deprecated, renamed: "debug")
 	public var showFrameDebug: Bool {
 		get {
@@ -58,22 +77,33 @@ open class FrameLayout: UIView {
 		}
 	}
 	
+	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
 	public var debug: Bool = false {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
 	
+	/// Set the color of debug line
 	public var debugColor: UIColor? = nil {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
 	
+	/// Set the fix size of frameLayout
 	public var fixSize: CGSize = .zero {
 		didSet {
 			minSize = fixSize
 			maxSize = fixSize
+		}
+	}
+	
+	/// Set the fix size of targetView
+	public var fixContentSize: CGSize = .zero {
+		didSet {
+			minContentSize = fixContentSize
+			maxContentSize = fixContentSize
 		}
 	}
 	
