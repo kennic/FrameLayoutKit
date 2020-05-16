@@ -15,8 +15,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Installation
 
-FrameLayoutKit is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+FrameLayoutKit is available through `Swift Package Manager` (Recommended) and [CocoaPods](http://cocoapods.org):
 
 ```ruby
 pod "FrameLayoutKit"
@@ -47,7 +46,7 @@ let frameLayout = HStackLayout {
 ```
 ![Hello World](/helloWorld.png "Hello World")
 
-Or you can use operand syntax:
+Or you can use operand syntax for shorter/cleaner code:
 
 ```swift
 let frameLayout = HStackLayout {
