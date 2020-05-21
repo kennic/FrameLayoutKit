@@ -310,7 +310,7 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self)
+		preSizeThatFitsConfigurationBlock?(self, size)
 		
 		var result: CGSize = size
 		
