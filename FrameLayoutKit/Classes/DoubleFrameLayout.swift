@@ -23,6 +23,33 @@ public enum NKLayoutDistribution {
 	public static let right: NKLayoutDistribution = .bottom
 }
 
+@propertyWrapper
+public struct Clamping<Value: Comparable> {
+	var value: Value
+	let range: ClosedRange<Value>
+	
+	public init(wrappedValue value: Value, _ range: ClosedRange<Value>) {
+		precondition(range.contains(value))
+		self.value = value
+		self.range = range
+	}
+	
+	public var wrappedValue: Value {
+		get { value }
+		set { value = min(max(range.lowerBound, newValue), range.upperBound) }
+	}
+}
+
+@propertyWrapper
+public struct UnitPercentage<Value: FloatingPoint> {
+	@Clamping(0...1)
+	public var wrappedValue: Value = .zero
+	
+	public init(wrappedValue value: Value) {
+		self.wrappedValue = value
+	}
+}
+
 open class DoubleFrameLayout: FrameLayout {
 	public var distribution: NKLayoutDistribution = .top
 	public var axis: NKLayoutAxis = .auto
@@ -54,7 +81,8 @@ open class DoubleFrameLayout: FrameLayout {
 			}
 		}
 	}
-	public var splitRatio: CGFloat = 0.5
+	
+	@UnitPercentage public var splitRatio: CGFloat = 0.5
 	
 	override open var ignoreHiddenView: Bool {
 		didSet {
