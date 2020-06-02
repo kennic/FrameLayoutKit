@@ -54,22 +54,26 @@ infix operator +>
 
 public extension DoubleFrameLayout {
 	
-	static func <+(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+	static func <+(lhs: DoubleFrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.leftFrameLayout = frameLayout
 		}
 		else {
 			lhs.leftFrameLayout.targetView = rhs
 		}
+		
+		return lhs.leftFrameLayout
 	}
 	
-	static func +>(lhs: DoubleFrameLayout, rhs: UIView? = nil) {
+	static func +>(lhs: DoubleFrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.rightFrameLayout = frameLayout
 		}
 		else {
 			lhs.rightFrameLayout.targetView = rhs
 		}
+		
+		return lhs.rightFrameLayout
 	}
 	
 }
