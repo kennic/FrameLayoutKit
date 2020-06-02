@@ -386,7 +386,7 @@ open class StackFrameLayout: FrameLayout {
 	// MARK: -
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self)
+		preSizeThatFitsConfigurationBlock?(self, size)
 		
 		var result: CGSize = size
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right

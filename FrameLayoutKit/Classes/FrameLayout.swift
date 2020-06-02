@@ -134,9 +134,9 @@ open class FrameLayout: UIView {
 	}
 	
 	/// Block will be called before calling sizeThatFits
-	public var preSizeThatFitsConfigurationBlock: ((_ frameLayout: FrameLayout) -> Void)?
+	public var preSizeThatFitsConfigurationBlock: ((FrameLayout, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
-	public var preLayoutConfigurationBlock: ((_ frameLayout: FrameLayout) -> Void)?
+	public var preLayoutConfigurationBlock: ((FrameLayout) -> Void)?
 	
 	override open var frame: CGRect {
 		get {
@@ -271,7 +271,7 @@ open class FrameLayout: UIView {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self)
+		preSizeThatFitsConfigurationBlock?(self, size)
 		guard isEmpty == false else { return .zero }
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
