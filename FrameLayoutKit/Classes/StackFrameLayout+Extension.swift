@@ -54,6 +54,7 @@ infix operator +>
 
 public extension DoubleFrameLayout {
 	
+	@discardableResult
 	static func <+(lhs: DoubleFrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.leftFrameLayout = frameLayout
@@ -65,6 +66,7 @@ public extension DoubleFrameLayout {
 		return lhs.leftFrameLayout
 	}
 	
+	@discardableResult
 	static func +>(lhs: DoubleFrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.rightFrameLayout = frameLayout
