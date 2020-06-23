@@ -10,38 +10,28 @@ import UIKit
 import FrameLayoutKit
 
 class ViewController: UIViewController {
-	let frameLayout = StackFrameLayout(axis: .vertical)
+	let scrollStackView = ScrollStackView()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
 		
 		view.backgroundColor = .lightGray
 		
-		#if targetEnvironment(macCatalyst)
-		for _ in 0..<1 {
-			let cardView = CardView()
-			view.addSubview(cardView)
-			frameLayout.add(cardView)
+		for _ in 0..<5 {
+			scrollStackView.add(CardView())
 		}
-		#else
-		let cardView = CardView()
-		view.addSubview(cardView)
-		frameLayout.add(cardView)
-		#endif
 		
-		let numberPadView = NumberPadView()
-		view.addSubview(numberPadView)
-		frameLayout.add(numberPadView)
+		scrollStackView.add(NumberPadView())
 		
-		frameLayout.spacing = 20
-		frameLayout.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-		frameLayout.distribution = .center
-		view.addSubview(frameLayout)
+		scrollStackView.spacing = 20
+		scrollStackView.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+		scrollStackView.distribution = .center
+		view.addSubview(scrollStackView)
     }
 	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		frameLayout.frame = view.bounds
+		scrollStackView.frame = view.bounds
 	}
 
 }

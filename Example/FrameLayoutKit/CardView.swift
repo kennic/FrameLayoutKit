@@ -78,7 +78,7 @@ class CardView: UIView {
 		
 		frameLayout.spacing = 15.0
 		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-		frameLayout.debug = true
+//		frameLayout.debug = true
 		addSubview(frameLayout)
 	}
 	
