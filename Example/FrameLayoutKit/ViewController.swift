@@ -18,7 +18,11 @@ class ViewController: UIViewController {
 		view.backgroundColor = .lightGray
 		
 		for _ in 0..<5 {
-			scrollStackView.add(CardView())
+			let cardView = CardView()
+			cardView.onSizeChanged = { [weak self] sender in
+				self?.scrollStackView.relayoutSubviews(animateDuration: 0.35)
+			}
+			scrollStackView.add(cardView)
 		}
 		
 		scrollStackView.add(NumberPadView())

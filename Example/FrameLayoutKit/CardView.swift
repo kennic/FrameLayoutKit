@@ -15,7 +15,10 @@ class CardView: UIView {
 	let nameLabel = UILabel()
 	let dateLabel = UILabel()
 	let messageLabel = UILabel()
+	let expandButton = UIButton(type: .detailDisclosure)
 	let frameLayout = StackFrameLayout(axis: .horizontal)
+	
+	var onSizeChanged: ((CardView) -> Void)?
 	
 	init() {
 		super.init(frame: .zero)
@@ -26,6 +29,8 @@ class CardView: UIView {
 		layer.shadowRadius = 5
 		layer.shadowOpacity = 0.6
 		layer.masksToBounds = false
+		
+		expandButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
 		
 		nameLabel.font = .systemFont(ofSize: 18, weight: .bold)
 		nameLabel.text = "John Appleseed"
@@ -41,7 +46,7 @@ class CardView: UIView {
 			label.textColor = .black
 		}
 		
-		[earthImageView, rocketImageView, nameLabel, dateLabel, messageLabel].forEach { (view) in
+		[earthImageView, rocketImageView, nameLabel, dateLabel, messageLabel, expandButton].forEach { (view) in
 			addSubview(view)
 		}
 		
@@ -70,9 +75,16 @@ class CardView: UIView {
 			($0 + rocketImageView).alignment = (.center, .center)
 		}
 		frameLayout + VStackLayout {
-			$0 + [nameLabel, dateLabel]
+			$0 + HStackLayout {
+				($0 + nameLabel).flexible()
+				$0 + expandButton
+				$0.distribution = .right
+			}
+			$0 + dateLabel
 			$0 + 10.0
 			$0 + messageLabel
+			
+			$0.flexible()
 			$0.spacing = 5.0
 		}
 		
@@ -93,6 +105,12 @@ class CardView: UIView {
 	override func layoutSubviews() {
 		super.layoutSubviews()
 		frameLayout.frame = bounds
+	}
+	
+	@objc func onButtonTap() {
+		messageLabel.isHidden = !messageLabel.isHidden
+		setNeedsLayout()
+		onSizeChanged?(self)
 	}
 	
 }

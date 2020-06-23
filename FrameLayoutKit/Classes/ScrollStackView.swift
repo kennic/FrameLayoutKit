@@ -16,14 +16,6 @@ open class ScrollStackView<T: UIView>: UIView {
 		}
 	}
 	
-	public var firstView: T? {
-		return frameLayout.firstFrameLayout?.targetView as? T
-	}
-	
-	public var lastView: T? {
-		return frameLayout.lastFrameLayout?.targetView as? T
-	}
-	
 	open var spacing: CGFloat {
 		get {
 			return frameLayout.spacing
@@ -190,6 +182,13 @@ open class ScrollStackView<T: UIView>: UIView {
 	
 	open func removeAll() {
 		views = []
+	}
+	
+	open func relayoutSubviews(animateDuration: TimeInterval) {
+		setNeedsLayout()
+		UIView.animate(withDuration: animateDuration) {
+			self.layoutIfNeeded()
+		}
 	}
 	
 	// MARK: -
