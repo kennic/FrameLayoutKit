@@ -184,7 +184,7 @@ open class ScrollStackView<T: UIView>: UIView {
 		views = []
 	}
 	
-	open func relayoutSubviews(animateDuration: TimeInterval) {
+	open func relayoutSubviews(animateDuration: TimeInterval = 0.35) {
 		setNeedsLayout()
 		UIView.animate(withDuration: animateDuration) {
 			self.layoutIfNeeded()
