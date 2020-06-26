@@ -9,26 +9,18 @@ import UIKit
 
 open class StackFrameLayout: FrameLayout {
 	public var distribution: NKLayoutDistribution = .top
-	public var axis: NKLayoutAxis = .auto
+	public var axis: NKLayoutAxis = .vertical
 	
 	@available(*, deprecated, renamed: "axis")
 	public var layoutDirection: NKLayoutAxis {
-		get {
-			return axis
-		}
-		set {
-			axis = newValue
-		}
+		get { axis }
+		set { axis = newValue }
 	}
 	
 	@available(*, deprecated, renamed: "distribution")
 	public var layoutAlignment: NKLayoutDistribution {
-		get {
-			return distribution
-		}
-		set {
-			distribution = newValue
-		}
+		get { distribution }
+		set { distribution = newValue }
 	}
 	
 	public var spacing: CGFloat = 0 {
@@ -131,23 +123,17 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	public var firstFrameLayout: FrameLayout? {
-		get {
-			return frameLayouts.first
-		}
+		get { frameLayouts.first }
 	}
 	
 	public var lastFrameLayout: FrameLayout? {
-		get {
-			return frameLayouts.last
-		}
+		get { frameLayouts.last }
 	}
 	
 	public internal(set) var frameLayouts: [FrameLayout] = []
 	
 	public var numberOfFrameLayouts: Int {
-		get {
-			return frameLayouts.count
-		}
+		get { frameLayouts.count }
 		set {
 			let count = frameLayouts.count
 			
@@ -227,10 +213,7 @@ open class StackFrameLayout: FrameLayout {
 	@discardableResult
 	open func add(_ views: [UIView]) -> [FrameLayout] {
 		var results = [FrameLayout]()
-		views.forEach { (view) in
-			results.append(add(view))
-		}
-		
+		views.forEach({ results.append(add($0)) })
 		return results
 	}
 	
@@ -361,9 +344,7 @@ open class StackFrameLayout: FrameLayout {
 		
 		for layout in frameLayouts {
 			block(layout, index, &stop)
-			if stop {
-				break
-			}
+			if stop { break }
 			
 			index += 1
 		}
@@ -373,10 +354,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	override open func setNeedsLayout() {
 		super.setNeedsLayout()
-		
-		for layout in frameLayouts {
-			layout.setNeedsLayout()
-		}
+		frameLayouts.forEach( { $0.setNeedsLayout() })
 	}
 	
 	fileprivate func numberOfVisibleFrames() -> Int {
@@ -403,9 +381,7 @@ open class StackFrameLayout: FrameLayout {
 			
 			if isOverlapped {
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					let frameSize = frameLayout.sizeThatFits(contentSize)
 					result.width = isIntrinsicSizeEnabled ? max(result.width, frameSize.width) : size.width
@@ -426,20 +402,9 @@ open class StackFrameLayout: FrameLayout {
 			let isInvertedAlignment = distribution == .bottom || distribution == .right
 			let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
 			
-			var lastFrameLayout: FrameLayout? = nil
-			for layout in (isInvertedAlignment ? frameLayouts : invertedLayoutArray) {
-				if !layout.isEmpty {
-					lastFrameLayout = layout
-					break
-				}
-			}
+			var lastFrameLayout: FrameLayout? = (isInvertedAlignment ? frameLayouts : invertedLayoutArray).first(where: { !$0.isEmpty })
 			
-			var direction: NKLayoutAxis = axis
-			if axis == .auto {
-				direction = size.width < size.height ? .vertical : .horizontal
-			}
-			
-			if direction == .horizontal {
+			if axis == .horizontal {
 				var maxHeight: CGFloat = 0
 				
 				switch distribution {
@@ -452,9 +417,7 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
@@ -484,9 +447,7 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
@@ -522,9 +483,7 @@ open class StackFrameLayout: FrameLayout {
 						continue
 					}
 					
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
 					frameContentSize = frameLayout.sizeThatFits(frameContentSize)
@@ -593,28 +552,14 @@ open class StackFrameLayout: FrameLayout {
 		
 		let isInvertedAlignment = distribution == .bottom || distribution == .right
 		let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
+		let lastFrameLayout: FrameLayout? = (isInvertedAlignment ? frameLayouts : invertedLayoutArray).first(where: { !$0.isEmpty })
 		
-		var lastFrameLayout: FrameLayout? = nil
-		for layout in (isInvertedAlignment ? frameLayouts : invertedLayoutArray) {
-			if !layout.isEmpty {
-				lastFrameLayout = layout
-				break
-			}
-		}
-		
-		var direction: NKLayoutAxis = axis
-		if axis == .auto {
-			direction = frame.size.width < frame.size.height ? .vertical : .horizontal
-		}
-		
-		if direction == .horizontal {
+		if axis == .horizontal {
 			switch distribution {
 			case .top, .left:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.origin.x = containerFrame.origin.x
@@ -629,9 +574,7 @@ open class StackFrameLayout: FrameLayout {
 				var flexibleLeftEdge: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					if frameLayout.isFlexible {
 						flexibleFrame = frameLayout
@@ -664,9 +607,7 @@ open class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in invertedLayoutArray {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						if frameLayout == flexibleFrame {
 							targetFrame.origin.x = flexibleLeftEdge
@@ -680,9 +621,7 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						frameLayout.frame = targetFrame
-						if frameLayout == flexibleFrame {
-							break
-						}
+						if frameLayout == flexibleFrame { break }
 						
 						space = frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + space
@@ -694,9 +633,7 @@ open class StackFrameLayout: FrameLayout {
 			case .bottom, .right:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.size.width = frameContentSize.width
@@ -711,9 +648,7 @@ open class StackFrameLayout: FrameLayout {
 				var flexibleRightEdge: CGFloat = 0
 				
 				for frameLayout in invertedLayoutArray {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					if frameLayout.isFlexible {
 						flexibleFrame = frameLayout
@@ -743,9 +678,7 @@ open class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
 						if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
@@ -769,9 +702,7 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						frameLayout.frame = targetFrame
-						if frameLayout == flexibleFrame {
-							break
-						}
+						if frameLayout == flexibleFrame { break }
 						
 						space = frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + space
@@ -782,10 +713,7 @@ open class StackFrameLayout: FrameLayout {
 			case .equal:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
-						
+						if frameLayout.isEmpty { continue }
 						frameLayout.frame = containerFrame
 					}
 					return
@@ -796,9 +724,7 @@ open class StackFrameLayout: FrameLayout {
 				let cellSize = (containerFrame.size.width - spaces) / CGFloat(Float(visibleFrameCount))
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					frameContentSize = CGSize(width: cellSize, height: containerFrame.size.height)
 					targetFrame.origin.x = containerFrame.origin.x + usedSpace
@@ -812,9 +738,7 @@ open class StackFrameLayout: FrameLayout {
 			case .center:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.size.width = frameContentSize.width
@@ -826,9 +750,7 @@ open class StackFrameLayout: FrameLayout {
 				}
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					frameContentSize = CGSize(width: containerFrame.size.width - usedSpace, height: containerFrame.size.height)
 					let fitSize = frameLayout.sizeThatFits(frameContentSize)
@@ -845,9 +767,7 @@ open class StackFrameLayout: FrameLayout {
 				
 				let spaceToCenter: CGFloat = (containerFrame.size.width - usedSpace) / 2
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					targetFrame = CGRect(x: frameLayout.frame.origin.x + spaceToCenter, y: frameLayout.frame.origin.y, width: frameLayout.frame.size.width, height: frameLayout.frame.size.height)
 					frameLayout.frame = targetFrame
@@ -861,9 +781,7 @@ open class StackFrameLayout: FrameLayout {
 			case .top, .left:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.origin.y = containerFrame.origin.y
@@ -878,9 +796,7 @@ open class StackFrameLayout: FrameLayout {
 				var flexibleTopEdge: CGFloat = 0
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					if frameLayout.isFlexible {
 						flexibleFrame = frameLayout
@@ -913,9 +829,7 @@ open class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in invertedLayoutArray {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						if frameLayout == flexibleFrame {
 							targetFrame.origin.y = flexibleTopEdge
@@ -930,9 +844,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						frameLayout.frame = targetFrame
 						
-						if frameLayout == flexibleFrame {
-							break
-						}
+						if frameLayout == flexibleFrame { break }
 						
 						space = frameContentSize.height > 0 ? spacing : 0
 						usedSpace += frameContentSize.height + space
@@ -943,9 +855,7 @@ open class StackFrameLayout: FrameLayout {
 			case .bottom, .right:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.size.width = containerFrame.size.width
@@ -960,9 +870,7 @@ open class StackFrameLayout: FrameLayout {
 				var flexibleBottomEdge: CGFloat = 0
 				
 				for frameLayout in invertedLayoutArray {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					if frameLayout.isFlexible {
 						flexibleFrame = frameLayout
@@ -993,9 +901,7 @@ open class StackFrameLayout: FrameLayout {
 					usedSpace = 0
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - usedSpace)
 						if isIntrinsicSizeEnabled || frameLayout != flexibleFrame {
@@ -1020,9 +926,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						frameLayout.frame = targetFrame
 						
-						if frameLayout == flexibleFrame {
-							break
-						}
+						if frameLayout == flexibleFrame { break }
 						
 						space = frameContentSize.height > 0 ? spacing : 0
 						usedSpace += frameContentSize.height + space
@@ -1033,10 +937,7 @@ open class StackFrameLayout: FrameLayout {
 			case .equal:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
-						
+						if frameLayout.isEmpty { continue }
 						frameLayout.frame = containerFrame
 					}
 					return
@@ -1047,9 +948,7 @@ open class StackFrameLayout: FrameLayout {
 				let cellSize = (containerFrame.size.height - spaces) / CGFloat(Float(visibleFramecount))
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					frameContentSize = CGSize(width: containerFrame.size.width, height: cellSize)
 					//if (frameLayout.isIntrinsicSizeEnabled) frameContentSize = [frameLayout sizeThatFits:frameContentSize];
@@ -1065,9 +964,7 @@ open class StackFrameLayout: FrameLayout {
 			case .center:
 				if isOverlapped {
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
-							continue
-						}
+						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
 						targetFrame.size.width = containerFrame.size.width
@@ -1079,9 +976,7 @@ open class StackFrameLayout: FrameLayout {
 				}
 				
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - usedSpace)
 					let fitSize = frameLayout.sizeThatFits(frameContentSize)
@@ -1103,9 +998,7 @@ open class StackFrameLayout: FrameLayout {
 				
 				let spaceToCenter: CGFloat = (containerFrame.size.height - usedSpace) / 2
 				for frameLayout in frameLayouts {
-					if frameLayout.isEmpty {
-						continue
-					}
+					if frameLayout.isEmpty { continue }
 					
 					targetFrame = frameLayout.frame
 					targetFrame.origin.y += spaceToCenter

@@ -17,9 +17,7 @@ open class ScrollStackView<T: UIView>: UIView {
 	}
 	
 	open var spacing: CGFloat {
-		get {
-			return frameLayout.spacing
-		}
+		get { frameLayout.spacing }
 		set {
 			frameLayout.spacing = newValue
 			setNeedsLayout()
@@ -27,9 +25,7 @@ open class ScrollStackView<T: UIView>: UIView {
 	}
 	
 	open var edgeInsets: UIEdgeInsets {
-		get {
-			return frameLayout.edgeInsets
-		}
+		get { frameLayout.edgeInsets }
 		set {
 			frameLayout.edgeInsets = newValue
 			setNeedsLayout()
@@ -49,9 +45,7 @@ open class ScrollStackView<T: UIView>: UIView {
 	}
 	
 	public var axis: NKLayoutAxis {
-		get {
-			return frameLayout.axis
-		}
+		get { frameLayout.axis }
 		set {
 			frameLayout.axis = newValue
 			setNeedsLayout()
@@ -59,9 +53,7 @@ open class ScrollStackView<T: UIView>: UIView {
 	}
 	
 	public var distribution: NKLayoutDistribution {
-		get {
-			return frameLayout.distribution
-		}
+		get { frameLayout.distribution }
 		set {
 			frameLayout.distribution = newValue
 			setNeedsLayout()
@@ -195,10 +187,6 @@ open class ScrollStackView<T: UIView>: UIView {
 	
 	fileprivate func updateLayout() {
 		if views.isEmpty {
-			frameLayout.enumerate({ (layout, index, stop) in
-				layout.targetView?.removeFromSuperview()
-			})
-			
 			frameLayout.removeAll(autoRemoveTargetView: true)
 		}
 		else {

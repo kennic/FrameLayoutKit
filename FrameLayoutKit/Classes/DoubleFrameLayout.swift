@@ -10,7 +10,6 @@ import UIKit
 public enum NKLayoutAxis {
     case horizontal // left - right
     case vertical // top - bottom
-    case auto
 }
 
 public enum NKLayoutDistribution {
@@ -52,26 +51,18 @@ public struct UnitPercentage<Value: FloatingPoint> {
 
 open class DoubleFrameLayout: FrameLayout {
 	public var distribution: NKLayoutDistribution = .top
-	public var axis: NKLayoutAxis = .auto
+	public var axis: NKLayoutAxis = .vertical
 	
 	@available(*, deprecated, renamed: "axis")
 	public var layoutDirection: NKLayoutAxis {
-		get {
-			return axis
-		}
-		set {
-			axis = newValue
-		}
+		get { axis }
+		set { axis = newValue }
 	}
 	
 	@available(*, deprecated, renamed: "distribution")
 	public var layoutAlignment: NKLayoutDistribution {
-		get {
-			return distribution
-		}
-		set {
-			distribution = newValue
-		}
+		get { distribution }
+		set { distribution = newValue }
 	}
 	
 	public var spacing: CGFloat = 0 {
@@ -188,39 +179,23 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	public var topFrameLayout: FrameLayout {
-		get {
-			return frameLayout1
-		}
-		set {
-			frameLayout1 = newValue
-		}
+		get { frameLayout1 }
+		set { frameLayout1 = newValue }
 	}
 	
 	public var leftFrameLayout: FrameLayout {
-		get {
-			return frameLayout1
-		}
-		set {
-			frameLayout1 = newValue
-		}
+		get { frameLayout1 }
+		set { frameLayout1 = newValue }
 	}
 	
 	public var bottomFrameLayout: FrameLayout {
-		get {
-			return frameLayout2
-		}
-		set {
-			frameLayout2 = newValue
-		}
+		get { frameLayout2 }
+		set { frameLayout2 = newValue }
 	}
 	
 	public var rightFrameLayout: FrameLayout {
-		get {
-			return frameLayout2
-		}
-		set {
-			frameLayout2 = newValue
-		}
+		get { frameLayout2 }
+		set { frameLayout2 = newValue }
 	}
 	
 	public var isOverlapped: Bool = false {
@@ -374,9 +349,6 @@ open class DoubleFrameLayout: FrameLayout {
 			}
 			
 			var space: CGFloat = 0
-			if axis == .auto {
-				axis = size.width < size.height ? .vertical : .horizontal
-			}
 			
 			if axis == .horizontal {
 				switch distribution {
@@ -593,13 +565,8 @@ open class DoubleFrameLayout: FrameLayout {
 		var targetFrame1: CGRect = containerFrame
 		var targetFrame2: CGRect = containerFrame
 		var space: CGFloat = 0
-		var direction: NKLayoutAxis = axis
-		if axis == .auto {
-			let size = bounds.size
-			direction = size.width < size.height ? .vertical : .horizontal
-		}
 		
-		if direction == .horizontal {
+		if axis == .horizontal {
 			switch distribution {
 			case .top, .left:
 				frame1ContentSize = frameLayout1.sizeThatFits(containerFrame.size)

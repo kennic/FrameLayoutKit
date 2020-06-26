@@ -17,9 +17,7 @@ open class GridFrameLayout: FrameLayout {
 	public var isAutoSize = false
 	
 	public override var isIntrinsicSizeEnabled: Bool {
-		get {
-			return stackLayout.isIntrinsicSizeEnabled
-		}
+		get { stackLayout.isIntrinsicSizeEnabled }
 		set {
 			stackLayout.isIntrinsicSizeEnabled = newValue
 			setNeedsLayout()
@@ -27,9 +25,7 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	override public var edgeInsets: UIEdgeInsets {
-		get {
-			return stackLayout.edgeInsets
-		}
+		get { stackLayout.edgeInsets }
 		set {
 			stackLayout.edgeInsets = newValue
 			setNeedsLayout()
@@ -121,9 +117,7 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	public var horizontalSpacing: CGFloat {
-		get {
-			stackLayout.spacing
-		}
+		get { stackLayout.spacing }
 		set {
 			stackLayout.spacing = newValue
 			setNeedsLayout()
@@ -141,9 +135,7 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	public var rows: Int {
-		get {
-			return stackLayout.frameLayouts.count
-		}
+		get { stackLayout.frameLayouts.count }
 		set {
 			let count = stackLayout.frameLayouts.count
 			
@@ -188,11 +180,12 @@ open class GridFrameLayout: FrameLayout {
 	public fileprivate(set) var viewCount: Int = 0
 	public var views: [UIView] = [] {
 		didSet {
-			views.forEach { (view) in
-				if view.superview == nil {
-					addSubview(view)
+			views.forEach {
+				if $0.superview == nil {
+					addSubview($0)
 				}
 			}
+			
 			viewCount = views.count
 			arrangeViews()
 		}
@@ -280,15 +273,9 @@ open class GridFrameLayout: FrameLayout {
 	
 	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
 		guard let lastRows = lastRowLayout else { return nil }
+		
 		if containsView {
-			let layouts = lastRows.frameLayouts.reversed()
-			for layout in layouts {
-				if layout.targetView != nil {
-					return layout
-				}
-			}
-			
-			return nil
+			return lastRows.frameLayouts.last(where: { $0.targetView != nil })
 		}
 		else {
 			return lastRows.frameLayouts.last
@@ -432,7 +419,7 @@ open class GridFrameLayout: FrameLayout {
 		
 		var i: Int = 0
 		
-		if axis == .horizontal || axis == .auto {
+		if axis == .horizontal {
 			if autoColumns, maxColumnWidth > 0 {
 				var viewSize = stackLayout.bounds.size
 				if viewSize == .zero { viewSize = bounds.size }

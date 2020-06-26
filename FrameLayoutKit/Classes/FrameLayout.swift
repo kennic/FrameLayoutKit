@@ -69,12 +69,8 @@ open class FrameLayout: UIView {
 	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
 	@available(*, deprecated, renamed: "debug")
 	public var showFrameDebug: Bool {
-		get {
-			return debug
-		}
-		set {
-			debug = newValue
-		}
+		get { debug }
+		set { debug = newValue}
 	}
 	
 	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
@@ -139,9 +135,7 @@ open class FrameLayout: UIView {
 	public var preLayoutConfigurationBlock: ((FrameLayout) -> Void)?
 	
 	override open var frame: CGRect {
-		get {
-			return super.frame
-		}
+		get { super.frame }
 		set {
 			if newValue.isInfinite || newValue.isNull || newValue.origin.x.isNaN || newValue.origin.y.isNaN || newValue.size.width.isNaN || newValue.size.height.isNaN {
 				return
@@ -162,9 +156,7 @@ open class FrameLayout: UIView {
 	}
 	
 	override open var bounds: CGRect {
-		get {
-			return super.bounds
-		}
+		get { super.bounds }
 		set {
 			if newValue.isInfinite || newValue.isNull || newValue.origin.x.isNaN || newValue.origin.y.isNaN || newValue.size.width.isNaN || newValue.size.height.isNaN {
 				return
@@ -259,7 +251,7 @@ open class FrameLayout: UIView {
 	}
 	
 	fileprivate func randomColor() -> UIColor {
-		let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
+		let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple, .cyan]
 		let randomIndex = Int(arc4random()) % colors.count
 		return colors[randomIndex]
 	}
@@ -274,9 +266,7 @@ open class FrameLayout: UIView {
 		preSizeThatFitsConfigurationBlock?(self, size)
 		guard isEmpty == false else { return .zero }
 		
-		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
-			return minSize
-		}
+		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 { return minSize }
 		
 		var result: CGSize = .zero
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
@@ -509,9 +499,7 @@ open class FrameLayout: UIView {
 	fileprivate func contentSizeThatFits(size: CGSize) -> CGSize {
 		guard let targetView = targetView else { return .zero }
 		
-		if minContentSize == maxContentSize && minContentSize.width > 0 && minContentSize.height > 0 {
-			return minContentSize
-		}
+		if minContentSize == maxContentSize && minContentSize.width > 0 && minContentSize.height > 0 { return minContentSize }
 		
 		var result: CGSize
 		
