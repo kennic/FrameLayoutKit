@@ -26,9 +26,7 @@ public extension StackFrameLayout {
 	@discardableResult
 	static func +(lhs: StackFrameLayout, rhs: [UIView]? = nil) -> [FrameLayout] {
 		var results = [FrameLayout]()
-		rhs?.forEach({ (view) in
-			results.append(lhs.add(view))
-		})
+		rhs?.forEach { results.append(lhs.add($0)) }
 		return results
 	}
 	
@@ -44,6 +42,42 @@ public extension StackFrameLayout {
 	
 	@discardableResult
 	static func +(lhs: StackFrameLayout, rhs: Int = 0) -> FrameLayout {
+		return lhs.addSpace(CGFloat(rhs))
+	}
+	
+}
+
+public extension ScrollStackView {
+	
+	@discardableResult
+	static func ---(lhs: ScrollStackView, _ size: CGFloat = 0) -> FrameLayout {
+		return lhs.addSpace(size)
+	}
+	
+	@discardableResult
+	static func +(lhs: ScrollStackView, rhs: UIView? = nil) -> FrameLayout {
+		return lhs.add(rhs)
+	}
+	
+	@discardableResult
+	static func +(lhs: ScrollStackView, rhs: [UIView]? = nil) -> [FrameLayout] {
+		var results = [FrameLayout]()
+		rhs?.forEach { results.append(lhs.add($0)) }
+		return results
+	}
+	
+	@discardableResult
+	static func +(lhs: ScrollStackView, rhs: CGFloat = 0) -> FrameLayout {
+		return lhs.addSpace(rhs)
+	}
+	
+	@discardableResult
+	static func +(lhs: ScrollStackView, rhs: Double = 0) -> FrameLayout {
+		return lhs.addSpace(CGFloat(rhs))
+	}
+	
+	@discardableResult
+	static func +(lhs: ScrollStackView, rhs: Int = 0) -> FrameLayout {
 		return lhs.addSpace(CGFloat(rhs))
 	}
 	

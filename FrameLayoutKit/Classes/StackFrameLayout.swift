@@ -225,6 +225,7 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
+			if let view = view, view.superview == nil { addSubview(view) }
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayouts.append(frameLayout)
@@ -241,6 +242,7 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
+			if let view = view, view.superview == nil { addSubview(view) }
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayouts.insert(frameLayout, at: index)
@@ -326,16 +328,7 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	public func frameLayout(with view: UIView) -> FrameLayout? {
-		var result: FrameLayout? = nil
-		
-		for layout in frameLayouts {
-			if layout.targetView == view {
-				result = layout
-				break
-			}
-		}
-		
-		return result
+		return frameLayouts.first(where: { $0.targetView == view })
 	}
 	
 	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
@@ -354,7 +347,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	override open func setNeedsLayout() {
 		super.setNeedsLayout()
-		frameLayouts.forEach( { $0.setNeedsLayout() })
+		frameLayouts.forEach { $0.setNeedsLayout() }
 	}
 	
 	fileprivate func numberOfVisibleFrames() -> Int {

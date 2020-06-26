@@ -7,9 +7,9 @@
 
 import UIKit
 
-open class ScrollStackView<T: UIView>: UIView {
+open class ScrollStackView: UIView {
 	
-	public var views: [T] = [] {
+	public var views: [UIView] = [] {
 		didSet {
 			updateLayout()
 			setNeedsLayout()
@@ -65,13 +65,19 @@ open class ScrollStackView<T: UIView>: UIView {
 	
 	// MARK: -
 	
-	convenience public init(views: [T], axis: NKLayoutAxis = .vertical) {
+	convenience public init(views: [UIView], axis: NKLayoutAxis = .vertical) {
 		self.init()
 		
 		self.axis = axis
 		defer {
 			self.views = views
 		}
+	}
+	
+	@discardableResult
+	public convenience init(_ block: (ScrollStackView) throws -> Void) rethrows {
+		self.init()
+		try block(self)
 	}
 	
 	public init() {
@@ -123,12 +129,12 @@ open class ScrollStackView<T: UIView>: UIView {
 	
 	// MARK: -
 	
-	public func view(at index: Int) -> T? {
-		return frameLayout.frameLayout(at: index)?.targetView as? T
+	public func view(at index: Int) -> UIView? {
+		return frameLayout.frameLayout(at: index)?.targetView
 	}
 	
 	@discardableResult
-	open func add(_ view: T?) -> FrameLayout {
+	open func add(_ view: UIView?) -> FrameLayout {
 		if let view = view { scrollView.addSubview(view) }
 		let layout = frameLayout.add(view)
 		setNeedsLayout()
@@ -136,17 +142,12 @@ open class ScrollStackView<T: UIView>: UIView {
 	}
 	
 	@discardableResult
-	open func add(_ views: [T]) -> [FrameLayout] {
-		var results = [FrameLayout]()
-		views.forEach { (view) in
-			results.append(add(view))
-		}
-		
-		return results
+	open func add(_ views: [UIView]) -> [FrameLayout] {
+		return views.map { add($0) }
 	}
 	
 	@discardableResult
-	open func insert(_ view: T?, at index: Int) -> FrameLayout {
+	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
 		if let view = view { scrollView.addSubview(view) }
 		let layout = frameLayout.insert(view, at: index)
 		setNeedsLayout()
@@ -155,12 +156,12 @@ open class ScrollStackView<T: UIView>: UIView {
 	
 	@discardableResult
 	open func addSpace(_ size: CGFloat = 0) -> FrameLayout {
-		let layout = add(T())
+		let layout = add(UIView())
 		layout.fixSize = CGSize(width: axis == .horizontal ? size : 0, height: axis == .vertical ? size : 0)
 		return layout
 	}
 	
-	open func replace(view: T, at index: Int) {
+	open func replace(view: UIView, at index: Int) {
 		self.view(at: index)?.removeFromSuperview()
 		scrollView.addSubview(view)
 		frameLayout.frameLayout(at: index)?.targetView = view
@@ -181,6 +182,14 @@ open class ScrollStackView<T: UIView>: UIView {
 		UIView.animate(withDuration: animateDuration) {
 			self.layoutIfNeeded()
 		}
+	}
+	
+	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+	}
+	
+	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
 	}
 	
 	// MARK: -
