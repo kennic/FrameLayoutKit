@@ -320,10 +320,7 @@ open class FrameLayout: UIView {
 		#else
 		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
 		#endif
-		var contentSize = horizontalAlignment != .fill || verticalAlignment != .fill ? contentSizeThatFits(size: containerFrame.size) : .zero
-		if heightRatio > 0 {
-			contentSize.height = contentSize.width * heightRatio
-		}
+		let contentSize = (horizontalAlignment != .fill || verticalAlignment != .fill) || (minContentSize != .zero || maxContentSize != .zero) ? contentSizeThatFits(size: containerFrame.size) : .zero
 		
 		switch horizontalAlignment {
 		case .left:
