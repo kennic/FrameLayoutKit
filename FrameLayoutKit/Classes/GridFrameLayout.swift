@@ -35,84 +35,70 @@ open class GridFrameLayout: FrameLayout {
 	override public var minSize: CGSize {
 		didSet {
 			stackLayout.minSize = minSize
+			setNeedsLayout()
 		}
 	}
 	
 	override public var maxSize: CGSize {
 		didSet {
 			stackLayout.maxSize = minSize
+			setNeedsLayout()
 		}
 	}
 	
 	override public var fixSize: CGSize {
 		didSet {
 			stackLayout.fixSize = fixSize
+			setNeedsLayout()
 		}
 	}
 	
 	public var minRowHeight: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				frameLayout.minSize = CGSize(width: frameLayout.minSize.width, height: minRowHeight)
-			}
+			stackLayout.frameLayouts.forEach { $0.minSize = CGSize(width: $0.minSize.width, height: minRowHeight) }
+			setNeedsLayout()
 		}
 	}
 	
 	public var maxRowHeight: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				frameLayout.maxSize = CGSize(width: frameLayout.maxSize.width, height: maxRowHeight)
-			}
+			stackLayout.frameLayouts.forEach { $0.maxSize = CGSize(width: $0.maxSize.width, height: maxRowHeight) }
+			setNeedsLayout()
 		}
 	}
 	
 	public var fixRowHeight: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				frameLayout.fixSize = CGSize(width: frameLayout.fixSize.width, height: fixRowHeight)
-			}
+			stackLayout.frameLayouts.forEach { $0.fixSize = CGSize(width: $0.fixSize.width, height: fixRowHeight) }
+			setNeedsLayout()
 		}
 	}
 	
 	public var minColumnWidth: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				if let layout = frameLayout as? StackFrameLayout {
-					layout.frameLayouts.forEach { (layout) in
-						layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
-					}
-				}
-			}
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height) }
+			setNeedsLayout()
 		}
 	}
 	
 	public var maxColumnWidth: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				if let layout = frameLayout as? StackFrameLayout {
-					layout.frameLayouts.forEach { (layout) in
-						layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
-					}
-				}
-			}
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height) }
+			setNeedsLayout()
 		}
 	}
 	
 	public var fixColumnWidth: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				if let layout = frameLayout as? StackFrameLayout {
-					layout.frameLayouts.forEach { (layout) in
-						layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
-					}
-				}
-			}
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height) }
+			setNeedsLayout()
 		}
 	}
 	
 	override public var heightRatio: CGFloat {
 		didSet {
 			stackLayout.heightRatio = heightRatio
+			setNeedsLayout()
 		}
 	}
 	
@@ -126,11 +112,8 @@ open class GridFrameLayout: FrameLayout {
 	
 	public var verticalSpacing: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { (frameLayout) in
-				if let layout = frameLayout as? StackFrameLayout {
-					layout.spacing = verticalSpacing
-				}
-			}
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { ($0 as? StackFrameLayout)?.spacing = verticalSpacing }
+			setNeedsLayout()
 		}
 	}
 	
