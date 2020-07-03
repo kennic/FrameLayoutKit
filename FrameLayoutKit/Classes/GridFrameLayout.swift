@@ -102,6 +102,14 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	override public var debug: Bool {
+		didSet {
+			stackLayout.debug = debug
+			stackLayout.frameLayouts.forEach { $0.debug = debug }
+			setNeedsLayout()
+		}
+	}
+	
 	public var horizontalSpacing: CGFloat {
 		get { stackLayout.spacing }
 		set {
@@ -271,22 +279,23 @@ open class GridFrameLayout: FrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = verticalSpacing
+		layout.debug = debug
 		
 		if fixRowHeight > 0 {
-			layout.fixSize = CGSize(width: layout.fixSize.width, height: fixRowHeight)
+			layout.fixSize = CGSize(width: 0, height: fixRowHeight)
 		}
 		else {
-			layout.minSize = CGSize(width: layout.minSize.width, height: minRowHeight)
-			layout.maxSize = CGSize(width: layout.maxSize.width, height: maxRowHeight)
+			layout.minSize = CGSize(width: 0, height: minRowHeight)
+			layout.maxSize = CGSize(width: 0, height: maxRowHeight)
 		}
 		
-		layout.frameLayouts.forEach { (layout) in
+		layout.frameLayouts.forEach {
 			if fixColumnWidth > 0 {
-				layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+				$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
 			}
 			else {
-				layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
-				layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+				$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
+				$0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height)
 			}
 		}
 		
@@ -326,12 +335,14 @@ open class GridFrameLayout: FrameLayout {
 		stackLayout.frameLayouts.forEach { (layout) in
 			if let rowLayout = layout as? StackFrameLayout {
 				rowLayout.add().with {
+					$0.debug = debug
+					
 					if fixColumnWidth > 0 {
-						$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
+						$0.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
 					}
 					else {
-						$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
-						$0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height)
+						$0.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
+						$0.maxSize = CGSize(width: maxColumnWidth, height: maxRowHeight)
 					}
 				}
 			}
@@ -343,12 +354,14 @@ open class GridFrameLayout: FrameLayout {
 		stackLayout.frameLayouts.forEach { (layout) in
 			if let rowLayout = layout as? StackFrameLayout {
 				rowLayout.insert(nil, at: index).with {
+					$0.debug = debug
+					
 					if fixColumnWidth > 0 {
-						$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
+						$0.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
 					}
 					else {
-						$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
-						$0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height)
+						$0.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
+						$0.maxSize = CGSize(width: maxColumnWidth, height: maxRowHeight)
 					}
 				}
 			}
