@@ -458,6 +458,42 @@ open class StackFrameLayout: FrameLayout {
 					}
 					
 					break
+					
+				case .split(let ratio):
+					var flexibleFrame: FrameLayout? = nil
+					var ratioIndex = 0
+					var totalRatio: CGFloat = 0.0
+					let ratioValueCount = ratio.count
+					
+					for frameLayout in frameLayouts {
+						if frameLayout.isFlexible {
+							flexibleFrame = frameLayout
+							lastFrameLayout = flexibleFrame
+							continue
+						}
+						
+						if frameLayout.isEmpty { continue }
+						
+						let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : max(1.0 - totalRatio, 0.0)
+						totalRatio += ratioValue
+						
+						frameContentSize = CGSize(width: contentSize.width * ratioValue, height: contentSize.height)
+						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+						
+						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
+						totalSpace += frameContentSize.width + space
+						maxHeight = max(maxHeight, frameContentSize.height)
+						ratioIndex += 1
+					}
+					
+					if let flexibleFrame = flexibleFrame {
+						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
+						frameContentSize = flexibleFrame.sizeThatFits(frameContentSize)
+						
+						totalSpace += frameContentSize.width
+						maxHeight = max(maxHeight, frameContentSize.height)
+					}
+					break
 				}
 				
 				if isIntrinsicSizeEnabled {
@@ -725,6 +761,52 @@ open class StackFrameLayout: FrameLayout {
 					frameLayout.frame = targetFrame
 					
 					usedSpace += frameContentSize.width + spacing
+				}
+				break
+				
+			case .split(let ratio):
+				if isOverlapped {
+					for frameLayout in frameLayouts {
+						if frameLayout.isEmpty { continue }
+						
+						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+						targetFrame.origin.x = containerFrame.origin.x
+						targetFrame.size.width = frameContentSize.width
+						targetFrame.size.height = containerFrame.size.height
+						frameLayout.frame = targetFrame
+					}
+					return
+				}
+				
+				var ratioIndex = 0
+				var totalRatio: CGFloat = 0.0
+				let ratioValueCount = ratio.count
+				
+				for frameLayout in frameLayouts {
+					if frameLayout.isEmpty { continue }
+					
+					let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : max(1.0 - totalRatio, 0.0)
+					totalRatio += ratioValue
+					
+					frameContentSize = CGSize(width: containerFrame.size.width * ratioValue, height: containerFrame.size.height)
+					if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
+						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						
+						if !frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
+							frameContentSize.height = fitSize.height
+						}
+						else {
+							frameContentSize = fitSize
+						}
+					}
+					
+					targetFrame.origin.x = containerFrame.origin.x + usedSpace
+					targetFrame.size.width = frameContentSize.width
+					frameLayout.frame = targetFrame
+					
+					space = frameContentSize.width > 0 ? spacing : 0
+					usedSpace += frameContentSize.width + space
+					ratioIndex += 1
 				}
 				break
 				
@@ -996,6 +1078,52 @@ open class StackFrameLayout: FrameLayout {
 					targetFrame = frameLayout.frame
 					targetFrame.origin.y += spaceToCenter
 					frameLayout.frame = targetFrame
+				}
+				break
+				
+			case .split(ratio: let ratio):
+				if isOverlapped {
+					for frameLayout in frameLayouts {
+						if frameLayout.isEmpty { continue }
+						
+						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+						targetFrame.origin.y = containerFrame.origin.y
+						targetFrame.size.width = containerFrame.size.width
+						targetFrame.size.height = frameContentSize.height
+						frameLayout.frame = targetFrame
+					}
+					return
+				}
+				
+				var ratioIndex = 0
+				var totalRatio: CGFloat = 0.0
+				let ratioValueCount = ratio.count
+				
+				for frameLayout in frameLayouts {
+					if frameLayout.isEmpty { continue }
+					
+					let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : max(1.0 - totalRatio, 0.0)
+					totalRatio += ratioValue
+					
+					frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height * ratioValue)
+					if isIntrinsicSizeEnabled || frameLayout != lastFrameLayout {
+						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						
+						if !frameLayout.isIntrinsicSizeEnabled && (frameLayout == lastFrameLayout) {
+							frameContentSize.width = fitSize.width
+						}
+						else {
+							frameContentSize = fitSize
+						}
+					}
+					
+					targetFrame.origin.y = containerFrame.origin.y + usedSpace
+					targetFrame.size.height = frameContentSize.height
+					frameLayout.frame = targetFrame
+					
+					space = frameContentSize.height > 0 ? spacing : 0
+					usedSpace += frameContentSize.height + space
+					ratioIndex += 1
 				}
 				break
 			}

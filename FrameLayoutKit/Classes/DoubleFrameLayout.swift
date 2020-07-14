@@ -12,14 +12,19 @@ public enum NKLayoutAxis {
     case vertical // top - bottom
 }
 
-public enum NKLayoutDistribution {
+public enum NKLayoutDistribution: Equatable {
 	case top
     case bottom
     case equal
+	case split(ratio: [CGFloat])
     case center
 	
 	public static let left: NKLayoutDistribution = .top
 	public static let right: NKLayoutDistribution = .bottom
+	
+	public init(split ratio: CGFloat...) {
+		self = .split(ratio: ratio)
+	}
 }
 
 @propertyWrapper
@@ -73,6 +78,7 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
+	@available(*, deprecated, message: "use .distribution = .split(ratio)")
 	@UnitPercentage public var splitRatio: CGFloat = 0.5
 	
 	override open var ignoreHiddenView: Bool {
@@ -402,6 +408,41 @@ open class DoubleFrameLayout: FrameLayout {
 					
 					break
 					
+				case .split(let ratio):
+					var ratioValue: CGFloat = ratio.first ?? 0.5
+					var spaceValue: CGFloat = spacing
+					
+					if frameLayout1.isEmpty {
+						ratioValue = 0
+						spaceValue = 0
+					}
+					
+					if frameLayout2.isEmpty {
+						ratioValue = 1
+						spaceValue = 0
+					}
+					
+					frame1ContentSize = frameLayout1.sizeThatFits(CGSize(width: (contentSize.width - spaceValue) * ratioValue, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout1.heightRatio == 0)
+					space = frame1ContentSize.width > 0 ? spaceValue : 0
+					
+					frame2ContentSize = frameLayout2.sizeThatFits(CGSize(width: contentSize.width - frame1ContentSize.width - space, height: contentSize.height), intrinsic: isIntrinsicSizeEnabled || frameLayout2.heightRatio == 0)
+					
+					if frame1ContentSize.width > frame2ContentSize.width {
+						frame2ContentSize.width = frame1ContentSize.width
+						
+						if frameLayout2.heightRatio > 0 {
+							frame2ContentSize.height = frame2ContentSize.width * heightRatio
+						}
+					}
+					else if frame2ContentSize.width > frame1ContentSize.width {
+						frame1ContentSize.width = frame2ContentSize.width
+						
+						if frameLayout1.heightRatio > 0 {
+							frame1ContentSize.height = frame1ContentSize.width * heightRatio
+						}
+					}
+					break
+					
 				case .center:
 					frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
 					space = frame1ContentSize.width > 0 ? spacing : 0
@@ -504,6 +545,45 @@ open class DoubleFrameLayout: FrameLayout {
 					}
 					
 					break
+					
+				case .split(let ratio):
+					var ratioValue: CGFloat = ratio.first ?? 0.5
+					var spaceValue: CGFloat = spacing
+					
+					if frameLayout1.isEmpty {
+						ratioValue = 0
+						spaceValue = 0
+					}
+					
+					if frameLayout2.isEmpty  {
+						ratioValue = 1
+						spaceValue = 0
+					}
+					
+					frame1ContentSize = frameLayout1.sizeThatFits(CGSize(width: contentSize.width, height: (contentSize.height - spaceValue) * ratioValue))
+					space = frame1ContentSize.height > 0 ? spaceValue : 0
+					
+					frame2ContentSize = frameLayout2.sizeThatFits(CGSize(width: contentSize.width, height: contentSize.height - frame1ContentSize.height - space))
+					
+					if frameLayout2.heightRatio > 0 {
+						if frame1ContentSize.width > frame2ContentSize.width {
+							frame2ContentSize.height = frame1ContentSize.width * heightRatio
+						}
+					}
+					
+					if frameLayout1.heightRatio > 0 {
+						if frame2ContentSize.width > frame1ContentSize.width {
+							frame1ContentSize.height = frame2ContentSize.width * heightRatio
+						}
+					}
+					
+					if frame1ContentSize.height > frame2ContentSize.height {
+						frame2ContentSize.height = frame1ContentSize.height
+					}
+					else if frame2ContentSize.height > frame1ContentSize.height {
+						frame1ContentSize.height = frame2ContentSize.height
+					}
+						break
 					
 				case .center:
 					frame1ContentSize = frameLayout1.sizeThatFits(contentSize)
@@ -642,6 +722,35 @@ open class DoubleFrameLayout: FrameLayout {
 				}
 				break
 				
+			case .split(let ratio):
+				if isOverlapped {
+					targetFrame1 = containerFrame
+					targetFrame2 = containerFrame
+				}
+				else {
+					var ratioValue = ratio.first ?? 0.5
+					var spaceValue = spacing
+					
+					if frameLayout1.isEmpty {
+						ratioValue = 0
+						spaceValue = 0
+					}
+					
+					if frameLayout2.isEmpty {
+						ratioValue = 1
+						spaceValue = 0
+					}
+					
+					frame1ContentSize = CGSize(width: (containerFrame.size.width - spaceValue) * ratioValue, height: containerFrame.size.height)
+					targetFrame1.size.width = frame1ContentSize.width
+					space = frame1ContentSize.width > 0 ? spaceValue : 0
+					
+					frame2ContentSize = CGSize(width: containerFrame.size.width - frame1ContentSize.width - space, height: containerFrame.size.height)
+					targetFrame2.origin.x = containerFrame.origin.x + frame1ContentSize.width + space
+					targetFrame2.size.width = frame2ContentSize.width
+				}
+				break
+				
 			case .center:
 				if isOverlapped {
 					frame1ContentSize = frameLayout1.isFlexible ? containerFrame.size : frameLayout1.sizeThatFits(containerFrame.size)
@@ -742,6 +851,35 @@ open class DoubleFrameLayout: FrameLayout {
 					targetFrame2.size.height = frame2ContentSize.height
 				}
 				break
+				
+			case .split(let ratio):
+					if isOverlapped {
+						targetFrame1 = containerFrame
+						targetFrame2 = containerFrame
+					}
+					else {
+						var ratioValue = ratio.first ?? 0.5
+						var spaceValue = spacing
+						
+						if frameLayout1.isEmpty {
+							ratioValue = 0
+							spaceValue = 0
+						}
+						
+						if frameLayout2.isEmpty {
+							ratioValue = 1
+							spaceValue = 0
+						}
+						
+						frame1ContentSize = CGSize(width: containerFrame.size.width, height: (containerFrame.size.height - spaceValue) * ratioValue)
+						targetFrame1.size.height = frame1ContentSize.height
+						space = frame1ContentSize.height > 0 ? spaceValue : 0
+						
+						frame2ContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - frame1ContentSize.height - space)
+						targetFrame2.origin.y = containerFrame.origin.y + targetFrame1.size.height + space
+						targetFrame2.size.height = frame2ContentSize.height
+					}
+					break
 				
 			case .center:
 				if isOverlapped {
