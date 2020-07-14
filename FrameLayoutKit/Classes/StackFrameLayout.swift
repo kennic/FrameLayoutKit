@@ -791,18 +791,6 @@ open class StackFrameLayout: FrameLayout {
 					totalRatio += ratioValue
 					
 					frameContentSize = CGSize(width: containerFrame.size.width * ratioValue, height: containerFrame.size.height)
-					/*
-					if isIntrinsicSizeEnabled || (frameLayout != lastFrameLayout) {
-						let fitSize = frameLayout.sizeThatFits(frameContentSize)
-						
-						if !frameLayout.isIntrinsicSizeEnabled && frameLayout == lastFrameLayout {
-							frameContentSize.height = fitSize.height
-						}
-						else {
-							frameContentSize = fitSize
-						}
-					}
-					*/
 					
 					targetFrame.origin.x = containerFrame.origin.x + usedSpace
 					targetFrame.size.width = frameContentSize.width
@@ -1110,16 +1098,6 @@ open class StackFrameLayout: FrameLayout {
 					totalRatio += ratioValue
 					
 					frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height * ratioValue)
-					if isIntrinsicSizeEnabled || frameLayout != lastFrameLayout {
-						let fitSize = frameLayout.sizeThatFits(frameContentSize)
-						
-						if !frameLayout.isIntrinsicSizeEnabled && (frameLayout == lastFrameLayout) {
-							frameContentSize.width = fitSize.width
-						}
-						else {
-							frameContentSize = fitSize
-						}
-					}
 					
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
 					targetFrame.size.height = frameContentSize.height
