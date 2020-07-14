@@ -637,6 +637,7 @@ open class DoubleFrameLayout: FrameLayout {
 		#endif
 		
 		guard containerFrame.size.width > 0 && containerFrame.size.height > 0 else {
+			didLayoutSubviewsBlock?(self)
 			return
 		}
 		
@@ -909,6 +910,8 @@ open class DoubleFrameLayout: FrameLayout {
 		
 		frameLayout1.frame = targetFrame1.integral
 		frameLayout2.frame = targetFrame2.integral
+		
+		didLayoutSubviewsBlock?(self)
 	}
 	
 }

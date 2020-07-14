@@ -84,6 +84,28 @@ class CardView: UIView {
 			$0 + 10.0
 			$0 + messageLabel
 			
+			//--- Example of split(ratio) distribution ---
+			$0 + HStackLayout {
+				$0.distribution = .split(ratio: [0.5, 0.2, 0.2])
+				var i = 0
+				let colors: [UIColor] = [.yellow, .green, .brown, .systemPink]
+				($0 + [UILabel(), UILabel(), UILabel(), UILabel()]).forEach {
+					if let label = $0.targetView as? UILabel {
+						addSubview(label)
+						label.textColor = .black
+						label.backgroundColor = colors[i]
+						i += 1
+					}
+					
+					$0.didLayoutSubviewsBlock = { sender in
+						if let label = sender.targetView as? UILabel {
+							label.text = "\(sender.frame.size.width) px"
+						}
+					}
+				}
+			}
+			//---
+			
 			$0.flexible()
 			$0.spacing = 5.0
 		}

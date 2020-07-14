@@ -133,6 +133,8 @@ open class FrameLayout: UIView {
 	public var preSizeThatFitsConfigurationBlock: ((FrameLayout, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
 	public var preLayoutConfigurationBlock: ((FrameLayout) -> Void)?
+	/// Block will be called at the end of layoutSubviews function
+	public var didLayoutSubviewsBlock: ((FrameLayout) -> Void)?
 	
 	override open var frame: CGRect {
 		get { super.frame }
@@ -312,7 +314,10 @@ open class FrameLayout: UIView {
 		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, !targetView.isHidden, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else { return }
+		guard let targetView = targetView, !targetView.isHidden, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
+			didLayoutSubviewsBlock?(self)
+			return
+		}
 		
 		var targetFrame: CGRect = .zero
 		#if swift(>=4.2)
@@ -466,6 +471,8 @@ open class FrameLayout: UIView {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
 			}
 		}
+		
+		didLayoutSubviewsBlock?(self)
 	}
 	
 	open override func didMoveToWindow() {
