@@ -767,11 +767,22 @@ open class StackFrameLayout: FrameLayout {
 				break
 				
 			case .split(let ratio):
+				let visibleFramecount = numberOfVisibleFrames()
+				let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
+				let contentWidth = containerFrame.size.width - spaces
+				
+				var ratioIndex = 0
+				let ratioValueCount = ratio.count
+				
 				if isOverlapped {
 					for frameLayout in frameLayouts {
 						if frameLayout.isEmpty { continue }
 						
-						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+						let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : nil
+						
+						frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height)
+						frameContentSize.limitedTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+						
 						targetFrame.origin.x = containerFrame.origin.x
 						targetFrame.size.width = frameContentSize.width
 						targetFrame.size.height = containerFrame.size.height
@@ -780,17 +791,13 @@ open class StackFrameLayout: FrameLayout {
 					return
 				}
 				
-				var ratioIndex = 0
-				var totalRatio: CGFloat = 0.0
-				let ratioValueCount = ratio.count
-				
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					
-					let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : max(1.0 - totalRatio, 0.0)
-					totalRatio += ratioValue
+					let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : nil
 					
-					frameContentSize = CGSize(width: containerFrame.size.width * ratioValue, height: containerFrame.size.height)
+					frameContentSize = CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height)
+					frameContentSize.limitedTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 					
 					targetFrame.origin.x = containerFrame.origin.x + usedSpace
 					targetFrame.size.width = frameContentSize.width

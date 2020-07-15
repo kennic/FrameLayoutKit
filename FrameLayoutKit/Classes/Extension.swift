@@ -199,3 +199,19 @@ extension With where Self: FrameLayout {
 }
 
 extension FrameLayout: With {}
+
+extension CGSize {
+	
+	mutating func limitedTo(minSize: CGSize, maxSize: CGSize) {
+		self.width = max(minSize.width, self.width)
+		self.height = max(minSize.height, self.height)
+		
+		if maxSize.width > 0 && maxSize.width >= minSize.width {
+			self.width = min(maxSize.width, self.width)
+		}
+		if maxSize.height > 0 && maxSize.height >= minSize.height {
+			self.height = min(maxSize.height, self.height)
+		}
+	}
+	
+}

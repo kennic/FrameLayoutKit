@@ -525,27 +525,10 @@ open class FrameLayout: UIView {
 				result = targetView.sizeThatFits(size)
 			}
 			
-			result.width = max(minSize.width, result.width)
-			result.height = max(minSize.height, result.height)
-			
-			if maxSize.width > 0 && maxSize.width >= minSize.width {
-				result.width = min(maxSize.width, result.width)
-			}
-			if maxSize.height > 0 && maxSize.height >= minSize.height {
-				result.height = min(maxSize.height, result.height)
-			}
+			result.limitedTo(minSize: minSize, maxSize: maxSize)
 		}
 		
-		result.width = max(minContentSize.width, result.width)
-		result.height = max(minContentSize.height, result.height)
-		
-		if maxContentSize.width > 0 && maxContentSize.width >= minContentSize.width {
-			result.width = min(maxContentSize.width, result.width)
-		}
-		if maxContentSize.height > 0 && maxContentSize.height >= minContentSize.height {
-			result.height = min(maxContentSize.height, result.height)
-		}
-		
+		result.limitedTo(minSize: minContentSize, maxSize: maxContentSize)
 		return result
 	}
 	
