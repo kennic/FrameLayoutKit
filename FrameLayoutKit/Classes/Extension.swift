@@ -203,15 +203,23 @@ extension FrameLayout: With {}
 extension CGSize {
 	
 	mutating func limitedTo(minSize: CGSize, maxSize: CGSize) {
-		self.width = max(minSize.width, self.width)
-		self.height = max(minSize.height, self.height)
+		self = self.limitTo(minSize: minSize, maxSize: maxSize)
+	}
+	
+	func limitTo(minSize: CGSize, maxSize: CGSize) -> CGSize {
+		var result = self
+		
+		result.width = max(minSize.width, result.width)
+		result.height = max(minSize.height, result.height)
 		
 		if maxSize.width > 0 && maxSize.width >= minSize.width {
-			self.width = min(maxSize.width, self.width)
+			result.width = min(maxSize.width, result.width)
 		}
 		if maxSize.height > 0 && maxSize.height >= minSize.height {
-			self.height = min(maxSize.height, self.height)
+			result.height = min(maxSize.height, result.height)
 		}
+		
+		return result
 	}
 	
 }

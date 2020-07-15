@@ -598,16 +598,7 @@ open class DoubleFrameLayout: FrameLayout {
 				}
 			}
 			
-			result.width = max(minSize.width, result.width)
-			result.height = max(minSize.height, result.height)
-			
-			if maxSize.width > 0 && maxSize.width >= minSize.width {
-				result.width = min(maxSize.width, result.width)
-			}
-			
-			if maxSize.height > 0 && maxSize.height >= minSize.height {
-				result.height = min(maxSize.height, result.height)
-			}
+			result.limitedTo(minSize: minSize, maxSize: maxSize)
 		}
 		
 		if result.width > 0 {

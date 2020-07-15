@@ -460,38 +460,24 @@ open class StackFrameLayout: FrameLayout {
 					break
 					
 				case .split(let ratio):
-					var flexibleFrame: FrameLayout? = nil
+					let visibleFramecount = numberOfVisibleFrames()
+					let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
+					let contentWidth = contentSize.width - spaces
+					
 					var ratioIndex = 0
-					var totalRatio: CGFloat = 0.0
 					let ratioValueCount = ratio.count
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isFlexible {
-							flexibleFrame = frameLayout
-							lastFrameLayout = flexibleFrame
-							continue
-						}
-						
 						if frameLayout.isEmpty { continue }
 						
-						let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : max(1.0 - totalRatio, 0.0)
-						totalRatio += ratioValue
-						
-						frameContentSize = CGSize(width: contentSize.width * ratioValue, height: contentSize.height)
+						let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
+						frameContentSize = CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - totalSpace, height: contentSize.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
 						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
 						totalSpace += frameContentSize.width + space
 						maxHeight = max(maxHeight, frameContentSize.height)
 						ratioIndex += 1
-					}
-					
-					if let flexibleFrame = flexibleFrame {
-						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
-						frameContentSize = flexibleFrame.sizeThatFits(frameContentSize)
-						
-						totalSpace += frameContentSize.width
-						maxHeight = max(maxHeight, frameContentSize.height)
 					}
 					break
 				}
@@ -536,16 +522,7 @@ open class StackFrameLayout: FrameLayout {
 				result.height = min(totalSpace, size.height)
 			}
 			
-			result.width = max(minSize.width, result.width)
-			result.height = max(minSize.height, result.height)
-			
-			if maxSize.width > 0 && maxSize.width >= minSize.width {
-				result.width = min(maxSize.width, result.width)
-			}
-			
-			if maxSize.height > 0 && maxSize.height >= minSize.height {
-				result.height = min(maxSize.height, result.height)
-			}
+			result.limitedTo(minSize: minSize, maxSize: maxSize)
 		}
 		
 		if result.width > 0 {
@@ -778,10 +755,8 @@ open class StackFrameLayout: FrameLayout {
 					for frameLayout in frameLayouts {
 						if frameLayout.isEmpty { continue }
 						
-						let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : nil
-						
-						frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height)
-						frameContentSize.limitedTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+						let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
+						frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						
 						targetFrame.origin.x = containerFrame.origin.x
 						targetFrame.size.width = frameContentSize.width
@@ -794,10 +769,8 @@ open class StackFrameLayout: FrameLayout {
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					
-					let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : nil
-					
-					frameContentSize = CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height)
-					frameContentSize.limitedTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+					let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
+					frameContentSize = CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 					
 					targetFrame.origin.x = containerFrame.origin.x + usedSpace
 					targetFrame.size.width = frameContentSize.width
@@ -1080,12 +1053,16 @@ open class StackFrameLayout: FrameLayout {
 				}
 				break
 				
-			case .split(ratio: let ratio):
+			case .split(let ratio):
+				let visibleFramecount = numberOfVisibleFrames()
+				let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
+				let contentHeight = containerFrame.size.height - spaces
+				
 				if isOverlapped {
 					for frameLayout in frameLayouts {
 						if frameLayout.isEmpty { continue }
 						
-						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+						frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						targetFrame.origin.y = containerFrame.origin.y
 						targetFrame.size.width = containerFrame.size.width
 						targetFrame.size.height = frameContentSize.height
@@ -1095,16 +1072,13 @@ open class StackFrameLayout: FrameLayout {
 				}
 				
 				var ratioIndex = 0
-				var totalRatio: CGFloat = 0.0
 				let ratioValueCount = ratio.count
 				
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					
-					let ratioValue = ratioIndex < ratioValueCount && frameLayout != lastFrameLayout ? ratio[ratioIndex] : max(1.0 - totalRatio, 0.0)
-					totalRatio += ratioValue
-					
-					frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height * ratioValue)
+					let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
+					frameContentSize = CGSize(width: containerFrame.size.width, height: ratioValue != nil ? contentHeight * ratioValue! : contentHeight - usedSpace).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 					
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
 					targetFrame.size.height = frameContentSize.height
