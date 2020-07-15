@@ -78,9 +78,6 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
-	@available(*, deprecated, message: "use .distribution = .split(ratio)")
-	@UnitPercentage public var splitRatio: CGFloat = 0.5
-	
 	override open var ignoreHiddenView: Bool {
 		didSet {
 			frameLayout1.ignoreHiddenView = ignoreHiddenView
@@ -373,7 +370,7 @@ open class DoubleFrameLayout: FrameLayout {
 					break
 					
 				case .equal:
-					var ratioValue: CGFloat = splitRatio
+					var ratioValue: CGFloat = 0.5
 					var spaceValue: CGFloat = spacing
 					
 					if frameLayout1.isEmpty {
@@ -507,7 +504,7 @@ open class DoubleFrameLayout: FrameLayout {
 					break
 					
 				case .equal:
-					var ratioValue: CGFloat = splitRatio
+					var ratioValue: CGFloat = 0.5
 					var spaceValue: CGFloat = spacing
 					
 					if frameLayout1.isEmpty {
@@ -700,7 +697,7 @@ open class DoubleFrameLayout: FrameLayout {
 					targetFrame2 = containerFrame
 				}
 				else {
-					var ratioValue = splitRatio
+					var ratioValue: CGFloat = 0.5
 					var spaceValue = spacing
 					
 					if frameLayout1.isEmpty {
@@ -830,7 +827,7 @@ open class DoubleFrameLayout: FrameLayout {
 					targetFrame2 = containerFrame
 				}
 				else {
-					var ratioValue = splitRatio
+					var ratioValue: CGFloat = 0.5
 					var spaceValue = spacing
 					
 					if frameLayout1.isEmpty {
