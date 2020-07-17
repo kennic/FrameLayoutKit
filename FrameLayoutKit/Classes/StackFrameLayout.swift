@@ -460,8 +460,8 @@ open class StackFrameLayout: FrameLayout {
 					break
 					
 				case .split(let ratio):
-					let visibleFramecount = numberOfVisibleFrames()
-					let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
+					let visibleFrameCount = numberOfVisibleFrames()
+					let spaces: CGFloat = CGFloat(visibleFrameCount - 1) * spacing
 					let contentWidth = contentSize.width - spaces
 					
 					var ratioIndex = 0
@@ -471,7 +471,8 @@ open class StackFrameLayout: FrameLayout {
 						if frameLayout.isEmpty { continue }
 						
 						let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
-						frameContentSize = CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - totalSpace, height: contentSize.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+						let cellWidth = (ratioValue ?? 0) <= 0.0 ? (contentWidth - totalSpace) / max(CGFloat(visibleFrameCount - ratioIndex), 1.0) : contentWidth * ratioValue!
+						frameContentSize = CGSize(width: cellWidth, height: contentSize.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
 						space = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
@@ -701,13 +702,7 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						targetFrame.origin.x = containerFrame.origin.x + usedSpace
-						
-						if frameLayout == flexibleFrame {
-							targetFrame.size.width = flexibleRightEdge - usedSpace
-						}
-						else {
-							targetFrame.size.width = frameContentSize.width
-						}
+						targetFrame.size.width = frameLayout == flexibleFrame ? flexibleRightEdge - usedSpace : frameContentSize.width
 						
 						frameLayout.frame = targetFrame
 						if frameLayout == flexibleFrame { break }
@@ -744,18 +739,26 @@ open class StackFrameLayout: FrameLayout {
 				break
 				
 			case .split(let ratio):
-				let visibleFramecount = numberOfVisibleFrames()
-				let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
+				let visibleFrameCount = numberOfVisibleFrames()
+				let spaces: CGFloat = CGFloat(visibleFrameCount - 1) * spacing
 				let contentWidth = containerFrame.size.width - spaces
 				
+				var finalRatio = ratio
+				var gapCount = visibleFrameCount - ratio.count
+				if gapCount > 0 {
+					finalRatio.append(contentsOf: [CGFloat](repeating: 0.0, count: gapCount))
+				}
+				
+				gapCount = finalRatio.filter({ $0 <= 0.0 }).count
+				
 				var ratioIndex = 0
-				let ratioValueCount = ratio.count
+				let ratioValueCount = finalRatio.count
 				
 				if isOverlapped {
 					for frameLayout in frameLayouts {
 						if frameLayout.isEmpty { continue }
 						
-						let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
+						let ratioValue = ratioIndex < ratioValueCount ? finalRatio[ratioIndex] : nil
 						frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						
 						targetFrame.origin.x = containerFrame.origin.x
@@ -766,11 +769,19 @@ open class StackFrameLayout: FrameLayout {
 					return
 				}
 				
+				var flexibleFrameIndexes = [Int]()
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					
-					let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
-					frameContentSize = CGSize(width: ratioValue != nil ? contentWidth * ratioValue! : contentWidth - usedSpace, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+					let ratioValue = ratioIndex < ratioValueCount ? finalRatio[ratioIndex] : nil
+					if ratioValue ?? 0 <= 0.0 {
+						flexibleFrameIndexes.append(ratioIndex)
+						ratioIndex += 1
+						continue
+					}
+					
+					let cellWidth = contentWidth * ratioValue!
+					frameContentSize = CGSize(width: cellWidth, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 					
 					targetFrame.origin.x = containerFrame.origin.x + usedSpace
 					targetFrame.size.width = frameContentSize.width
@@ -780,6 +791,28 @@ open class StackFrameLayout: FrameLayout {
 					usedSpace += frameContentSize.width + space
 					ratioIndex += 1
 				}
+				
+				if !flexibleFrameIndexes.isEmpty {
+					let remainingWidth = contentWidth - usedSpace
+					let cellWidth = remainingWidth / CGFloat(gapCount)
+					
+					ratioIndex = 0
+					var addingSpacing: CGFloat = 0.0
+					for frameLayout in frameLayouts {
+						var rect = frameLayout.frame
+						
+						if flexibleFrameIndexes.firstIndex(of: ratioIndex) != nil {
+							rect.size = CGSize(width: cellWidth, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+						}
+						
+						rect.origin.x = addingSpacing
+						frameLayout.frame = rect
+						
+						addingSpacing += rect.size.width
+						ratioIndex += 1
+					}
+				}
+				
 				break
 				
 			case .center:
@@ -963,13 +996,7 @@ open class StackFrameLayout: FrameLayout {
 						}
 						
 						targetFrame.origin.y = containerFrame.origin.y + usedSpace
-						
-						if frameLayout == flexibleFrame {
-							targetFrame.size.height = flexibleBottomEdge - usedSpace
-						}
-						else {
-							targetFrame.size.height = frameContentSize.height
-						}
+						targetFrame.size.height = frameLayout == flexibleFrame ? flexibleBottomEdge - usedSpace : frameContentSize.height
 						
 						frameLayout.frame = targetFrame
 						
@@ -990,9 +1017,9 @@ open class StackFrameLayout: FrameLayout {
 					return
 				}
 				
-				let visibleFramecount = numberOfVisibleFrames()
-				let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
-				let cellSize = (containerFrame.size.height - spaces) / CGFloat(Float(visibleFramecount))
+				let visibleFrameCount = numberOfVisibleFrames()
+				let spaces: CGFloat = CGFloat(visibleFrameCount - 1) * spacing
+				let cellSize = (containerFrame.size.height - spaces) / CGFloat(Float(visibleFrameCount))
 				
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
@@ -1032,14 +1059,7 @@ open class StackFrameLayout: FrameLayout {
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
 					targetFrame.size = frameContentSize
 					frameLayout.frame = targetFrame
-					
-					if frameLayout != lastFrameLayout {
-						space = frameContentSize.height > 0 ? spacing : 0
-					}
-					else {
-						space = 0
-					}
-					
+					space = frameLayout == lastFrameLayout ? 0.0 : frameContentSize.height > 0 ? spacing : 0
 					usedSpace += frameContentSize.height + space
 				}
 				
@@ -1054,8 +1074,8 @@ open class StackFrameLayout: FrameLayout {
 				break
 				
 			case .split(let ratio):
-				let visibleFramecount = numberOfVisibleFrames()
-				let spaces: CGFloat = CGFloat(visibleFramecount - 1) * spacing
+				let visibleFrameCount = numberOfVisibleFrames()
+				let spaces = CGFloat(visibleFrameCount - 1) * spacing
 				let contentHeight = containerFrame.size.height - spaces
 				
 				if isOverlapped {
@@ -1078,7 +1098,8 @@ open class StackFrameLayout: FrameLayout {
 					if frameLayout.isEmpty { continue }
 					
 					let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
-					frameContentSize = CGSize(width: containerFrame.size.width, height: ratioValue != nil ? contentHeight * ratioValue! : contentHeight - usedSpace).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+					let cellHeight = (ratioValue ?? 0) <= 0.0 ? (contentHeight - usedSpace) / max(CGFloat(visibleFrameCount - ratioIndex), 1.0) : contentHeight * ratioValue!
+					frameContentSize = CGSize(width: containerFrame.size.width, height: cellHeight).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 					
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
 					targetFrame.size.height = frameContentSize.height

@@ -86,7 +86,7 @@ class CardView: UIView {
 			
 			//--- Example of split(ratio) distribution ---
 			$0 + HStackLayout {
-				$0.distribution = .split(ratio: [0.5, 0.2, 0.2])
+				$0.distribution = .split(ratio: [0.5, 0.0, 0.3])
 				var i = 0
 				let colors: [UIColor] = [.yellow, .green, .brown, .systemPink]
 				($0 + [UILabel(), UILabel(), UILabel(), UILabel()]).forEach {
