@@ -9,6 +9,15 @@
 import Foundation
 import UIKit
 
+public extension FrameLayout {
+	
+	@discardableResult
+	static func +(lhs: FrameLayout, rhs: UIView? = nil) -> FrameLayout {
+		lhs.targetView = rhs
+		return lhs
+	}
+}
+
 infix operator ---
 
 public extension StackFrameLayout {
