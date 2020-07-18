@@ -13,6 +13,7 @@ class CardView: UIView {
 	let earthImageView = UIImageView(image: UIImage(named: "earth_48x48"))
 	let rocketImageView = UIImageView(image: UIImage(named: "rocket_32x32"))
 	let nameLabel = UILabel()
+	let titleLabel = UILabel()
 	let dateLabel = UILabel()
 	let messageLabel = UILabel()
 	let expandButton = UIButton(type: .detailDisclosure)
@@ -35,6 +36,13 @@ class CardView: UIView {
 		nameLabel.font = .systemFont(ofSize: 18, weight: .bold)
 		nameLabel.text = "John Appleseed"
 		
+		titleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+		titleLabel.text = "Admin"
+		titleLabel.textColor = .white
+		titleLabel.backgroundColor = .purple
+		titleLabel.layer.cornerRadius = 4.0
+		titleLabel.layer.masksToBounds = true
+		
 		dateLabel.font = .systemFont(ofSize: 15, weight: .thin)
 		dateLabel.text = "01/01/2020"
 		
@@ -46,7 +54,7 @@ class CardView: UIView {
 			label.textColor = .black
 		}
 		
-		[earthImageView, rocketImageView, nameLabel, dateLabel, messageLabel, expandButton].forEach { (view) in
+		[earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { (view) in
 			addSubview(view)
 		}
 		
@@ -76,9 +84,12 @@ class CardView: UIView {
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
-				($0 + nameLabel).flexible()
+				($0 + nameLabel)//.flexible()
+				($0 + titleLabel).flexible()
+				($0 + 0).flexible()
 				$0 + expandButton
-				$0.distribution = .right
+				$0.spacing = 10
+//				$0.distribution = .right
 			}
 			$0 + dateLabel
 			$0 + 10.0
@@ -113,7 +124,7 @@ class CardView: UIView {
 		
 		frameLayout.spacing = 15.0
 		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-//		frameLayout.debug = true
+		frameLayout.debug = true
 		addSubview(frameLayout)
 	}
 	
