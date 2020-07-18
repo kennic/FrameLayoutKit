@@ -873,16 +873,14 @@ open class StackFrameLayout: FrameLayout {
 					return
 				}
 				
-				var flexibleFrame: FrameLayout? = nil
-				var flexibleTopEdge: CGFloat = 0
+				var flexibleFrameCount = 0
 				
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					
 					if frameLayout.isFlexible {
-						flexibleFrame = frameLayout
-						flexibleTopEdge = containerFrame.origin.y + usedSpace
-						break
+						flexibleFrameCount += 1
+						continue
 					}
 					
 					frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - usedSpace)
@@ -905,30 +903,28 @@ open class StackFrameLayout: FrameLayout {
 					usedSpace += frameContentSize.height + space
 				}
 				
-				if flexibleFrame != nil {
-					space = 0
-					usedSpace = 0
+				if flexibleFrameCount > 0 {
+					let spaces: CGFloat = CGFloat(flexibleFrameCount - 1) * spacing
+					let remainingHeight = containerFrame.size.height - usedSpace - spaces
+					let cellHeight = remainingHeight / CGFloat(flexibleFrameCount)
 					
-					for frameLayout in invertedLayoutArray {
-						if frameLayout.isEmpty { continue }
+					space = 0
+					var offset: CGFloat = edgeInsets.top
+					for frameLayout in frameLayouts {
+						var rect = frameLayout.frame
 						
-						if frameLayout == flexibleFrame {
-							targetFrame.origin.y = flexibleTopEdge
-							targetFrame.size.height = containerFrame.size.height - flexibleTopEdge - usedSpace + edgeInsets.top
-						}
-						else {
-							frameContentSize = CGSize(width: containerFrame.size.width, height: containerFrame.size.height - usedSpace)
-							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
-							targetFrame.origin.y = max(bounds.size.height - frameContentSize.height - edgeInsets.bottom - usedSpace, 0)
-							targetFrame.size.height = frameContentSize.height
+						if frameLayout.isFlexible {
+							rect = targetFrame
+							rect.size = CGSize(width: containerFrame.size.width, height: cellHeight).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						}
 						
-						frameLayout.frame = targetFrame
+						if rect.origin.y != offset || frameLayout.frame.size.height != rect.size.height {
+							rect.origin.y = offset
+							frameLayout.frame = rect
+						}
 						
-						if frameLayout == flexibleFrame { break }
-						
-						space = frameContentSize.height > 0 ? spacing : 0
-						usedSpace += frameContentSize.height + space
+						space = rect.size.height > 0 ? spacing : 0
+						offset += rect.size.height + space
 					}
 				}
 				break

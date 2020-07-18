@@ -80,7 +80,10 @@ class CardView: UIView {
 		
 		frameLayout + VStackLayout {
 			($0 + earthImageView).alignment = (.top, .center)
-			($0 + 0).flexible()
+			($0 + 0).with {
+				$0.flexible()
+				$0.minSize = CGSize(width: 0, height: 50)
+			}
 			($0 + rocketImageView).alignment = (.center, .center)
 		}
 		frameLayout + VStackLayout {
@@ -97,20 +100,11 @@ class CardView: UIView {
 			$0 + messageLabel
 			
 			//--- Example of split(ratio) distribution ---
-			$0 + 10.0
+			($0 + 0.0).flexible()
 			$0 + HStackLayout {
 				$0.distribution = .split(ratio: [0.5, -1, -1, -1, 0.3]) // -1 means auto
-				var i = 0
 				
-				let colors: [UIColor] = [.yellow, .green, .brown, .systemPink, .blue]
-				($0 + [UILabel(), UILabel(), UILabel(), UILabel(), UILabel()]).forEach {
-					if let label = $0.targetView as? UILabel {
-						addSubview(label)
-						label.textColor = .black
-						label.backgroundColor = colors[i]
-						i += 1
-					}
-					
+				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
 					$0.didLayoutSubviewsBlock = { sender in
 						if let label = sender.targetView as? UILabel {
 							label.text = "\(sender.frame.size.width) px"
@@ -126,8 +120,15 @@ class CardView: UIView {
 		
 		frameLayout.spacing = 15.0
 		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-//		frameLayout.debug = true
+		frameLayout.debug = true
 		addSubview(frameLayout)
+	}
+	
+	func Label(_ color: UIColor) -> UILabel {
+		let label = UILabel()
+		label.textColor = .black
+		label.backgroundColor = color
+		return label
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
