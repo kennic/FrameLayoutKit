@@ -471,7 +471,7 @@ open class StackFrameLayout: FrameLayout {
 						if frameLayout.isEmpty { continue }
 						
 						let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
-						let cellWidth = (ratioValue ?? 0) <= 0.0 ? (contentWidth - totalSpace) / max(CGFloat(visibleFrameCount - ratioIndex), 1.0) : contentWidth * ratioValue!
+						let cellWidth = (ratioValue ?? -1) < 0.0 ? (contentWidth - totalSpace) / max(CGFloat(visibleFrameCount - ratioIndex), 1.0) : contentWidth * ratioValue!
 						frameContentSize = CGSize(width: cellWidth, height: contentSize.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
@@ -746,10 +746,10 @@ open class StackFrameLayout: FrameLayout {
 				var finalRatio = ratio
 				var gapCount = visibleFrameCount - ratio.count
 				if gapCount > 0 {
-					finalRatio.append(contentsOf: [CGFloat](repeating: 0.0, count: gapCount))
+					finalRatio.append(contentsOf: [CGFloat](repeating: -1, count: gapCount))
 				}
 				
-				gapCount = finalRatio.filter({ $0 <= 0.0 }).count
+				gapCount = finalRatio.filter({ $0 < 0.0 }).count
 				
 				var ratioIndex = 0
 				let ratioValueCount = finalRatio.count
@@ -774,7 +774,7 @@ open class StackFrameLayout: FrameLayout {
 					if frameLayout.isEmpty { continue }
 					
 					let ratioValue = ratioIndex < ratioValueCount ? finalRatio[ratioIndex] : nil
-					if ratioValue ?? 0 <= 0.0 {
+					if ratioValue ?? -1 < 0.0 {
 						flexibleFrameIndexes.append(ratioIndex)
 						ratioIndex += 1
 						continue
@@ -797,7 +797,7 @@ open class StackFrameLayout: FrameLayout {
 					let cellWidth = remainingWidth / CGFloat(gapCount)
 					
 					ratioIndex = 0
-					var addingSpacing: CGFloat = 0.0
+					var offset: CGFloat = 0.0
 					for frameLayout in frameLayouts {
 						var rect = frameLayout.frame
 						
@@ -805,10 +805,12 @@ open class StackFrameLayout: FrameLayout {
 							rect.size = CGSize(width: cellWidth, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						}
 						
-						rect.origin.x = addingSpacing
-						frameLayout.frame = rect
+						if rect.origin.x != offset || frameLayout.frame.size.width != rect.size.width {
+							rect.origin.x = offset
+							frameLayout.frame = rect
+						}
 						
-						addingSpacing += rect.size.width
+						offset += rect.size.width
 						ratioIndex += 1
 					}
 				}
@@ -1098,7 +1100,7 @@ open class StackFrameLayout: FrameLayout {
 					if frameLayout.isEmpty { continue }
 					
 					let ratioValue = ratioIndex < ratioValueCount ? ratio[ratioIndex] : nil
-					let cellHeight = (ratioValue ?? 0) <= 0.0 ? (contentHeight - usedSpace) / max(CGFloat(visibleFrameCount - ratioIndex), 1.0) : contentHeight * ratioValue!
+					let cellHeight = (ratioValue ?? -1) < 0.0 ? (contentHeight - usedSpace) / max(CGFloat(visibleFrameCount - ratioIndex), 1.0) : contentHeight * ratioValue!
 					frameContentSize = CGSize(width: containerFrame.size.width, height: cellHeight).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 					
 					targetFrame.origin.y = containerFrame.origin.y + usedSpace
