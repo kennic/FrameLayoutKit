@@ -36,6 +36,7 @@ class CardView: UIView {
 		nameLabel.font = .systemFont(ofSize: 18, weight: .bold)
 		nameLabel.text = "John Appleseed"
 		
+		titleLabel.textAlignment = .center
 		titleLabel.font = .systemFont(ofSize: 14, weight: .regular)
 		titleLabel.text = "Admin"
 		titleLabel.textColor = .white
@@ -85,7 +86,7 @@ class CardView: UIView {
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
 				($0 + nameLabel)//.flexible()
-				($0 + titleLabel).flexible()
+				($0 + titleLabel).extendSize = CGSize(width: 10, height: 0)
 				($0 + 0).flexible()
 				$0 + expandButton
 				$0.spacing = 10
@@ -96,6 +97,7 @@ class CardView: UIView {
 			$0 + messageLabel
 			
 			//--- Example of split(ratio) distribution ---
+			$0 + 10.0
 			$0 + HStackLayout {
 				$0.distribution = .split(ratio: [0.5, -1, -1, -1, 0.3]) // -1 means auto
 				var i = 0
@@ -124,7 +126,7 @@ class CardView: UIView {
 		
 		frameLayout.spacing = 15.0
 		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-		frameLayout.debug = true
+//		frameLayout.debug = true
 		addSubview(frameLayout)
 	}
 	
