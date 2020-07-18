@@ -624,8 +624,10 @@ open class StackFrameLayout: FrameLayout {
 							rect.size = CGSize(width: cellWidth, height: containerFrame.size.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						}
 						
-						rect.origin.x = offset
-						frameLayout.frame = rect
+						if rect.origin.x != offset || frameLayout.frame.size.width != rect.size.width {
+							rect.origin.x = offset
+							frameLayout.frame = rect
+						}
 						
 						space = rect.size.width > 0 ? spacing : 0
 						offset += rect.size.width + space
