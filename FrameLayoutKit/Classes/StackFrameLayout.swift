@@ -806,7 +806,7 @@ open class StackFrameLayout: FrameLayout {
 				}
 				
 				if !flexibleFrameIndexes.isEmpty {
-					let remainingWidth = contentWidth - usedSpace
+					let remainingWidth = contentWidth - usedSpace + gapSpace * 2
 					let cellWidth = remainingWidth / CGFloat(gapCount)
 					
 					ratioIndex = 0
