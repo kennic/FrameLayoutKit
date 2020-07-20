@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
 	s.homepage          = 'https://github.com/kennic/FrameLayoutKit'
 	s.license           = { :type => 'MIT', :file => 'LICENSE' }
 	s.author            = { 'Nam Kennic' => 'namkennic@me.com' }
-	s.source            = { :git => 'https://github.com/kennic/FrameLayoutKit.git', :tag => "v" + s.version.to_s }
+	s.source            = { :git => 'https://github.com/kennic/FrameLayoutKit.git', :tag => s.version.to_s }
 	s.social_media_url  = 'https://twitter.com/namkennic'
 	s.platform          = :ios, "8.0"
 	s.platform          = :tvos, "9.0"
