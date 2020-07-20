@@ -402,13 +402,12 @@ open class StackFrameLayout: FrameLayout {
 				
 				switch distribution {
 				case .left, .right, .top, .bottom:
-					var flexibleFrame: FrameLayout? = nil
+					var flexibleFrames = [FrameLayout]()
 					for frameLayout in frameLayouts {
 						if frameLayout.isEmpty { continue }
 						
 						if frameLayout.isFlexible {
-							flexibleFrame = frameLayout
-							lastFrameLayout = flexibleFrame
+							flexibleFrames.append(frameLayout)
 							continue
 						}
 						
@@ -420,12 +419,19 @@ open class StackFrameLayout: FrameLayout {
 						maxHeight = max(maxHeight, frameContentSize.height)
 					}
 					
-					if let flexibleFrame = flexibleFrame {
-						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
-						frameContentSize = flexibleFrame.sizeThatFits(frameContentSize)
+					let flexibleFrameCount = flexibleFrames.count
+					if flexibleFrameCount > 0 {
+						let spaces: CGFloat = CGFloat(flexibleFrameCount - 1) * spacing
+						let remainingWidth = contentSize.width - totalSpace - spaces
+						let cellWidth = remainingWidth / CGFloat(flexibleFrameCount)
 						
-						totalSpace += frameContentSize.width
-						maxHeight = max(maxHeight, frameContentSize.height)
+						for frameLayout in flexibleFrames {
+							frameContentSize = CGSize(width: cellWidth, height: contentSize.height)
+							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+							
+							totalSpace += frameContentSize.width
+							maxHeight = max(maxHeight, frameContentSize.height)
+						}
 					}
 					
 					break
