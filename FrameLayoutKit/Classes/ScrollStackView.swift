@@ -157,7 +157,7 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func addSpace(_ size: CGFloat = 0) -> FrameLayout {
 		let layout = add(UIView())
-		layout.fixSize = CGSize(width: axis == .horizontal ? size : 0, height: axis == .vertical ? size : 0)
+		layout.minSize = CGSize(width: axis == .horizontal ? size : 0, height: axis == .vertical ? size : 0)
 		return layout
 	}
 	
