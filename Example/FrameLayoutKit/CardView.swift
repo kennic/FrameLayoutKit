@@ -90,7 +90,6 @@ class CardView: UIView {
 				($0 + 0).flexible()
 				$0 + expandButton
 				$0.spacing = 10
-//				$0.distribution = .right
 			}
 			$0 + dateLabel
 //			$0 + 10.0
