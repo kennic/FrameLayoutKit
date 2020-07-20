@@ -80,10 +80,7 @@ class CardView: UIView {
 		
 		frameLayout + VStackLayout {
 			($0 + earthImageView).alignment = (.top, .center)
-			($0 + 0).with {
-				$0.flexible()
-				$0.minSize = CGSize(width: 0, height: 50)
-			}
+			($0 + 0).flexible()
 			($0 + rocketImageView).alignment = (.center, .center)
 		}
 		frameLayout + VStackLayout {
@@ -96,14 +93,14 @@ class CardView: UIView {
 //				$0.distribution = .right
 			}
 			$0 + dateLabel
-			$0 + 10.0
+//			$0 + 10.0
 			$0 + messageLabel
 			
 			//--- Example of split(ratio) distribution ---
 			($0 + 0.0).flexible()
 			$0 + HStackLayout {
 				$0.distribution = .split(ratio: [0.5, -1, -1, -1, 0.3]) // -1 means auto
-				
+
 				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
 					$0.didLayoutSubviewsBlock = { sender in
 						if let label = sender.targetView as? UILabel {

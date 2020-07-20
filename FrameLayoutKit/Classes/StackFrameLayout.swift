@@ -404,13 +404,13 @@ open class StackFrameLayout: FrameLayout {
 				case .left, .right, .top, .bottom:
 					var flexibleFrame: FrameLayout? = nil
 					for frameLayout in frameLayouts {
+						if frameLayout.isEmpty { continue }
+						
 						if frameLayout.isFlexible {
 							flexibleFrame = frameLayout
 							lastFrameLayout = flexibleFrame
 							continue
 						}
-						
-						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = CGSize(width: contentSize.width - totalSpace, height: contentSize.height)
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
@@ -434,13 +434,13 @@ open class StackFrameLayout: FrameLayout {
 					var flexibleFrame: FrameLayout? = nil
 					frameContentSize = CGSize(width: contentSize.width / CGFloat(numberOfVisibleFrames()), height: contentSize.height)
 					for frameLayout in frameLayouts {
+						if frameLayout.isEmpty { continue }
+						
 						if frameLayout.isFlexible {
 							flexibleFrame = frameLayout
 							lastFrameLayout = flexibleFrame
 							continue
 						}
-						
-						if frameLayout.isEmpty { continue }
 						
 						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 						
@@ -493,13 +493,13 @@ open class StackFrameLayout: FrameLayout {
 				var maxWidth: CGFloat = 0
 				var flexibleFrame: FrameLayout? = nil
 				for frameLayout in frameLayouts {
+					if frameLayout.isEmpty { continue }
+					
 					if frameLayout.isFlexible {
 						flexibleFrame = frameLayout
 						lastFrameLayout = flexibleFrame
 						continue
 					}
-					
-					if frameLayout.isEmpty { continue }
 					
 					frameContentSize = CGSize(width: contentSize.width, height: contentSize.height - totalSpace)
 					frameContentSize = frameLayout.sizeThatFits(frameContentSize)
@@ -617,6 +617,8 @@ open class StackFrameLayout: FrameLayout {
 					space = 0
 					var offset: CGFloat = edgeInsets.left
 					for frameLayout in frameLayouts {
+						if frameLayout.isEmpty { continue }
+						
 						var rect = frameLayout.frame
 						
 						if frameLayout.isFlexible {
@@ -857,7 +859,7 @@ open class StackFrameLayout: FrameLayout {
 				break
 			}
 		}
-		else {
+		else { // if direction == .vertical
 			switch distribution {
 			case .top, .left:
 				if isOverlapped {
@@ -911,6 +913,7 @@ open class StackFrameLayout: FrameLayout {
 					space = 0
 					var offset: CGFloat = edgeInsets.top
 					for frameLayout in frameLayouts {
+						if frameLayout.isEmpty { continue }
 						var rect = frameLayout.frame
 						
 						if frameLayout.isFlexible {
