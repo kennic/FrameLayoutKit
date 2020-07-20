@@ -239,7 +239,7 @@ open class FrameLayout: UIView {
 	
 	#if DEBUG
 	override open func draw(_ rect: CGRect) {
-		guard debug, bounds != .zero else {
+		guard debug, !isEmpty, bounds != .zero else {
 			super.draw(rect)
 			return
 		}
