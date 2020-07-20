@@ -41,7 +41,11 @@ open class FrameLayout: UIView {
 	public var minContentSize: CGSize = .zero
 	/// Maximum size of targetView
 	public var maxContentSize: CGSize = .zero
+	/// Adding size to content size. `minSize` and `maxSize` still have higher priority
+	public var extendSize: CGSize = .zero
+	/// Vertical alignment
 	public var verticalAlignment: NKContentVerticalAlignment = .fill
+	/// Horizontal alignment
 	public var horizontalAlignment: NKContentHorizontalAlignment = .fill
 	/// The width of targetView will stretchs out to fill frameLayout if the width of this frameLayout is larger than targetView's width
 	public var allowContentVerticalGrowing = false
@@ -235,7 +239,7 @@ open class FrameLayout: UIView {
 	
 	#if DEBUG
 	override open func draw(_ rect: CGRect) {
-		guard debug else {
+		guard debug, bounds != .zero else {
 			super.draw(rect)
 			return
 		}
@@ -516,6 +520,9 @@ open class FrameLayout: UIView {
 			else {
 				result = targetView.sizeThatFits(size)
 			}
+			
+			result.width += extendSize.width
+			result.height += extendSize.height
 			
 			result.limitedTo(minSize: minSize, maxSize: maxSize)
 		}

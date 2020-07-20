@@ -13,6 +13,7 @@ class CardView: UIView {
 	let earthImageView = UIImageView(image: UIImage(named: "earth_48x48"))
 	let rocketImageView = UIImageView(image: UIImage(named: "rocket_32x32"))
 	let nameLabel = UILabel()
+	let titleLabel = UILabel()
 	let dateLabel = UILabel()
 	let messageLabel = UILabel()
 	let expandButton = UIButton(type: .detailDisclosure)
@@ -35,6 +36,14 @@ class CardView: UIView {
 		nameLabel.font = .systemFont(ofSize: 18, weight: .bold)
 		nameLabel.text = "John Appleseed"
 		
+		titleLabel.textAlignment = .center
+		titleLabel.font = .systemFont(ofSize: 14, weight: .regular)
+		titleLabel.text = "Admin"
+		titleLabel.textColor = .white
+		titleLabel.backgroundColor = .purple
+		titleLabel.layer.cornerRadius = 4.0
+		titleLabel.layer.masksToBounds = true
+		
 		dateLabel.font = .systemFont(ofSize: 15, weight: .thin)
 		dateLabel.text = "01/01/2020"
 		
@@ -46,7 +55,7 @@ class CardView: UIView {
 			label.textColor = .black
 		}
 		
-		[earthImageView, rocketImageView, nameLabel, dateLabel, messageLabel, expandButton].forEach { (view) in
+		[earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { (view) in
 			addSubview(view)
 		}
 		
@@ -76,28 +85,22 @@ class CardView: UIView {
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
-				($0 + nameLabel).flexible()
+				($0 + nameLabel)//.flexible()
+				($0 + titleLabel).extendSize = CGSize(width: 10, height: 0)
+				($0 + 0).flexible()
 				$0 + expandButton
-				$0.distribution = .right
+				$0.spacing = 10
 			}
 			$0 + dateLabel
-			$0 + 10.0
+//			$0 + 10.0
 			$0 + messageLabel
 			
 			//--- Example of split(ratio) distribution ---
+			($0 + 0.0).flexible()
 			$0 + HStackLayout {
 				$0.distribution = .split(ratio: [0.5, -1, -1, -1, 0.3]) // -1 means auto
-				var i = 0
-				
-				let colors: [UIColor] = [.yellow, .green, .brown, .systemPink, .blue]
-				($0 + [UILabel(), UILabel(), UILabel(), UILabel(), UILabel()]).forEach {
-					if let label = $0.targetView as? UILabel {
-						addSubview(label)
-						label.textColor = .black
-						label.backgroundColor = colors[i]
-						i += 1
-					}
-					
+
+				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
 					$0.didLayoutSubviewsBlock = { sender in
 						if let label = sender.targetView as? UILabel {
 							label.text = "\(sender.frame.size.width) px"
@@ -113,8 +116,15 @@ class CardView: UIView {
 		
 		frameLayout.spacing = 15.0
 		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-//		frameLayout.debug = true
+		frameLayout.debug = true
 		addSubview(frameLayout)
+	}
+	
+	func Label(_ color: UIColor) -> UILabel {
+		let label = UILabel()
+		label.textColor = .black
+		label.backgroundColor = color
+		return label
 	}
 	
 	required init?(coder aDecoder: NSCoder) {
