@@ -259,7 +259,7 @@ open class StackFrameLayout: FrameLayout {
 	@discardableResult
 	open func addSpace(_ size: CGFloat = 0) -> FrameLayout {
 		let frameLayout = add()
-		frameLayout.fixSize = CGSize(width: size, height: size)
+		frameLayout.minSize = CGSize(width: size, height: size)
 		return frameLayout
 	}
 	
