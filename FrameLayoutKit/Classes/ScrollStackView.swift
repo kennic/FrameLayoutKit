@@ -60,6 +60,11 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var debug: Bool {
+		get { frameLayout.debug }
+		set { frameLayout.debug = newValue }
+	}
+	
 	public let scrollView = UIScrollView()
 	public let frameLayout = StackFrameLayout(axis: .vertical, distribution: .top)
 	

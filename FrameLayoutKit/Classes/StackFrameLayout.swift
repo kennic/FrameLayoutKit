@@ -401,8 +401,8 @@ open class StackFrameLayout: FrameLayout {
 			var frameContentSize: CGSize
 			
 			let isInvertedAlignment = distribution == .bottom || distribution == .right
-			let activeFrameLayouts: [FrameLayout] = (isInvertedAlignment ? frameLayouts : frameLayouts.reversed())
-			let lastFrameLayout: FrameLayout? = activeFrameLayouts.first(where: { !$0.isEmpty })
+			let activeFrameLayouts: [FrameLayout] = (isInvertedAlignment ? frameLayouts.reversed() : frameLayouts)
+			let lastFrameLayout: FrameLayout? = activeFrameLayouts.last(where: { !$0.isEmpty })
 			
 			if axis == .horizontal {
 				var maxHeight: CGFloat = 0
@@ -433,7 +433,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						let flexibleFrameCount = flexibleFrames.count
 						if flexibleFrameCount > 0 {
-							let remainingSpace: CGFloat = CGFloat(flexibleFrameCount - 1) * spacing
+							let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 							let remainingWidth = contentSize.width - totalSpace - remainingSpace
 							let cellWidth = remainingWidth / CGFloat(flexibleFrameCount)
 							
@@ -441,7 +441,6 @@ open class StackFrameLayout: FrameLayout {
 								frameContentSize = CGSize(width: cellWidth, height: contentSize.height)
 								frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 								
-								totalSpace += frameContentSize.width
 								maxHeight = max(maxHeight, frameContentSize.height)
 							}
 						}
