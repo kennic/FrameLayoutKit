@@ -232,3 +232,11 @@ extension CGSize {
 	}
 	
 }
+
+internal extension Array where Element: Equatable {
+	
+	func replacingMultipleOccurrences(using array: (of: Element, with: Element)...) -> Array {
+		return map { elem in array.first(where: { $0.of == elem })?.with ?? elem }
+	}
+	
+}
