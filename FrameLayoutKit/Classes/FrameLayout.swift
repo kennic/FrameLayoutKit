@@ -59,6 +59,8 @@ open class FrameLayout: UIView {
 	public var shouldCacheSize = false
 	/// Make it flexible in a `StackFrameLayout`, that means when it was added to a stack, this flexible stack will be stretched base on the stack size
 	public var isFlexible = false
+	/// Ratio used in StackFrameLayout when isFlexible = true. Default value is auto (`-1`)
+	public var flexibleRatio: CGFloat = -1
 	/// if `true`, sizeThatFits will returns the intrinsic width of targetView
 	public var isIntrinsicSizeEnabled = true
 	/// Returns height from sizeThatFits base on ratio of width. For example setting `1.0` will returns a square size from sizeThatFits
@@ -225,8 +227,9 @@ open class FrameLayout: UIView {
 	
 	// MARK: -
 	
-	open func flexible() {
+	open func flexible(ratio: CGFloat = -1) {
 		isFlexible = true
+		flexibleRatio = ratio
 	}
 	
 	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
