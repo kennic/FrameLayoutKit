@@ -402,7 +402,7 @@ open class StackFrameLayout: FrameLayout {
 			
 			let isInvertedAlignment = distribution == .bottom || distribution == .right
 			let activeFrameLayouts: [FrameLayout] = (isInvertedAlignment ? frameLayouts.reversed() : frameLayouts)
-			let lastFrameLayout: FrameLayout? = activeFrameLayouts.last(where: { !$0.isEmpty && !$0.isFlexible })
+			let lastFrameLayout: FrameLayout? = activeFrameLayouts.last(where: { !$0.isEmpty })
 			
 			if axis == .horizontal {
 				var maxHeight: CGFloat = 0
@@ -600,7 +600,7 @@ open class StackFrameLayout: FrameLayout {
 		
 		let isInvertedAlignment = distribution == .bottom || distribution == .right
 		let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
-		let lastFrameLayout: FrameLayout? = (isInvertedAlignment ? frameLayouts : invertedLayoutArray).first(where: { !$0.isEmpty && !$0.isFlexible })
+		let lastFrameLayout: FrameLayout? = (isInvertedAlignment ? frameLayouts : invertedLayoutArray).first(where: { !$0.isEmpty })
 		
 		if axis == .horizontal {
 			switch distribution {
