@@ -1268,7 +1268,7 @@ open class StackFrameLayout: FrameLayout {
 	
 }
 
-extension Array where Element == CGFloat {
+fileprivate extension Array where Element == CGFloat {
 	
 	/// convert [0.2, -1, -1, 0.3] to [0.2, 0.25, 0.25, 0.3] so total value in array equal to 1.0
 	
