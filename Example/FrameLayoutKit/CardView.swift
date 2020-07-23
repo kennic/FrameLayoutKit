@@ -85,7 +85,7 @@ class CardView: UIView {
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
-				($0 + nameLabel)//.flexible(ratio: 0.8) // takes 80% of flexible width
+				($0 + nameLabel).flexible(ratio: 0.8) // takes 80% of flexible width
 				($0 + titleLabel).extendSize = CGSize(width: 10, height: 0)
 				($0 + 0).flexible()
 				$0 + expandButton
@@ -98,12 +98,13 @@ class CardView: UIView {
 			//--- Example of split(ratio) distribution ---
 			($0 + 0.0).flexible()
 			$0 + HStackLayout {
-				$0.distribution = .split(ratio: [0.5, -1, -1, -1, 0.3]) // -1 means auto
-
+				$0.distribution = .split(ratio: [0.5, -1, -1, 0.3]) // -1 means auto
+				$0.spacing = 10
+				
 				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
 					$0.didLayoutSubviewsBlock = { sender in
 						if let label = sender.targetView as? UILabel {
-							label.text = "\(sender.frame.size.width) px"
+							label.text = "\(sender.frame.size.width) x \(sender.frame.size.height)"
 						}
 					}
 				}
