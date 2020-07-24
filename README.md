@@ -46,51 +46,7 @@ let frameLayout = HStackLayout {
 Or you can use operand syntax for shorter/cleaner code:
 
 ```swift
-let frameLayout = HStackLayout {
-  $0 + VStackLayout {
-    ($0 + earthImageView).alignment = (.top, .center)
-    ($0 + 0).flexible()
-    ($0 + rocketImageView).alignment = (.center, .center)
-  }
-  $0 + VStackLayout {
-    $0 + [nameLabel, dateLabel]
-    $0 + 10
-    $0 + messageLabel
-    $0.spacing = 5.0
-  }
-
-  $0.spacing = 15.0
-  $0.padding(top: 15, left: 15, bottom: 15, right: 15)
-  $0.debug = true
-}
-```
-
-## Code syntax migration
-
-Standard syntax:
-
-```swift
-frameLayout.add(VStackLayout {
-	$0.add(earthImageView).alignment = (.top, .center)
-	$0.addSpace().flexible()
-	$0.add(rocketImageView).alignment = (.center, .center)
-})
-		
-frameLayout.add(VStackLayout {
-	$0.add([nameLabel, dateLabel])
-	$0.addSpace(10)
-	$0.add(messageLabel)
-	$0.spacing = 5.0
-})
-
-frameLayout.spacing = 15.0
-frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-frameLayout.debug = true
-```
-
-Operand syntax (recommended)
-
-```swift
+let frameLayout = StackFrameLayout(axis: .horizontal)
 frameLayout + VStackLayout {
 	($0 + earthImageView).alignment = (.top, .center)
 	($0 + 0).flexible() // add a flexible space
@@ -106,8 +62,8 @@ frameLayout + VStackLayout {
 frameLayout.spacing = 15.0
 frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
 frameLayout.debug = true // show debug frame
+}
 ```
-
 
 ## Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
