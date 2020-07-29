@@ -85,7 +85,7 @@ class CardView: UIView {
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
-				($0 + nameLabel).flexible(ratio: 0.8) // takes 80% of flexible width
+				($0 + nameLabel)//.flexible(ratio: 0.8) // takes 80% of flexible width
 				($0 + titleLabel).extendSize = CGSize(width: 10, height: 0)
 				($0 + 0).flexible()
 				$0 + expandButton
@@ -102,7 +102,12 @@ class CardView: UIView {
 				$0.spacing = 10
 				
 				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
-					$0.didLayoutSubviewsBlock = { sender in
+					$0.preSizeThatFitsConfigurationBlock = { (sender, size) in
+						if let label = sender.targetView as? UILabel {
+							label.text = "\(size.width) x \(size.height)"
+						}
+					}
+					$0.preLayoutConfigurationBlock = { sender in
 						if let label = sender.targetView as? UILabel {
 							label.text = "\(sender.frame.size.width) x \(sender.frame.size.height)"
 						}
@@ -125,7 +130,6 @@ class CardView: UIView {
 		let label = UILabel()
 		label.textColor = .black
 		label.backgroundColor = color
-		label.text = "Label"
 		return label
 	}
 	

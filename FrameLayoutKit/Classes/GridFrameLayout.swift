@@ -110,7 +110,7 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var horizontalSpacing: CGFloat {
+	public var verticalSpacing: CGFloat {
 		get { stackLayout.spacing }
 		set {
 			stackLayout.spacing = newValue
@@ -118,9 +118,9 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var verticalSpacing: CGFloat = 0 {
+	public var horizontalSpacing: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { ($0 as? StackFrameLayout)?.spacing = verticalSpacing }
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { ($0 as? StackFrameLayout)?.spacing = horizontalSpacing }
 			setNeedsLayout()
 		}
 	}
@@ -278,7 +278,7 @@ open class GridFrameLayout: FrameLayout {
 	fileprivate func newRow() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
 		layout.numberOfFrameLayouts = columns
-		layout.spacing = verticalSpacing
+		layout.spacing = horizontalSpacing
 		layout.debug = debug
 		
 		if fixRowHeight > 0 {

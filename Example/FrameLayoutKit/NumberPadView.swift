@@ -21,6 +21,8 @@ class NumberPadView: UIView {
 	
 	init() {
 		super.init(frame: .zero)
+		backgroundColor = UIColor.black.withAlphaComponent(0.1)
+		
 		let titles = titleMap.components(separatedBy: " ")
 		var i = 0
 		let buttons = titles.map { (title) -> UIButton in
@@ -40,7 +42,6 @@ class NumberPadView: UIView {
 		frameLayout.isAutoSize = false
 		frameLayout.views = buttons
 		frameLayout.isUserInteractionEnabled = true
-		backgroundColor = UIColor.black.withAlphaComponent(0.1)
 		addSubview(frameLayout)
 	}
 	
