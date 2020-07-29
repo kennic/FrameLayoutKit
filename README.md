@@ -1,6 +1,11 @@
 ![](https://github.com/kennic/FrameLayoutKit/blob/master/banner.jpg)
 
-![Swift](https://img.shields.io/badge/%20in-swift%204.2-orange.svg)
+[![Platform](https://img.shields.io/cocoapods/p/FrameLayoutKit.svg?style=flat)](http://cocoapods.org/pods/FrameLayoutKit)
+[![Language](http://img.shields.io/badge/language-Swift-brightgreen.svg?style=flat
+)](https://developer.apple.com/swift)
+[![Version](https://img.shields.io/cocoapods/v/FrameLayoutKit.svg?style=flat-square)](http://cocoapods.org/pods/FrameLayoutKit)
+[![SwiftPM Compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
+[![License](https://img.shields.io/cocoapods/l/FrameLayoutKit.svg?style=flat-square)](http://cocoapods.org/pods/FrameLayoutKit)
 
 FrameLayout is a super fast and easy to use layout library for iOS and tvOS.
 
