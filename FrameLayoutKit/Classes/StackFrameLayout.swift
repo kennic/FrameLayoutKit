@@ -224,7 +224,11 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil { addSubview(view) }
+			if let view = view, view.superview == nil {
+				if view is UIControl { isUserInteractionEnabled = true }
+				addSubview(view)
+			}
+			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayouts.append(frameLayout)
@@ -241,7 +245,11 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil { addSubview(view) }
+			if let view = view, view.superview == nil {
+				if view is UIControl { isUserInteractionEnabled = true }
+				addSubview(view)
+			}
+			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayouts.insert(frameLayout, at: index)
@@ -293,9 +301,9 @@ open class StackFrameLayout: FrameLayout {
 		frameLayouts.removeAll()
 	}
 	
-	open func replace(_ frameLayout: FrameLayout?, at index: Int) {
+	open func replace(_ frameLayout: FrameLayout?, at index: Int, autoRemoveOldTargetView: Bool = false) {
 		guard let frameLayout = frameLayout else {
-			removeFrameLayout(at: index)
+			removeFrameLayout(at: index, autoRemoveTargetView: autoRemoveOldTargetView)
 			return
 		}
 		
