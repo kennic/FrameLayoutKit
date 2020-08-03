@@ -331,11 +331,8 @@ open class FrameLayout: UIView {
 			if allowContentHorizontalGrowing {
 				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
 			}
-			else if allowContentHorizontalShrinking {
-				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
-			}
 			else {
-				targetFrame.size.width = contentSize.width
+				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.size.width, contentSize.width) : contentSize.width
 			}
 			
 			targetFrame.origin.x = containerFrame.origin.x
@@ -345,11 +342,8 @@ open class FrameLayout: UIView {
 			if allowContentHorizontalGrowing {
 				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
 			}
-			else if allowContentHorizontalShrinking {
-				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
-			}
 			else {
-				targetFrame.size.width = contentSize.width
+				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.size.width, contentSize.width) : contentSize.width
 			}
 			
 			targetFrame.origin.x = containerFrame.maxX - contentSize.width
@@ -359,11 +353,8 @@ open class FrameLayout: UIView {
 			if allowContentHorizontalGrowing {
 				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
 			}
-			else if allowContentHorizontalShrinking {
-				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
-			}
 			else {
-				targetFrame.size.width = contentSize.width
+				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.size.width, contentSize.width) : contentSize.width
 			}
 			
 			targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - contentSize.width) / 2
@@ -384,7 +375,6 @@ open class FrameLayout: UIView {
 			
 			targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame.size.width) / 2
 			break
-			
 		}
 		
 		switch verticalAlignment {
@@ -446,7 +436,8 @@ open class FrameLayout: UIView {
 			targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.height) / 2
 			break
 		}
-	
+		
+		targetFrame.size.limitedTo(minSize: minContentSize, maxSize: maxContentSize)
 		targetFrame = targetFrame.integral
 		
 		if targetView.superview == self {
