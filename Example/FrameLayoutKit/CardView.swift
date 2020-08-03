@@ -85,7 +85,7 @@ class CardView: UIView {
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
-				($0 + nameLabel)//.flexible(ratio: 0.8) // takes 80% of flexible width
+				($0 + nameLabel)//.flexible(ratio: 0.8) // takes 80% of flexible width, uncomment to try it
 				($0 + titleLabel).extendSize = CGSize(width: 10, height: 0)
 				($0 + 0).flexible()
 				$0 + expandButton
@@ -109,7 +109,8 @@ class CardView: UIView {
 					}
 					$0.preLayoutConfigurationBlock = { sender in
 						if let label = sender.targetView as? UILabel {
-							label.text = "\(sender.frame.size.width) x \(sender.frame.size.height)"
+							let size = sender.frame.size
+							label.text = "\(size.width) x \(size.height)"
 						}
 					}
 				}
