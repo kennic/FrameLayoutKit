@@ -446,6 +446,8 @@ open class StackFrameLayout: FrameLayout {
 								frameContentSize = CGSize(width: cellWidth, height: contentSize.height)
 								frameContentSize = frameLayout.sizeThatFits(frameContentSize)
 								
+								gapSpace = frameContentSize.width > 0 ? spacing : 0
+								totalSpace += frameContentSize.width + gapSpace
 								maxHeight = max(maxHeight, frameContentSize.height)
 								ratioIndex += 1
 							}
