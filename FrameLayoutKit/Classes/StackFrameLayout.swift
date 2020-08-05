@@ -224,10 +224,7 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil {
-				if view is UIControl { isUserInteractionEnabled = true }
-				addSubview(view)
-			}
+			if let view = view, view.superview == nil { addSubview(view) }
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
@@ -245,10 +242,7 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil {
-				if view is UIControl { isUserInteractionEnabled = true }
-				addSubview(view)
-			}
+			if let view = view, view.superview == nil { addSubview(view) }
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
