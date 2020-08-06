@@ -145,7 +145,7 @@ open class FrameLayout: UIView {
 	override open var frame: CGRect {
 		get { super.frame }
 		set {
-			if newValue.isInfinite || newValue.isNull || newValue.origin.x.isNaN || newValue.origin.y.isNaN || newValue.size.width.isNaN || newValue.size.height.isNaN {
+			if newValue.isInfinite || newValue.isNull || newValue.minX.isNaN || newValue.minY.isNaN || newValue.width.isNaN || newValue.height.isNaN {
 				return
 			}
 			
@@ -166,7 +166,7 @@ open class FrameLayout: UIView {
 	override open var bounds: CGRect {
 		get { super.bounds }
 		set {
-			if newValue.isInfinite || newValue.isNull || newValue.origin.x.isNaN || newValue.origin.y.isNaN || newValue.size.width.isNaN || newValue.size.height.isNaN {
+			if newValue.isInfinite || newValue.isNull || newValue.minX.isNaN || newValue.minY.isNaN || newValue.width.isNaN || newValue.height.isNaN {
 				return
 			}
 			
@@ -313,7 +313,7 @@ open class FrameLayout: UIView {
 		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, !targetView.isHidden, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else {
+		guard let targetView = targetView, !targetView.isHidden, !isHidden, !bounds.isEmpty else {
 			didLayoutSubviewsBlock?(self)
 			return
 		}
@@ -329,21 +329,21 @@ open class FrameLayout: UIView {
 		switch horizontalAlignment {
 		case .left:
 			if allowContentHorizontalGrowing {
-				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+				targetFrame.size.width = max(containerFrame.width, contentSize.width)
 			}
 			else {
-				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.size.width, contentSize.width) : contentSize.width
+				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.width, contentSize.width) : contentSize.width
 			}
 			
-			targetFrame.origin.x = containerFrame.origin.x
+			targetFrame.origin.x = containerFrame.minX
 			break
 			
 		case .right:
 			if allowContentHorizontalGrowing {
-				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+				targetFrame.size.width = max(containerFrame.width, contentSize.width)
 			}
 			else {
-				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.size.width, contentSize.width) : contentSize.width
+				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.width, contentSize.width) : contentSize.width
 			}
 			
 			targetFrame.origin.x = containerFrame.maxX - contentSize.width
@@ -351,53 +351,53 @@ open class FrameLayout: UIView {
 			
 		case .center:
 			if allowContentHorizontalGrowing {
-				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+				targetFrame.size.width = max(containerFrame.width, contentSize.width)
 			}
 			else {
-				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.size.width, contentSize.width) : contentSize.width
+				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.width, contentSize.width) : contentSize.width
 			}
 			
-			targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - contentSize.width) / 2
+			targetFrame.origin.x = containerFrame.minX + (containerFrame.width - contentSize.width) / 2
 			break
 			
 		case .fill:
-			targetFrame.origin.x = containerFrame.origin.x
-			targetFrame.size.width = containerFrame.size.width
+			targetFrame.origin.x = containerFrame.minX
+			targetFrame.size.width = containerFrame.width
 			break
 			
 		case .fit:
 			if allowContentHorizontalGrowing {
-				targetFrame.size.width = max(containerFrame.size.width, contentSize.width)
+				targetFrame.size.width = max(containerFrame.width, contentSize.width)
 			}
 			else {
-				targetFrame.size.width = min(containerFrame.size.width, contentSize.width)
+				targetFrame.size.width = min(containerFrame.width, contentSize.width)
 			}
 			
-			targetFrame.origin.x = containerFrame.origin.x + (containerFrame.size.width - targetFrame.size.width) / 2
+			targetFrame.origin.x = containerFrame.minX + (containerFrame.width - targetFrame.width) / 2
 			break
 		}
 		
 		switch verticalAlignment {
 		case .top:
 			if allowContentVerticalGrowing {
-				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = max(containerFrame.height, contentSize.height)
 			}
 			else if allowContentVerticalShrinking {
-				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = min(containerFrame.height, contentSize.height)
 			}
 			else {
 				targetFrame.size.height = contentSize.height
 			}
 			
-			targetFrame.origin.y = containerFrame.origin.y
+			targetFrame.origin.y = containerFrame.minY
 			break
 		
 		case .bottom:
 			if allowContentVerticalGrowing {
-				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = max(containerFrame.height, contentSize.height)
 			}
 			else if allowContentVerticalShrinking {
-				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = min(containerFrame.height, contentSize.height)
 			}
 			else {
 				targetFrame.size.height = contentSize.height
@@ -408,32 +408,32 @@ open class FrameLayout: UIView {
 			
 		case .center:
 			if allowContentVerticalGrowing {
-				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = max(containerFrame.height, contentSize.height)
 			}
 			else if allowContentVerticalShrinking {
-				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = min(containerFrame.height, contentSize.height)
 			}
 			else {
 				targetFrame.size.height = contentSize.height
 			}
 			
-			targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - contentSize.height) / 2
+			targetFrame.origin.y = containerFrame.minY + (containerFrame.height - contentSize.height) / 2
 			break
 			
 		case .fill:
-			targetFrame.origin.y = containerFrame.origin.y
-			targetFrame.size.height = containerFrame.size.height
+			targetFrame.origin.y = containerFrame.minY
+			targetFrame.size.height = containerFrame.height
 			break
 			
 		case .fit:
 			if allowContentVerticalGrowing {
-				targetFrame.size.height = max(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = max(containerFrame.height, contentSize.height)
 			}
 			else {
-				targetFrame.size.height = min(containerFrame.size.height, contentSize.height)
+				targetFrame.size.height = min(containerFrame.height, contentSize.height)
 			}
 			
-			targetFrame.origin.y = containerFrame.origin.y + (containerFrame.size.height - targetFrame.size.height) / 2
+			targetFrame.origin.y = containerFrame.minY + (containerFrame.height - targetFrame.height) / 2
 			break
 		}
 		
@@ -445,13 +445,13 @@ open class FrameLayout: UIView {
 		}
 		else {
 			if superview == nil || window == nil  {
-				targetFrame.origin.x = frame.origin.x
-				targetFrame.origin.y = frame.origin.y
+				targetFrame.origin.x = frame.minX
+				targetFrame.origin.y = frame.minY
 				
 				var superView: UIView? = superview
 				while superView != nil && (superView is FrameLayout) {
-					targetFrame.origin.x += superView!.frame.origin.x
-					targetFrame.origin.y += superView!.frame.origin.y
+					targetFrame.origin.x += superView!.frame.minX
+					targetFrame.origin.y += superView!.frame.minY
 					superView = superView!.superview
 				}
 				

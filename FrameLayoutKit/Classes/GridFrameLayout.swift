@@ -154,13 +154,13 @@ open class GridFrameLayout: FrameLayout {
 			stackLayout.frameLayouts.forEach { (layout) in
 				if let layout = layout as? StackFrameLayout {
 					layout.numberOfFrameLayouts = columns
-					layout.frameLayouts.forEach { (layout) in
+					layout.frameLayouts.forEach {
 						if fixColumnWidth > 0 {
-							layout.fixSize = CGSize(width: fixColumnWidth, height: layout.fixSize.height)
+							$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
 						}
 						else {
-							layout.minSize = CGSize(width: minColumnWidth, height: layout.minSize.height)
-							layout.maxSize = CGSize(width: maxColumnWidth, height: layout.maxSize.height)
+							$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
+							$0.maxSize = CGSize(width: maxColumnWidth, height: $0.maxSize.height)
 						}
 					}
 				}
