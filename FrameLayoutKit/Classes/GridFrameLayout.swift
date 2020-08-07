@@ -250,16 +250,7 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	public func allFrameLayouts() -> [FrameLayout] {
-		var results = [FrameLayout]()
-		for r in 0..<stackLayout.frameLayouts.count {
-			guard let rowLayout = stackLayout.frameLayouts[r] as? StackFrameLayout else { continue }
-			for c in 0..<rowLayout.frameLayouts.count {
-				if let layout = frameLayout(row: r, column: c) {
-					results.append(layout)
-				}
-			}
-		}
-		return results
+		return stackLayout.frameLayouts.compactMap { $0 as? StackFrameLayout }.flatMap { $0.frameLayouts }
 	}
 	
 	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {

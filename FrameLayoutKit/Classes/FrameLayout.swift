@@ -466,10 +466,12 @@ open class FrameLayout: UIView {
 	}
 	
 	open override func didMoveToWindow() {
+		super.didMoveToWindow()
 		setNeedsLayout()
 	}
 	
 	open override func didMoveToSuperview() {
+		super.didMoveToSuperview()
 		setNeedsLayout()
 	}
 	
