@@ -914,7 +914,7 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = CGSize(width: containerFrame.width - usedSpace, height: containerFrame.height)
+						frameContentSize = containerFrame.size
 						let fitSize = frameLayout.sizeThatFits(frameContentSize)
 						frameContentSize.width = fitSize.width
 						
@@ -1190,7 +1190,7 @@ open class StackFrameLayout: FrameLayout {
 							continue
 						}
 						
-						frameContentSize = CGSize(width: containerFrame.width, height: containerFrame.height - usedSpace)
+						frameContentSize = containerFrame.size
 						let fitSize = frameLayout.sizeThatFits(frameContentSize)
 						frameContentSize.height = fitSize.height
 						
