@@ -113,6 +113,19 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var contentFitSize: CGSize = CGSize(width: CGFloat.infinity, height: CGFloat.infinity) {
+		didSet {
+			setNeedsLayout()
+		}
+	}
+	
+	/// Block will be called before calling sizeThatFits
+	public var preSizeThatFitsConfigurationBlock: ((ScrollStackView, CGSize) -> Void)?
+	/// Block will be called before calling layoutSubviews
+	public var preLayoutConfigurationBlock: ((ScrollStackView) -> Void)?
+	/// Block will be called at the end of layoutSubviews function
+	public var didLayoutSubviewsBlock: ((ScrollStackView) -> Void)?
+	
 	public let scrollView = UIScrollView()
 	public let frameLayout = StackFrameLayout(axis: .vertical, distribution: .top)
 	
@@ -157,14 +170,16 @@ open class ScrollStackView: UIView {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		preSizeThatFitsConfigurationBlock?(self, size)
 		return frameLayout.sizeThatFits(size)
 	}
 	
 	override open func layoutSubviews() {
+		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
 		let viewSize = bounds.size
-		let sizeToFit = axis == .horizontal ? CGSize(width: CGFloat.infinity, height: viewSize.height) : CGSize(width: viewSize.width, height: CGFloat.infinity)
+		let sizeToFit = axis == .horizontal ? CGSize(width: contentFitSize.width, height: viewSize.height) : CGSize(width: viewSize.width, height: contentFitSize.height)
 		let contentSize = frameLayout.sizeThatFits(sizeToFit, intrinsic: true)
 		scrollView.contentSize = contentSize
 		scrollView.frame = bounds
@@ -179,6 +194,7 @@ open class ScrollStackView: UIView {
 			scrollView.contentSize.width = min(viewSize.width, contentSize.width)
 		}
 		frameLayout.frame = contentFrame
+		didLayoutSubviewsBlock?(self)
 	}
 	
 	// MARK: -
