@@ -65,6 +65,54 @@ open class ScrollStackView: UIView {
 		set { frameLayout.debug = newValue }
 	}
 	
+	public var minContentSize: CGSize {
+		get { frameLayout.minContentSize }
+		set {
+			frameLayout.minContentSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var maxContentSize: CGSize {
+		get { frameLayout.maxContentSize }
+		set {
+			frameLayout.maxContentSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var minSize: CGSize {
+		get { frameLayout.minSize }
+		set {
+			frameLayout.minSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var maxSize: CGSize {
+		get { frameLayout.maxSize }
+		set {
+			frameLayout.maxSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixSize: CGSize {
+		get { frameLayout.fixSize }
+		set {
+			frameLayout.fixSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var extendSize: CGSize {
+		get { frameLayout.extendSize }
+		set {
+			frameLayout.extendSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public let scrollView = UIScrollView()
 	public let frameLayout = StackFrameLayout(axis: .vertical, distribution: .top)
 	
@@ -117,17 +165,18 @@ open class ScrollStackView: UIView {
 		
 		let viewSize = bounds.size
 		let sizeToFit = axis == .horizontal ? CGSize(width: CGFloat.infinity, height: viewSize.height) : CGSize(width: viewSize.width, height: CGFloat.infinity)
-		scrollView.contentSize = frameLayout.sizeThatFits(sizeToFit)
+		let contentSize = frameLayout.sizeThatFits(sizeToFit, intrinsic: true)
+		scrollView.contentSize = contentSize
 		scrollView.frame = bounds
 		
 		var contentFrame = bounds
 		if axis == .horizontal {
-			contentFrame.size.width = max(viewSize.width, scrollView.contentSize.width)
-			scrollView.contentSize.height = min(viewSize.height, scrollView.contentSize.height)
+			contentFrame.size.width = max(viewSize.width, contentSize.width)
+			scrollView.contentSize.height = min(viewSize.height, contentSize.height)
 		}
 		else {
-			contentFrame.size.height = max(viewSize.height, scrollView.contentSize.height)
-			scrollView.contentSize.width = min(viewSize.width, scrollView.contentSize.width)
+			contentFrame.size.height = max(viewSize.height, contentSize.height)
+			scrollView.contentSize.width = min(viewSize.width, contentSize.width)
 		}
 		frameLayout.frame = contentFrame
 	}

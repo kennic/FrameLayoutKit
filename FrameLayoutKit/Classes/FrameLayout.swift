@@ -29,7 +29,7 @@ A single frameLayout handles size and position of a view
 open class FrameLayout: UIView {
 	/// Target view that handled by this frameLayout
 	public var targetView: UIView? = nil
-	/// If set to `true`, sizeThatFits(size:) will returns `.zero` if `targetView` is hidden.
+	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
@@ -37,7 +37,7 @@ open class FrameLayout: UIView {
 	public var minSize: CGSize = .zero
 	/// Maximum size of frameLayout
 	public var maxSize: CGSize = .zero
-	/// Minimum size of targetView
+	/// Minimum size of `targetView`
 	public var minContentSize: CGSize = .zero
 	/// Maximum size of targetView
 	public var maxContentSize: CGSize = .zero
@@ -47,23 +47,23 @@ open class FrameLayout: UIView {
 	public var verticalAlignment: NKContentVerticalAlignment = .fill
 	/// Horizontal alignment
 	public var horizontalAlignment: NKContentHorizontalAlignment = .fill
-	/// The width of targetView will stretchs out to fill frameLayout if the width of this frameLayout is larger than targetView's width
+	/// Width of `targetView` will be stretched out to fill frameLayout if the width of this frameLayout is larger than `targetView`'s width
 	public var allowContentVerticalGrowing = false
-	/// The width of targetView will shrinking down to fit frameLayout if the width of this frameLayout is smaller than targetView's width
+	/// Width of `targetView` will be shrinked down to fit frameLayout if the width of this frameLayout is smaller than `targetView`'s width
 	public var allowContentVerticalShrinking = false
-	/// The height of targetView will stretchs out to fill frameLayout if the height of this frameLayout is larger than targetView's height
+	/// Height of `targetView` will be stretched out to fill frameLayout if the height of this frameLayout is larger than `targetView`'s height
 	public var allowContentHorizontalGrowing = false
-	/// The height of targetView will shrinking down to fit frameLayout if the height of this frameLayout is smaller than targetView's height
+	/// Height of `targetView` will be shrinked down to fit frameLayout if the height of this frameLayout is smaller than `targetView`'s height
 	public var allowContentHorizontalShrinking = false
-	/// Value of sizeThatFits will be cached based on targetView's memory address
+	/// Value of `sizeThatFits` will be cached based on `targetView`'s memory address. This is not proved for better performance, use it with care. Default is `false`
 	public var shouldCacheSize = false
 	/// Make it flexible in a `StackFrameLayout`, that means when it was added to a stack, this flexible stack will be stretched base on the stack size
 	public var isFlexible = false
-	/// Ratio used in StackFrameLayout when isFlexible = true. Default value is auto (`-1`)
+	/// Ratio used in `StackFrameLayout` when `isFlexible` = true. Default value is auto (`-1`)
 	public var flexibleRatio: CGFloat = -1
-	/// if `true`, sizeThatFits will returns the intrinsic width of targetView
+	/// if `true`, `sizeThatFits` will returns the intrinsic width of `targetView`
 	public var isIntrinsicSizeEnabled = true
-	/// Returns height from sizeThatFits base on ratio of width. For example setting `1.0` will returns a square size from sizeThatFits
+	/// Returns height from `sizeThatFits` base on ratio of width. For example setting `1.0` will returns a square size from `sizeThatFits`
 	public var heightRatio: CGFloat = 0 {
 		didSet {
 			if heightRatio > 0 {
