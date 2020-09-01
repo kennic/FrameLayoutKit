@@ -246,6 +246,11 @@ open class ScrollStackView: UIView {
 		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
 	}
 	
+	override open func setNeedsLayout() {
+		super.setNeedsLayout()
+		frameLayout.setNeedsLayout()
+	}
+	
 	// MARK: -
 	
 	fileprivate func updateLayout() {
