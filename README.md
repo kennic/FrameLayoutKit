@@ -13,6 +13,14 @@ FrameLayout is a super fast and easy to use layout library for iOS and tvOS.
 
 For Objective-C version: [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayoutKit) (Deprecated, not recommended)
 
+## Why?
+
+Say NO to autolayout constraint nightmare:
+
+![NO](https://github.com/kennic/FrameLayoutKit/blob/master/no_constraint.png)
+![YES](https://github.com/kennic/FrameLayoutKit/blob/master/frameLayoutSyntax.png)
+
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
