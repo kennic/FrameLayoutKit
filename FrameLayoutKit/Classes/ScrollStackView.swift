@@ -131,12 +131,16 @@ open class ScrollStackView: UIView {
 	
 	// MARK: -
 	
-	convenience public init(views: [UIView], axis: NKLayoutAxis = .vertical) {
+	convenience public init(axis: NKLayoutAxis = .vertical, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {
 		self.init()
 		
 		self.axis = axis
+		self.distribution = distribution
+		
 		defer {
-			self.views = views
+			if let views = views, !views.isEmpty {
+				self.views = views
+			}
 		}
 	}
 	
