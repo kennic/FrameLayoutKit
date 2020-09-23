@@ -119,6 +119,14 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var isIntrinsicSizeEnabled: Bool {
+		get { frameLayout.isIntrinsicSizeEnabled }
+		set {
+			frameLayout.isIntrinsicSizeEnabled = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	/// Block will be called before calling sizeThatFits
 	public var preSizeThatFitsConfigurationBlock: ((ScrollStackView, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
