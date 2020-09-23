@@ -215,6 +215,18 @@ open class ScrollStackView: UIView {
 		return frameLayout.frameLayout(at: index)?.targetView
 	}
 	
+	public func frameLayout(at index: Int) -> FrameLayout? {
+		return frameLayout.frameLayout(at: index)
+	}
+	
+	public func frameLayout(with view: UIView) -> FrameLayout? {
+		return frameLayout.frameLayout(with: view)
+	}
+	
+	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
+		frameLayout.enumerate(block)
+	}
+	
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
 		if let view = view { scrollView.addSubview(view) }
