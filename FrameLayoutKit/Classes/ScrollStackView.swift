@@ -127,6 +127,22 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var isFlexible: Bool {
+		get { frameLayout.isFlexible }
+		set {
+			frameLayout.isFlexible = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var heightRatio: CGFloat {
+		get { frameLayout.heightRatio }
+		set {
+			frameLayout.heightRatio = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	/// Block will be called before calling sizeThatFits
 	public var preSizeThatFitsConfigurationBlock: ((ScrollStackView, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
@@ -225,6 +241,10 @@ open class ScrollStackView: UIView {
 	
 	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
 		frameLayout.enumerate(block)
+	}
+	
+	public func flexible(ratio: CGFloat = -1) {
+		frameLayout.flexible(ratio: ratio)
 	}
 	
 	@discardableResult
