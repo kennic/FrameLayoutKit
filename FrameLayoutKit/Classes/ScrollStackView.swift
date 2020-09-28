@@ -311,6 +311,11 @@ open class ScrollStackView: UIView {
 		frameLayout.setNeedsLayout()
 	}
 	
+	open override func layoutIfNeeded() {
+		super.layoutIfNeeded()
+		frameLayout.layoutIfNeeded()
+	}
+	
 	// MARK: -
 	
 	fileprivate func updateLayout() {
