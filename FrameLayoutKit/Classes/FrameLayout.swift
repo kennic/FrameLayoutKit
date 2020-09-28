@@ -313,7 +313,7 @@ open class FrameLayout: UIView {
 		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, !targetView.isHidden, !isHidden, !bounds.isEmpty else {
+		guard let targetView = targetView, !isEmpty, !bounds.isEmpty else {
 			didLayoutSubviewsBlock?(self)
 			return
 		}

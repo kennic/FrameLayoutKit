@@ -119,6 +119,14 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var ignoreHiddenView: Bool {
+		get { frameLayout.ignoreHiddenView }
+		set {
+			frameLayout.ignoreHiddenView = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var isIntrinsicSizeEnabled: Bool {
 		get { frameLayout.isIntrinsicSizeEnabled }
 		set {
