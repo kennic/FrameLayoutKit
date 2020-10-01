@@ -247,6 +247,7 @@ open class StackFrameLayout: FrameLayout {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayouts.insert(frameLayout, at: index)
+			addSubview(frameLayout)
 			return frameLayout
 		}
 	}
