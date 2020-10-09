@@ -73,13 +73,6 @@ open class FrameLayout: UIView {
 	}
 	
 	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
-	@available(*, deprecated, renamed: "debug")
-	public var showFrameDebug: Bool {
-		get { debug }
-		set { debug = newValue}
-	}
-	
-	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
 	public var debug: Bool = false {
 		didSet {
 			setNeedsDisplay()
@@ -109,29 +102,13 @@ open class FrameLayout: UIView {
 		}
 	}
 	
-	@available(*, deprecated, renamed: "alignment")
-	public var contentAlignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
-		didSet {
-			verticalAlignment = contentAlignment.vertical
-			horizontalAlignment = contentAlignment.horizontal
-			
-			setNeedsLayout()
-		}
-	}
-	
+	/// Set the alignment of both axis
 	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
 		didSet {
 			verticalAlignment = alignment.vertical
 			horizontalAlignment = alignment.horizontal
 			
 			setNeedsLayout()
-		}
-	}
-	
-	@available(*, deprecated, message: "use `with` instead")
-	public var configurationBlock: ((_ frameLayout: FrameLayout) -> Void)? = nil {
-		didSet {
-			configurationBlock?(self)
 		}
 	}
 	
@@ -192,10 +169,12 @@ open class FrameLayout: UIView {
 		return [:]
 	}()
 	
-	internal var isEmpty: Bool {
+	/// Returns `true` if `targetView` is nil or hidden. Only if `ignoreHiddenView` is `true`
+	public var isEmpty: Bool {
 		return ((targetView?.isHidden ?? false || isHidden) && ignoreHiddenView)
 	}
 	
+	/// Returns intrinsic content size
 	open override var intrinsicContentSize: CGSize {
 		return contentSizeThatFits(size: bounds.size)
 	}

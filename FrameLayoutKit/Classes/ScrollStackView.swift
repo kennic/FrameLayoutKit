@@ -257,6 +257,10 @@ open class ScrollStackView: UIView {
 		frameLayout.flexible(ratio: ratio)
 	}
 	
+	public func invert() {
+		frameLayout.invert()
+	}
+	
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
 		if let view = view { scrollView.addSubview(view) }

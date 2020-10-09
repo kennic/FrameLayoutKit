@@ -11,18 +11,6 @@ open class StackFrameLayout: FrameLayout {
 	public var distribution: NKLayoutDistribution = .top
 	public var axis: NKLayoutAxis = .vertical
 	
-	@available(*, deprecated, renamed: "axis")
-	public var layoutDirection: NKLayoutAxis {
-		get { axis }
-		set { axis = newValue }
-	}
-	
-	@available(*, deprecated, renamed: "distribution")
-	public var layoutAlignment: NKLayoutDistribution {
-		get { distribution }
-		set { distribution = newValue }
-	}
-	
 	public var spacing: CGFloat = 0 {
 		didSet {
 			if spacing != oldValue {
@@ -39,66 +27,43 @@ open class StackFrameLayout: FrameLayout {
 	
 	override open var ignoreHiddenView: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.ignoreHiddenView = ignoreHiddenView
-			}
+			frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView }
 		}
 	}
 	
 	override open var shouldCacheSize: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.shouldCacheSize = shouldCacheSize
-			}
-		}
-	}
-	
-	@available(*, deprecated, renamed: "debug")
-	override open var showFrameDebug: Bool {
-		didSet {
-			for layout in frameLayouts {
-				layout.debug = showFrameDebug
-			}
+			frameLayouts.forEach { $0.shouldCacheSize = shouldCacheSize }
 		}
 	}
 	
 	override open var debug: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.debug = debug
-			}
+			frameLayouts.forEach { $0.debug = debug }
 		}
 	}
 	
 	override open var allowContentVerticalGrowing: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.allowContentVerticalGrowing = allowContentVerticalGrowing
-			}
+			frameLayouts.forEach { $0.allowContentVerticalGrowing = allowContentVerticalGrowing }
 		}
 	}
 	
 	override open var allowContentVerticalShrinking: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.allowContentVerticalShrinking = allowContentVerticalShrinking
-			}
+			frameLayouts.forEach { $0.allowContentVerticalShrinking = allowContentVerticalShrinking }
 		}
 	}
 	
 	override open var allowContentHorizontalGrowing: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.allowContentHorizontalGrowing = allowContentHorizontalGrowing
-			}
+			frameLayouts.forEach { $0.allowContentHorizontalGrowing = allowContentHorizontalGrowing }
 		}
 	}
 	
 	override open var allowContentHorizontalShrinking: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.allowContentHorizontalShrinking = allowContentHorizontalShrinking
-			}
+			frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking }
 		}
 	}
 	
@@ -116,9 +81,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	override open var clipsToBounds: Bool {
 		didSet {
-			for layout in frameLayouts {
-				layout.clipsToBounds = clipsToBounds
-			}
+			frameLayouts.forEach { $0.clipsToBounds = clipsToBounds }
 		}
 	}
 	
@@ -157,18 +120,6 @@ open class StackFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	@available(*, deprecated, renamed: "init(axis:distribution:views:)")
-	convenience public init(direction: NKLayoutAxis, alignment: NKLayoutDistribution = .top, views: [UIView]? = nil) {
-		self.init()
-		
-		self.axis = direction
-		self.distribution = alignment
-		
-		if let views = views {
-			add(views)
-		}
-	}
-	
 	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {
 		self.init()
 		
@@ -190,24 +141,6 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	// MARK: -
-	
-	@available(*, deprecated, renamed: "add(view:)")
-	@discardableResult
-	open func append(frameLayout: FrameLayout) -> FrameLayout {
-		frameLayouts.append(frameLayout)
-		addSubview(frameLayout)
-		return frameLayout
-	}
-	
-	@available(*, deprecated, renamed: "add(view:)")
-	@discardableResult
-	open func append(view: UIView? = nil) -> FrameLayout {
-		let frameLayout = FrameLayout(targetView: view)
-		frameLayout.debug = debug
-		frameLayouts.append(frameLayout)
-		addSubview(frameLayout)
-		return frameLayout
-	}
 	
 	@discardableResult
 	open func add(_ views: [UIView]) -> [FrameLayout] {
@@ -250,12 +183,6 @@ open class StackFrameLayout: FrameLayout {
 			addSubview(frameLayout)
 			return frameLayout
 		}
-	}
-	
-	@available(*, deprecated, renamed: "addSpace(size:)")
-	@discardableResult
-	open func appendSpace(size: CGFloat = 0) -> FrameLayout {
-		return addSpace(size)
 	}
 	
 	@discardableResult
@@ -320,6 +247,11 @@ open class StackFrameLayout: FrameLayout {
 		else if index == count {
 			insert(nil, at: index)
 		}
+	}
+	
+	public func invert() {
+		frameLayouts = frameLayouts.reversed()
+		setNeedsLayout()
 	}
 	
 	// MARK: -

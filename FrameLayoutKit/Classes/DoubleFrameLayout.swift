@@ -44,6 +44,7 @@ public struct Clamping<Value: Comparable> {
 	}
 }
 
+/*
 @propertyWrapper
 public struct UnitPercentage<Value: FloatingPoint> {
 	@Clamping(0...1)
@@ -53,22 +54,11 @@ public struct UnitPercentage<Value: FloatingPoint> {
 		self.wrappedValue = value
 	}
 }
+*/
 
 open class DoubleFrameLayout: FrameLayout {
 	public var distribution: NKLayoutDistribution = .top
 	public var axis: NKLayoutAxis = .vertical
-	
-	@available(*, deprecated, renamed: "axis")
-	public var layoutDirection: NKLayoutAxis {
-		get { axis }
-		set { axis = newValue }
-	}
-	
-	@available(*, deprecated, renamed: "distribution")
-	public var layoutAlignment: NKLayoutDistribution {
-		get { distribution }
-		set { distribution = newValue }
-	}
 	
 	public var spacing: CGFloat = 0 {
 		didSet {
@@ -89,14 +79,6 @@ open class DoubleFrameLayout: FrameLayout {
 		didSet {
 			frameLayout1.shouldCacheSize = shouldCacheSize
 			frameLayout2.shouldCacheSize = shouldCacheSize
-		}
-	}
-	
-	@available(*, deprecated, renamed: "debug")
-	override open var showFrameDebug: Bool {
-		didSet {
-			frameLayout1.debug = showFrameDebug
-			frameLayout2.debug = showFrameDebug
 		}
 	}
 	
@@ -208,11 +190,6 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	// MARK: -
-	
-	@available(*, deprecated, renamed: "init(axis:distribution:views:)")
-	convenience public init(direction: NKLayoutAxis, alignment: NKLayoutDistribution = .top, views: [UIView]? = nil) {
-		self.init(axis: direction, distribution: alignment, views: views)
-	}
 	
 	@discardableResult
 	public convenience init(_ block: (DoubleFrameLayout) throws -> Void) rethrows {
