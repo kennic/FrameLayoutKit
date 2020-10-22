@@ -65,6 +65,11 @@ open class ScrollStackView: UIView {
 		set { frameLayout.debug = newValue }
 	}
 	
+	public var isOverlapped: Bool {
+		get { frameLayout.isOverlapped }
+		set { frameLayout.isOverlapped = newValue }
+	}
+	
 	public var minContentSize: CGSize {
 		get { frameLayout.minContentSize }
 		set {
