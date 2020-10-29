@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name             = 'FrameLayoutKit'
-	s.version          = '4.8.0'
+	s.version          = '4.8.1'
 	s.summary          = 'FrameLayoutKit is a super fast and easy to use layout kit'
 	s.description      = <<-DESC
 	An auto layout kit helps you to layout your UI easier, faster and more effective
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 	s.platform          = :tvos, "9.0"
 	s.ios.deployment_target = '9.0'
 	s.tvos.deployment_target = '9.0'
-	s.swift_version 	= "4.2"
+	s.swift_version 	= "5.0"
 	s.source_files 		= 'FrameLayoutKit/Classes/*.*'
 	
 end
