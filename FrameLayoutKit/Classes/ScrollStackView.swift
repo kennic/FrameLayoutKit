@@ -198,8 +198,11 @@ open class ScrollStackView: UIView {
 		scrollView.showsHorizontalScrollIndicator = false
 		scrollView.clipsToBounds = false
 		scrollView.delaysContentTouches = false
+		
+		#if os(iOS)
 		if #available(iOS 11.0, *) { scrollView.contentInsetAdjustmentBehavior = .never }
 		if #available(iOS 13.0, *) { scrollView.automaticallyAdjustsScrollIndicatorInsets = false }
+		#endif
 		
 		frameLayout.spacing = 0.0
 		frameLayout.isIntrinsicSizeEnabled = true
