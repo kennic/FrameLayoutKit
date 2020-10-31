@@ -144,9 +144,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	open func add(_ views: [UIView]) -> [FrameLayout] {
-		var results = [FrameLayout]()
-		views.forEach({ results.append(add($0)) })
-		return results
+		return views.map { add($0) }
 	}
 	
 	@discardableResult
@@ -370,7 +368,7 @@ open class StackFrameLayout: FrameLayout {
 						if flexibleFrameCount > 0 {
 							let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 							let contentWidth = contentSize.width - totalSpace - remainingSpace
-							let ratio = flexibleFrames.map { return $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
+							let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 							
 							var ratioIndex = 0
 							for frameLayout in flexibleFrames {
@@ -479,7 +477,7 @@ open class StackFrameLayout: FrameLayout {
 				if flexibleFrameCount > 0 {
 					let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 					let contentHeight = contentSize.height - totalSpace - remainingSpace
-					let ratio = flexibleFrames.map { return $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
+					let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 					
 					var ratioIndex = 0
 					for frameLayout in flexibleFrames {
@@ -557,7 +555,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.size.height = containerFrame.height
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					var flexibleFrames = [FrameLayout]()
@@ -598,7 +596,7 @@ open class StackFrameLayout: FrameLayout {
 					if flexibleFrameCount > 0 {
 						let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 						let contentWidth = containerFrame.width - usedSpace - remainingSpace
-						let ratio = flexibleFrames.map { return $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
+						let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 						
 						gapSpace = 0
 						var ratioIndex = 0
@@ -622,7 +620,7 @@ open class StackFrameLayout: FrameLayout {
 								ratioIndex += 1
 							}
 							
-							if rect.minX != offset || frameLayout.frame.width != rect.width {
+							if rect.minX != offset || frameLayout.frame.size != rect.size {
 								rect.origin.x = offset
 								frameLayout.frame = rect
 							}
@@ -650,7 +648,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.origin.x = containerFrame.width - targetFrame.width
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					var flexibleFrames = [FrameLayout]()
@@ -690,7 +688,7 @@ open class StackFrameLayout: FrameLayout {
 					if flexibleFrameCount > 0 {
 						let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 						let contentWidth = containerFrame.width - usedSpace - remainingSpace
-						let ratio = flexibleFrames.map { return $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
+						let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 						
 						gapSpace = 0
 						var ratioIndex = 0
@@ -716,7 +714,7 @@ open class StackFrameLayout: FrameLayout {
 							
 							offset -= rect.width + gapSpace
 							
-							if rect.minX != offset || frameLayout.frame.width != rect.width {
+							if rect.minX != offset || frameLayout.frame.size != rect.size {
 								rect.origin.x = offset
 								frameLayout.frame = rect
 							}
@@ -748,7 +746,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.size.height = containerFrame.height
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					for frameLayout in frameLayouts {
@@ -794,7 +792,7 @@ open class StackFrameLayout: FrameLayout {
 							frameLayout.frame = targetFrame
 							ratioIndex += 1
 						}
-						return
+						break
 					}
 					
 					for frameLayout in frameLayouts {
@@ -836,7 +834,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.origin.x = containerFrame.minX + (containerFrame.width - targetFrame.width)/2
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					for frameLayout in frameLayouts {
@@ -892,7 +890,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.size.height = frameContentSize.height
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					var flexibleFrames = [FrameLayout]()
@@ -932,7 +930,7 @@ open class StackFrameLayout: FrameLayout {
 					if flexibleFrameCount > 0 {
 						let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 						let contentHeight = containerFrame.height - usedSpace - remainingSpace
-						let ratio = flexibleFrames.map { return $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
+						let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 						
 						gapSpace = 0
 						var ratioIndex = 0
@@ -955,7 +953,7 @@ open class StackFrameLayout: FrameLayout {
 								ratioIndex += 1
 							}
 							
-							if rect.minY != offset || frameLayout.frame.height != rect.height {
+							if rect.minY != offset || frameLayout.frame.size != rect.size {
 								rect.origin.y = offset
 								frameLayout.frame = rect
 							}
@@ -982,7 +980,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.origin.y = containerFrame.minY + (containerFrame.height - targetFrame.height)
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					var flexibleFrames = [FrameLayout]()
@@ -1022,7 +1020,7 @@ open class StackFrameLayout: FrameLayout {
 					if flexibleFrameCount > 0 {
 						let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
 						let contentHeight = containerFrame.height - usedSpace - remainingSpace
-						let ratio = flexibleFrames.map { return $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
+						let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 						
 						gapSpace = 0
 						var ratioIndex = 0
@@ -1048,7 +1046,7 @@ open class StackFrameLayout: FrameLayout {
 							
 							offset -= rect.height + gapSpace
 							
-							if rect.minY != offset || frameLayout.frame.height != rect.height {
+							if rect.minY != offset || frameLayout.frame.size != rect.size {
 								rect.origin.y = offset
 								frameLayout.frame = rect
 							}
@@ -1069,7 +1067,7 @@ open class StackFrameLayout: FrameLayout {
 							}
 							frameLayout.frame = containerFrame
 						}
-						return
+						break
 					}
 					
 					let visibleFrameLayouts = visibleFrames()
@@ -1112,7 +1110,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.origin.y = containerFrame.minY + (containerFrame.height - targetFrame.width)/2
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					for frameLayout in frameLayouts {
@@ -1169,7 +1167,7 @@ open class StackFrameLayout: FrameLayout {
 							targetFrame.size.height = frameContentSize.height
 							frameLayout.frame = targetFrame
 						}
-						return
+						break
 					}
 					
 					let finalRatio = ratio.autoFill(total: visibleFrameCount)
