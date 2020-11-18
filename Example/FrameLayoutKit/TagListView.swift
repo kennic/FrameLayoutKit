@@ -25,6 +25,7 @@ class TagListView: UIView {
 		
 		flowLayout.interItemSpacing = 4
 		flowLayout.lineSpacing = 4
+//		flowLayout.distribution = .equal
 		
 		addButton.setTitle("Add Item", for: .normal)
 		addButton.backgroundColor = .systemBlue
@@ -90,6 +91,7 @@ class TagListView: UIView {
 		item.removeFromSuperview()
 		flowLayout.views.removeLast()
 		print("\(flowLayout.views.count) items")
+		
 		onChanged?(self)
 	}
 	
