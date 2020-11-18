@@ -12,6 +12,7 @@ import FrameLayoutKit
 class TagListView: UIView {
 	let flowLayout = FlowFrameLayout(axis: .horizontal)
 	let addButton = UIButton()
+	let removeButton = UIButton()
 	let frameLayout = StackFrameLayout(axis: .vertical)
 	let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
 	
@@ -23,17 +24,28 @@ class TagListView: UIView {
 		backgroundColor = .gray
 		
 		addButton.setTitle("Add Item", for: .normal)
+		addButton.backgroundColor = .systemBlue
 		addButton.addTarget(self, action: #selector(addItem), for: .touchUpInside)
 		addButton.showsTouchWhenHighlighted = true
 		
+		removeButton.setTitle("Remove Item", for: .normal)
+		removeButton.backgroundColor = .systemPink
+		removeButton.addTarget(self, action: #selector(removeLastItem), for: .touchUpInside)
+		removeButton.showsTouchWhenHighlighted = true
+		
 		addSubview(flowLayout)
 		addSubview(addButton)
+		addSubview(removeButton)
 		addSubview(frameLayout)
 		
 		frameLayout + flowLayout
-		(frameLayout + addButton).fixSize = CGSize(width: 0, height: 50)
+		frameLayout + HStackLayout {
+			$0 + [removeButton, addButton]
+			$0.distribution = .equal
+			$0.fixSize = CGSize(width: 0, height: 50)
+		}
 		
-		frameLayout.spacing = 20
+//		frameLayout.spacing = 20
 	}
 	
 	required init?(coder: NSCoder) {
@@ -55,14 +67,26 @@ class TagListView: UIView {
 	}
 	
 	@objc func addItem() {
-		let title = Int.random(in: 0..<1_000_000_000)
+		let count = flowLayout.views.count
+		let title = Int.random(in: 0..<3) > 1 ? Int.random(in: 0..<1_000_000_000) : Int.random(in: 0..<1_000)
 		let tagButton = UIButton()
 		tagButton.titleLabel?.font = .systemFont(ofSize: 10)
-		tagButton.setTitle("\(title)", for: .normal)
+		tagButton.titleLabel?.adjustsFontSizeToFitWidth = false
+		tagButton.titleLabel?.lineBreakMode = .byClipping
+		tagButton.setTitle("  [\(count)]: \(title)  ", for: .normal)
 		tagButton.setTitleColor(.white, for: .normal)
 		tagButton.backgroundColor = color()
 		
 		flowLayout.views.append(tagButton)
+		print("\(count + 1) items")
+		onChanged?(self)
+	}
+	
+	@objc func removeLastItem() {
+		guard let item = flowLayout.views.last else { return }
+		item.removeFromSuperview()
+		flowLayout.views.removeLast()
+		print("\(flowLayout.views.count) items")
 		onChanged?(self)
 	}
 	

@@ -97,6 +97,7 @@ open class FlowFrameLayout: FrameLayout {
 		didSet {
 			views.forEach { if $0.superview == nil { addSubview($0) } }
 			
+			lastSize = .zero
 			viewCount = views.count
 			setNeedsLayout()
 		}
@@ -201,8 +202,10 @@ open class FlowFrameLayout: FrameLayout {
 			var row = 1
 			var col = 0
 			var remainingSize = fitSize
+			var index = 0
 			
-			for view in views {
+			while index < viewCount {
+				let view = views[index]
 				if view.isHidden && ignoreHiddenView { continue }
 				col += 1
 				
@@ -211,18 +214,28 @@ open class FlowFrameLayout: FrameLayout {
 				remainingSize.width -= space
 				rowHeight = max(rowHeight, contentSize.height)
 				
-				if remainingSize.width <= 0 {
-					rowColMap[row] = col
+				index += 1
+				
+				if remainingSize.width < 0 {
+					index -= 1
 					result.height += rowHeight
 					
-					if view != lastView {
+					if viewCount > 1 {
 						result.width = max(result.width, fitSize.width - remainingSize.width)
 						result.height += lineSpacing
+						
+						rowHeight = 0
 						
 						row += 1
 						col = 0
 					}
+					
+					remainingSize.width = fitSize.width
+					remainingSize.height -= result.height
 				}
+				
+				rowColMap[row] = col
+				result.height = max(result.height, rowHeight)
 			}
 		}
 		else {
@@ -230,8 +243,10 @@ open class FlowFrameLayout: FrameLayout {
 			var row = 0
 			var col = 1
 			var remainingSize = fitSize
+			var index = 0
 			
-			for view in views {
+			while index < viewCount {
+				let view = views[index]
 				if view.isHidden && ignoreHiddenView { continue }
 				row += 1
 				
@@ -239,20 +254,26 @@ open class FlowFrameLayout: FrameLayout {
 				let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
 				remainingSize.height -= space
 				colWidth = max(colWidth, contentSize.width)
+				rowColMap[col] = row
 				
-				if remainingSize.height <= 0 {
-					rowColMap[col] = row
+				index += 1
+				
+				if remainingSize.height < 0 {
+					index -= 1
 					result.width += colWidth
 					remainingSize.width -= (colWidth + interItemSpacing)
 					
-					if view != lastView {
+					if viewCount > 1 {
 						result.height = max(result.height, fitSize.height - remainingSize.height)
 						result.width += interItemSpacing
 						
+						colWidth = 0
 						col += 1
 						row = 0
 					}
 				}
+				
+				result.width = max(result.width, colWidth)
 			}
 		}
 		
@@ -293,7 +314,7 @@ open class FlowFrameLayout: FrameLayout {
 			
 			var index = 0
 			let numberOfStack = map.keys.count
-			
+			print("MAP: \(map)")
 			for i in 0..<numberOfStack {
 				if index == viewCount { break }
 				
