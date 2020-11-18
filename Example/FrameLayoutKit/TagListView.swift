@@ -23,6 +23,9 @@ class TagListView: UIView {
 		
 		backgroundColor = .gray
 		
+		flowLayout.interItemSpacing = 4
+		flowLayout.lineSpacing = 4
+		
 		addButton.setTitle("Add Item", for: .normal)
 		addButton.backgroundColor = .systemBlue
 		addButton.addTarget(self, action: #selector(addItem), for: .touchUpInside)
@@ -45,7 +48,7 @@ class TagListView: UIView {
 			$0.fixSize = CGSize(width: 0, height: 50)
 		}
 		
-//		frameLayout.spacing = 20
+		frameLayout.spacing = 4
 	}
 	
 	required init?(coder: NSCoder) {
