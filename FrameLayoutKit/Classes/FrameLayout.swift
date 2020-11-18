@@ -292,10 +292,11 @@ open class FrameLayout: UIView {
 		preLayoutConfigurationBlock?(self)
 		super.layoutSubviews()
 		
-		guard let targetView = targetView, !isEmpty, !bounds.isEmpty else {
+		defer {
 			didLayoutSubviewsBlock?(self)
-			return
 		}
+		
+		guard let targetView = targetView, !isEmpty, !bounds.isEmpty else { return }
 		
 		var targetFrame: CGRect = .zero
 		#if swift(>=4.2)
@@ -440,8 +441,6 @@ open class FrameLayout: UIView {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
 			}
 		}
-		
-		didLayoutSubviewsBlock?(self)
 	}
 	
 	open override func didMoveToWindow() {

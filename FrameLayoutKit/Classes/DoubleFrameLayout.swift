@@ -595,16 +595,17 @@ open class DoubleFrameLayout: FrameLayout {
 	override open func layoutSubviews() {
 		super.layoutSubviews()
 		
+		defer {
+			didLayoutSubviewsBlock?(self)
+		}
+		
 		#if swift(>=4.2)
 		let containerFrame: CGRect = bounds.inset(by: edgeInsets)
 		#else
 		let containerFrame: CGRect = UIEdgeInsetsInsetRect(bounds, edgeInsets)
 		#endif
 		
-		guard !containerFrame.isEmpty else {
-			didLayoutSubviewsBlock?(self)
-			return
-		}
+		guard !containerFrame.isEmpty else { return }
 		
 		var frame1ContentSize: CGSize = .zero
 		var frame2ContentSize: CGSize = .zero
@@ -875,8 +876,6 @@ open class DoubleFrameLayout: FrameLayout {
 		
 		frameLayout1.frame = targetFrame1.integral
 		frameLayout2.frame = targetFrame2.integral
-		
-		didLayoutSubviewsBlock?(self)
 	}
 	
 }

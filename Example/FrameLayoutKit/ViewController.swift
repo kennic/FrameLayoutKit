@@ -11,6 +11,7 @@ import FrameLayoutKit
 
 class ViewController: UIViewController {
 	let scrollStackView = ScrollStackView()
+	let tagListView = TagListView()
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +27,13 @@ class ViewController: UIViewController {
 			cardViews.append(cardView)
 		}
 		
+		tagListView.onChanged = { [weak self] sender in
+			self?.scrollStackView.relayoutSubviews(animateDuration: 0.35)
+		}
+		
 		scrollStackView + cardViews
 		scrollStackView + NumberPadView()
+		scrollStackView + tagListView
 		
 		scrollStackView.spacing = 20
 		scrollStackView.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)

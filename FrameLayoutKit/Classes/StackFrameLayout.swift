@@ -517,10 +517,11 @@ open class StackFrameLayout: FrameLayout {
 	override open func layoutSubviews() {
 		super.layoutSubviews()
 		
-		if bounds.size == .zero {
+		defer {
 			didLayoutSubviewsBlock?(self)
-			return
 		}
+		
+		if bounds.size == .zero { return }
 		
 		#if swift(>=4.2)
 		let containerFrame = bounds.inset(by: edgeInsets)
@@ -1196,8 +1197,6 @@ open class StackFrameLayout: FrameLayout {
 					break
 			}
 		}
-		
-		didLayoutSubviewsBlock?(self)
 	}
 	
 }
