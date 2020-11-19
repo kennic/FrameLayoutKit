@@ -218,86 +218,99 @@ open class FlowFrameLayout: FrameLayout {
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
 		let lastView = views.last
 		
-		if axis == .horizontal {
-			var rowHeight: CGFloat = 0.0
-			var row = 1
-			var col = 0
-			var remainingSize = fitSize
-			var index = 0
-			
-			while index < viewCount {
-				let view = views[index]
-				if view.isHidden && ignoreHiddenView { continue }
-				col += 1
-				
-				let contentSize = view.sizeThatFits(remainingSize)
-				let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
-				remainingSize.width -= space
-				rowHeight = max(rowHeight, contentSize.height)
-				
-				index += 1
-				
-				if remainingSize.width < 0 {
-					index -= 1
-					result.height += rowHeight
-					
-					if viewCount > 1 {
-						result.width = max(result.width, fitSize.width - remainingSize.width)
-						result.height += lineSpacing
-						
-						rowHeight = 0
-						
-						row += 1
-						col = 0
-					}
-					
-					remainingSize.width = fitSize.width
-					remainingSize.height -= result.height
-				}
-				
-				rowColMap[row] = col
-				result.height = max(result.height, rowHeight)
-			}
+		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
+			result = minSize
+		}
+		else if heightRatio > 0 && !isIntrinsicSizeEnabled {
+			result.height = result.width * heightRatio
 		}
 		else {
-			var colWidth: CGFloat = 0.0
-			var row = 0
-			var col = 1
-			var remainingSize = fitSize
-			var index = 0
-			
-			while index < viewCount {
-				let view = views[index]
-				if view.isHidden && ignoreHiddenView { continue }
-				row += 1
+			if axis == .horizontal {
+				var rowHeight: CGFloat = 0.0
+				var row = 1
+				var col = 0
+				var remainingSize = fitSize
+				var index = 0
 				
-				let contentSize = view.sizeThatFits(remainingSize)
-				let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
-				remainingSize.height -= space
-				colWidth = max(colWidth, contentSize.width)
-				rowColMap[col] = row
-				index += 1
-				
-				if remainingSize.height < 0 || contentSize.height > remainingSize.height {
-					index -= 1
-					result.width += colWidth
-					remainingSize.width -= (colWidth + interItemSpacing)
+				while index < viewCount {
+					let view = views[index]
+					if view.isHidden && ignoreHiddenView { continue }
+					col += 1
 					
-					if viewCount > 1 {
-						result.height = max(result.height, fitSize.height - remainingSize.height)
-						result.width += interItemSpacing
+					let contentSize = view.sizeThatFits(remainingSize)
+					let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
+					remainingSize.width -= space
+					rowHeight = max(rowHeight, contentSize.height)
+					
+					index += 1
+					
+					if remainingSize.width < 0 || contentSize.width > remainingSize.width {
+						index -= 1
+						result.height += rowHeight
 						
-						colWidth = 0
-						col += 1
-						row = 0
+						if viewCount > 1 {
+							result.width = max(result.width, fitSize.width - remainingSize.width)
+							result.height += lineSpacing
+							
+							rowHeight = 0
+							
+							row += 1
+							col = 0
+						}
+						
+						remainingSize.width = fitSize.width
+						remainingSize.height -= result.height
 					}
 					
-					remainingSize.width -= result.width
-					remainingSize.height = fitSize.height
+					rowColMap[row] = col
+					result.height = max(result.height, rowHeight)
 				}
-				
-				result.width = max(result.width, colWidth)
 			}
+			else { // axis = .vertical
+				let fitSize = CGSize(width: fitSize.width, height: maxHeight == 0 ? UIScreen.main.bounds.size.height : maxHeight)
+				var colWidth: CGFloat = 0.0
+				var row = 0
+				var col = 1
+				var remainingSize = fitSize
+				var index = 0
+				
+				while index < viewCount {
+					let view = views[index]
+					if view.isHidden && ignoreHiddenView { continue }
+					row += 1
+					
+					let contentSize = view.sizeThatFits(remainingSize)
+					let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
+					remainingSize.height -= space
+					colWidth = max(colWidth, contentSize.width)
+					rowColMap[col] = row
+					index += 1
+					
+					result.height = max(result.height, fitSize.height - remainingSize.height)
+					
+					if remainingSize.height < 0 || contentSize.height > remainingSize.height {
+						index -= 1
+						result.width += colWidth
+						remainingSize.width -= (colWidth + interItemSpacing)
+						
+						if viewCount > 1 {
+							result.width += interItemSpacing
+							
+							colWidth = 0
+							col += 1
+							row = 0
+						}
+						
+						remainingSize.width -= result.width
+						remainingSize.height = fitSize.height
+					}
+					
+					result.width = max(result.width, colWidth)
+				}
+			}
+			
+			result.limitedTo(minSize: minSize, maxSize: maxSize)
+			print("\(result)")
 		}
 		
 		if result.width > 0 {

@@ -107,14 +107,18 @@ open class FrameLayout: UIView {
 	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
 	public var debug: Bool = false {
 		didSet {
+			#if DEBUG
 			setNeedsDisplay()
+			#endif
 		}
 	}
 	
 	/// Set the color of debug line
 	public var debugColor: UIColor? = nil {
 		didSet {
+			#if DEBUG
 			setNeedsDisplay()
+			#endif
 		}
 	}
 	
@@ -159,8 +163,6 @@ open class FrameLayout: UIView {
 		didSet {
 			verticalAlignment = alignment.vertical
 			horizontalAlignment = alignment.horizontal
-			
-			setNeedsLayout()
 		}
 	}
 	
@@ -185,31 +187,22 @@ open class FrameLayout: UIView {
 				setNeedsDisplay()
 			}
 			#endif
-			
-			if superview == nil {
-				layoutIfNeeded()
-			}
 		}
 	}
 	
 	override open var bounds: CGRect {
 		get { super.bounds }
 		set {
-			if newValue.isInfinite || newValue.isNull || newValue.minX.isNaN || newValue.minY.isNaN || newValue.width.isNaN || newValue.height.isNaN {
-				return
-			}
+			if newValue.isInfinite || newValue.isNull || newValue.minX.isNaN || newValue.minY.isNaN || newValue.width.isNaN || newValue.height.isNaN { return }
 			
 			super.bounds = newValue
 			setNeedsLayout()
+			
 			#if DEBUG
 			if debug {
 				setNeedsDisplay()
 			}
 			#endif
-			
-			if superview == nil {
-				layoutIfNeeded()
-			}
 		}
 	}
 	

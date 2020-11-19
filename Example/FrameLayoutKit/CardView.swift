@@ -16,7 +16,7 @@ class CardView: UIView {
 	let titleLabel = UILabel()
 	let dateLabel = UILabel()
 	let messageLabel = UILabel()
-	let expandButton = UIButton(type: .detailDisclosure)
+	let expandButton = UIButton(type: .contactAdd)
 	let frameLayout = StackFrameLayout(axis: .horizontal)
 	
 	var onSizeChanged: ((CardView) -> Void)?
