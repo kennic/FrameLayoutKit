@@ -36,42 +36,42 @@ open class FrameLayout: UIView {
 	/// Minimum size of frameLayout
 	public var minSize: CGSize = .zero
 	public var minWidth: CGFloat {
-		get { return minSize.width }
-		set { minSize = CGSize(width: minSize.width, height: newValue) }
+		get { minSize.width }
+		set { minSize.width = newValue }
 	}
 	public var minHeight: CGFloat {
-		get { return minSize.height }
-		set { minSize = CGSize(width: newValue, height: minSize.height) }
+		get { minSize.height }
+		set { minSize.height = newValue }
 	}
 	/// Maximum size of frameLayout
 	public var maxSize: CGSize = .zero
 	public var maxWidth: CGFloat {
-		get { return maxSize.width }
-		set { maxSize = CGSize(width: newValue, height: maxSize.height) }
+		get { maxSize.width }
+		set { maxSize.width = newValue }
 	}
 	public var maxHeight: CGFloat {
-		get { return maxSize.height }
-		set { maxSize = CGSize(width: maxSize.width, height: newValue) }
+		get { maxSize.height }
+		set { maxSize.height = newValue }
 	}
 	/// Minimum size of `targetView`
 	public var minContentSize: CGSize = .zero
 	public var minContentWidth: CGFloat {
-		get { return minContentSize.width }
-		set { minContentSize = CGSize(width: minContentSize.width, height: newValue) }
+		get { minContentSize.width }
+		set { minContentSize.width = newValue }
 	}
 	public var minContentHeight: CGFloat {
-		get { return minContentSize.height }
-		set { minContentSize = CGSize(width: newValue, height: minContentSize.height) }
+		get { minContentSize.height }
+		set { minContentSize.height = newValue }
 	}
 	/// Maximum size of targetView
 	public var maxContentSize: CGSize = .zero
 	public var maxContentWidth: CGFloat {
-		get { return maxContentSize.width }
-		set { maxContentSize = CGSize(width: newValue, height: maxContentSize.height) }
+		get { maxContentSize.width }
+		set { maxContentSize.width = newValue }
 	}
 	public var maxContentHeight: CGFloat {
-		get { return maxContentSize.height }
-		set { maxContentSize = CGSize(width: maxContentSize.width, height: newValue) }
+		get { maxContentSize.height }
+		set { maxContentSize.height = newValue }
 	}
 	/// Adding size to content size. `minSize` and `maxSize` still have higher priority
 	public var extendSize: CGSize = .zero
@@ -127,13 +127,13 @@ open class FrameLayout: UIView {
 	}
 	
 	public var fixWidth: CGFloat {
-		get { return fixSize.width }
-		set { fixSize = CGSize(width: newValue, height: fixSize.height) }
+		get { fixSize.width }
+		set { fixSize.width = newValue }
 	}
 	
 	public var fixHeight: CGFloat {
-		get { return fixSize.height }
-		set { fixSize = CGSize(width: fixSize.width, height: newValue) }
+		get { fixSize.height }
+		set { fixSize.height = newValue }
 	}
 	
 	/// Set the fix size of targetView
@@ -145,13 +145,13 @@ open class FrameLayout: UIView {
 	}
 	
 	public var fixContentWidth: CGFloat {
-		get { return fixContentSize.width }
-		set { fixContentSize = CGSize(width: newValue, height: fixContentSize.height) }
+		get { fixContentSize.width }
+		set { fixContentSize.width = newValue }
 	}
 	
 	public var fixContentHeight: CGFloat {
-		get { return fixContentSize.height }
-		set { fixContentSize = CGSize(width: fixContentSize.width, height: newValue) }
+		get { fixContentSize.height }
+		set { fixContentSize.height = newValue }
 	}
 	
 	/// Set the alignment of both axis
@@ -297,14 +297,18 @@ open class FrameLayout: UIView {
 	}
 	#endif
 	
-	public func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
+	open func sizeThatFits(_ size: CGSize, intrinsic: Bool = true) -> CGSize {
 		isIntrinsicSizeEnabled = intrinsic
 		return sizeThatFits(size)
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		return sizeThatFits(size, ignoreHiddenView: true)
+	}
+	
+	open func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
 		preSizeThatFitsConfigurationBlock?(self, size)
-		guard isEmpty == false else { return .zero }
+		guard !isEmpty || !ignoreHiddenView else { return .zero }
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 { return minSize }
 		
@@ -348,7 +352,7 @@ open class FrameLayout: UIView {
 			didLayoutSubviewsBlock?(self)
 		}
 		
-		guard let targetView = targetView, !isEmpty, !bounds.isEmpty else { return }
+		guard let targetView = targetView, !bounds.isEmpty else { return }
 		
 		var targetFrame: CGRect = .zero
 		#if swift(>=4.2)

@@ -109,6 +109,9 @@ open class StackFrameLayout: FrameLayout {
 		get { frameLayouts.last }
 	}
 	
+	/// If `true`, layout will set the view's frame even it's hidden, but will not add it to the layout, so that the view will not animated from zero point to its target frame when it's visible later.
+	public var processHiddenView: Bool = true
+	
 	public internal(set) var frameLayouts: [FrameLayout] = []
 	
 	public var numberOfFrameLayouts: Int {
@@ -175,6 +178,7 @@ open class StackFrameLayout: FrameLayout {
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
+			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
@@ -193,6 +197,7 @@ open class StackFrameLayout: FrameLayout {
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
+			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
@@ -313,7 +318,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+	open override func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
 		preSizeThatFitsConfigurationBlock?(self, size)
 		
 		var result: CGSize = size
@@ -564,14 +569,14 @@ open class StackFrameLayout: FrameLayout {
 				case .top, .left:
 					if isOverlapped {
 						for frameLayout in frameLayouts {
-							if frameLayout.isEmpty {
+							if frameLayout.isEmpty && !processHiddenView {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? CGSize(width: containerFrame.width * (frameLayout.flexibleRatio < 0.0 ? 1.0 : frameLayout.flexibleRatio), height: containerFrame.height) : frameLayout.sizeThatFits(containerFrame.size)
+							frameContentSize = frameLayout.isFlexible ? CGSize(width: containerFrame.width * (frameLayout.flexibleRatio < 0.0 ? 1.0 : frameLayout.flexibleRatio), height: containerFrame.height) : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView)
 							targetFrame.origin.x = containerFrame.minX
 							targetFrame.size.width = frameContentSize.width
 							targetFrame.size.height = containerFrame.height
@@ -583,21 +588,22 @@ open class StackFrameLayout: FrameLayout {
 					var flexibleFrames = [FrameLayout]()
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
-						if frameLayout.isFlexible {
+						if frameLayout.isFlexible && !isEmpty {
 							flexibleFrames.append(frameLayout)
 							lastFrameLayout = frameLayout
 							continue
 						}
 						
 						frameContentSize = CGSize(width: containerFrame.width - usedSpace, height: containerFrame.height)
-						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						let fitSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 						
 						if frameLayout == lastFrameLayout && !frameLayout.isIntrinsicSizeEnabled {
 							frameContentSize.height = fitSize.height
@@ -609,6 +615,8 @@ open class StackFrameLayout: FrameLayout {
 						targetFrame.origin.x = containerFrame.minX + usedSpace
 						targetFrame.size.width = frameContentSize.width
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + gapSpace
@@ -624,16 +632,17 @@ open class StackFrameLayout: FrameLayout {
 						var ratioIndex = 0
 						var offset: CGFloat = edgeInsets.left
 						for frameLayout in frameLayouts {
-							if frameLayout.isEmpty {
+							let isEmpty = frameLayout.isEmpty
+							if isEmpty {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
 							var rect = frameLayout.frame
 							
-							if frameLayout.isFlexible {
+							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
 								let cellWidth = contentWidth * ratioValue
 								
@@ -646,6 +655,8 @@ open class StackFrameLayout: FrameLayout {
 								rect.origin.x = offset
 								frameLayout.frame = rect
 							}
+							
+							if isEmpty { continue }
 							
 							gapSpace = rect.width > 0 ? spacing : 0
 							offset += rect.width + gapSpace
@@ -680,10 +691,10 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView)
 							targetFrame.size.width = frameContentSize.width
 							targetFrame.size.height = containerFrame.height
 							targetFrame.origin.x = containerFrame.width - targetFrame.width
@@ -695,14 +706,15 @@ open class StackFrameLayout: FrameLayout {
 					var flexibleFrames = [FrameLayout]()
 					
 					for frameLayout in invertedLayoutArray {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
-						if frameLayout.isFlexible {
+						if frameLayout.isFlexible && !isEmpty {
 							flexibleFrames.append(frameLayout)
 							lastFrameLayout = frameLayout
 							continue
@@ -714,13 +726,16 @@ open class StackFrameLayout: FrameLayout {
 						}
 						else {
 							frameContentSize = CGSize(width: containerFrame.width - usedSpace, height: containerFrame.height)
-							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+							frameContentSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 							
 							targetFrame.origin.x = max(bounds.width - frameContentSize.width - edgeInsets.right - usedSpace, 0)
 							targetFrame.size.width = frameContentSize.width
 						}
 						
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
+						
 						gapSpace = frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + gapSpace
 					}
@@ -735,16 +750,17 @@ open class StackFrameLayout: FrameLayout {
 						var ratioIndex = 0
 						var offset: CGFloat = containerFrame.width + edgeInsets.left
 						for frameLayout in invertedLayoutArray {
-							if frameLayout.isEmpty {
+							let isEmpty = frameLayout.isEmpty
+							if isEmpty {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
 							var rect = frameLayout.frame
 							
-							if frameLayout.isFlexible {
+							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
 								let cellWidth = contentWidth * ratioValue
 								
@@ -759,6 +775,8 @@ open class StackFrameLayout: FrameLayout {
 								rect.origin.x = offset
 								frameLayout.frame = rect
 							}
+							
+							if isEmpty { continue }
 							
 							gapSpace = rect.width > 0 ? spacing : 0
 						}
@@ -796,7 +814,7 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
 							frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: cellSize, height: containerFrame.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
@@ -810,17 +828,20 @@ open class StackFrameLayout: FrameLayout {
 					}
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						frameContentSize = CGSize(width: cellSize, height: containerFrame.height)
 						targetFrame.origin.x = containerFrame.minX + usedSpace
 						targetFrame.size.width = frameContentSize.width
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						usedSpace += frameContentSize.width + spacing
 					}
@@ -840,7 +861,7 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
 							let ratioValue = finalRatio[ratioIndex]
@@ -856,11 +877,12 @@ open class StackFrameLayout: FrameLayout {
 					}
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						let ratioValue = finalRatio[ratioIndex]
@@ -870,6 +892,8 @@ open class StackFrameLayout: FrameLayout {
 						targetFrame.origin.x = containerFrame.minX + usedSpace
 						targetFrame.size.width = frameContentSize.width
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + gapSpace
@@ -885,10 +909,10 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView)
 							targetFrame.size.width = frameContentSize.width
 							targetFrame.size.height = containerFrame.height
 							targetFrame.origin.x = containerFrame.minX + (containerFrame.width - targetFrame.width)/2
@@ -898,20 +922,23 @@ open class StackFrameLayout: FrameLayout {
 					}
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						frameContentSize = containerFrame.size
-						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						let fitSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 						frameContentSize.width = fitSize.width
 						
 						targetFrame.origin.x = containerFrame.minX + usedSpace
 						targetFrame.size = frameContentSize
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameLayout != lastFrameLayout && frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + gapSpace
@@ -923,7 +950,7 @@ open class StackFrameLayout: FrameLayout {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						frameLayout.frame = frameLayout.frame.offsetBy(dx: offset, dy: 0)
@@ -941,10 +968,10 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView)
 							targetFrame.origin.y = containerFrame.minY
 							targetFrame.size.width = containerFrame.width
 							targetFrame.size.height = frameContentSize.height
@@ -956,20 +983,21 @@ open class StackFrameLayout: FrameLayout {
 					var flexibleFrames = [FrameLayout]()
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
-						if frameLayout.isFlexible {
+						if frameLayout.isFlexible && !isEmpty {
 							flexibleFrames.append(frameLayout)
 							continue
 						}
 						
 						frameContentSize = CGSize(width: containerFrame.width, height: containerFrame.height - usedSpace)
-						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						let fitSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 						
 						if frameLayout == lastFrameLayout && !frameLayout.isIntrinsicSizeEnabled {
 							frameContentSize.width = fitSize.width
@@ -981,6 +1009,8 @@ open class StackFrameLayout: FrameLayout {
 						targetFrame.origin.y = containerFrame.minY + usedSpace
 						targetFrame.size.height = frameContentSize.height
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameContentSize.height > 0 ? spacing : 0
 						usedSpace += frameContentSize.height + gapSpace
@@ -996,15 +1026,17 @@ open class StackFrameLayout: FrameLayout {
 						var ratioIndex = 0
 						var offset = edgeInsets.top
 						for frameLayout in frameLayouts {
-							if frameLayout.isEmpty {
+							let isEmpty = frameLayout.isEmpty
+							if isEmpty {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
+							
 							var rect = frameLayout.frame
 							
-							if frameLayout.isFlexible {
+							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
 								let cellHeight = contentHeight * ratioValue
 								
@@ -1017,6 +1049,8 @@ open class StackFrameLayout: FrameLayout {
 								rect.origin.y = offset
 								frameLayout.frame = rect
 							}
+							
+							if isEmpty { continue }
 							
 							gapSpace = rect.height > 0 ? spacing : 0
 							offset += rect.height + gapSpace
@@ -1050,10 +1084,10 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView)
 							targetFrame.size.width = containerFrame.width
 							targetFrame.size.height = frameContentSize.height
 							targetFrame.origin.y = containerFrame.minY + (containerFrame.height - targetFrame.height)
@@ -1065,14 +1099,15 @@ open class StackFrameLayout: FrameLayout {
 					var flexibleFrames = [FrameLayout]()
 					
 					for frameLayout in invertedLayoutArray {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
-						if frameLayout.isFlexible {
+						if frameLayout.isFlexible && !isEmpty {
 							flexibleFrames.append(frameLayout)
 							continue
 						}
@@ -1083,13 +1118,15 @@ open class StackFrameLayout: FrameLayout {
 						}
 						else {
 							frameContentSize = CGSize(width: containerFrame.width, height: containerFrame.height - usedSpace)
-							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+							frameContentSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 							
 							targetFrame.origin.y = max(bounds.height - frameContentSize.height - edgeInsets.bottom - usedSpace, 0)
 							targetFrame.size.height = frameContentSize.height
 						}
 						
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameContentSize.height > 0 ? spacing : 0
 						usedSpace += frameContentSize.height + gapSpace
@@ -1105,16 +1142,17 @@ open class StackFrameLayout: FrameLayout {
 						var ratioIndex = 0
 						var offset = containerFrame.height + edgeInsets.top
 						for frameLayout in invertedLayoutArray {
-							if frameLayout.isEmpty {
+							let isEmpty = frameLayout.isEmpty
+							if isEmpty {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
 							var rect = frameLayout.frame
 							
-							if frameLayout.isFlexible {
+							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
 								let cellHeight = contentHeight * ratioValue
 								
@@ -1129,6 +1167,8 @@ open class StackFrameLayout: FrameLayout {
 								rect.origin.y = offset
 								frameLayout.frame = rect
 							}
+							
+							if isEmpty { continue }
 							
 							gapSpace = rect.height > 0 ? spacing : 0
 						}
@@ -1161,7 +1201,7 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							frameLayout.frame = containerFrame
 						}
@@ -1174,19 +1214,22 @@ open class StackFrameLayout: FrameLayout {
 					let cellSize = (containerFrame.height - spaces) / CGFloat(Float(visibleFrameCount))
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						frameContentSize = CGSize(width: containerFrame.width, height: cellSize)
-						//if (frameLayout.isIntrinsicSizeEnabled) frameContentSize = [frameLayout sizeThatFits:frameContentSize];
+						//if (frameLayout.isIntrinsicSizeEnabled) frameContentSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 						
 						targetFrame.origin.y = containerFrame.minY + usedSpace
 						targetFrame.size.height = frameContentSize.height
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						usedSpace += frameContentSize.height + spacing
 					}
@@ -1199,10 +1242,10 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView)
 							targetFrame.size.width = containerFrame.width
 							targetFrame.size.height = frameContentSize.height
 							targetFrame.origin.y = containerFrame.minY + (containerFrame.height - targetFrame.width)/2
@@ -1212,20 +1255,23 @@ open class StackFrameLayout: FrameLayout {
 					}
 					
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						frameContentSize = containerFrame.size
-						let fitSize = frameLayout.sizeThatFits(frameContentSize)
+						let fitSize = frameLayout.sizeThatFits(frameContentSize, ignoreHiddenView: !processHiddenView)
 						frameContentSize.height = fitSize.height
 						
 						targetFrame.origin.y = containerFrame.minY + usedSpace
 						targetFrame.size = frameContentSize
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameLayout == lastFrameLayout ? 0.0 : frameContentSize.height > 0 ? spacing : 0
 						usedSpace += frameContentSize.height + gapSpace
@@ -1237,7 +1283,7 @@ open class StackFrameLayout: FrameLayout {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						frameLayout.frame = frameLayout.frame.offsetBy(dx: 0, dy: offset)
@@ -1256,10 +1302,10 @@ open class StackFrameLayout: FrameLayout {
 								#if DEBUG
 								frameLayout.setNeedsDisplay()
 								#endif
-								continue
+								if !processHiddenView { continue }
 							}
 							
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : frameLayout.sizeThatFits(containerFrame.size, ignoreHiddenView: !processHiddenView).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 							targetFrame.origin.y = containerFrame.minY
 							targetFrame.size.width = containerFrame.width
 							targetFrame.size.height = frameContentSize.height
@@ -1272,11 +1318,12 @@ open class StackFrameLayout: FrameLayout {
 					
 					var ratioIndex = 0
 					for frameLayout in frameLayouts {
-						if frameLayout.isEmpty {
+						let isEmpty = frameLayout.isEmpty
+						if isEmpty {
 							#if DEBUG
 							frameLayout.setNeedsDisplay()
 							#endif
-							continue
+							if !processHiddenView { continue }
 						}
 						
 						let ratioValue = finalRatio[ratioIndex]
@@ -1286,6 +1333,8 @@ open class StackFrameLayout: FrameLayout {
 						targetFrame.origin.y = containerFrame.minY + usedSpace
 						targetFrame.size.height = frameContentSize.height
 						frameLayout.frame = targetFrame
+						
+						if isEmpty { continue }
 						
 						gapSpace = frameContentSize.height > 0 ? spacing : 0
 						usedSpace += frameContentSize.height + gapSpace
