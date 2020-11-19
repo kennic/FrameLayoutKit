@@ -25,6 +25,18 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
+	public var isJustified: Bool = false {
+		didSet {
+			setNeedsLayout()
+		}
+	}
+	
+	public var justifyThreshold: CGFloat = 0.0 {
+		didSet {
+			setNeedsLayout()
+		}
+	}
+	
 	override open var ignoreHiddenView: Bool {
 		didSet {
 			frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView }
@@ -43,24 +55,28 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
+	/// Allow content view to expand its height to fill its frameLayout when the layout is higher than the view itself
 	override open var allowContentVerticalGrowing: Bool {
 		didSet {
 			frameLayouts.forEach { $0.allowContentVerticalGrowing = allowContentVerticalGrowing }
 		}
 	}
 	
+	/// Allow content view to shrink its height to fit its frameLayout when the layout is shorter than the view itself
 	override open var allowContentVerticalShrinking: Bool {
 		didSet {
 			frameLayouts.forEach { $0.allowContentVerticalShrinking = allowContentVerticalShrinking }
 		}
 	}
 	
+	/// Allow content view to expand its width to fill its frameLayout when the layout is wider than the view itself
 	override open var allowContentHorizontalGrowing: Bool {
 		didSet {
 			frameLayouts.forEach { $0.allowContentHorizontalGrowing = allowContentHorizontalGrowing }
 		}
 	}
 	
+	/// Allow content view to shrink its width to fit its frameLayout when the layout is narrower than the view itself
 	override open var allowContentHorizontalShrinking: Bool {
 		didSet {
 			frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking }
@@ -273,6 +289,11 @@ open class StackFrameLayout: FrameLayout {
 			
 			index += 1
 		}
+	}
+	
+	public func justified(threshold: CGFloat = 0) {
+		justifyThreshold = threshold
+		isJustified = true
 	}
 	
 	// MARK: -
@@ -630,6 +651,25 @@ open class StackFrameLayout: FrameLayout {
 							offset += rect.width + gapSpace
 						}
 					}
+					else if isJustified {
+						let remainingWidth = containerFrame.width - usedSpace
+						let numberOfSpaces = numberOfVisibleFrames() - 1
+						
+						if remainingWidth > justifyThreshold, numberOfSpaces > 0 {
+							let spaces = CGFloat(numberOfSpaces)
+							let extraValuePerSpace = (remainingWidth / spaces) + (spacing / spaces)
+							let firstFrame = frameLayouts.first(where: { !$0.isEmpty })
+							
+							var index = 1
+							for frameLayout in frameLayouts {
+								if frameLayout == firstFrame || frameLayout.isEmpty { continue }
+								var rect = frameLayout.frame
+								rect.origin.x += extraValuePerSpace * CGFloat(index)
+								frameLayout.frame = rect
+								index += 1
+							}
+						}
+					}
 					
 					break
 				
@@ -721,6 +761,25 @@ open class StackFrameLayout: FrameLayout {
 							}
 							
 							gapSpace = rect.width > 0 ? spacing : 0
+						}
+					}
+					else if isJustified {
+						let remainingWidth = containerFrame.width - usedSpace
+						let numberOfSpaces = numberOfVisibleFrames() - 1
+						
+						if remainingWidth > justifyThreshold, numberOfSpaces > 0 {
+							let spaces = CGFloat(numberOfSpaces)
+							let extraValuePerSpace = (remainingWidth / spaces) + (spacing / spaces)
+							let lastFrame = invertedLayoutArray.first(where: { !$0.isEmpty })
+							
+							var index = 1
+							for frameLayout in invertedLayoutArray {
+								if frameLayout == lastFrame || frameLayout.isEmpty { continue }
+								var rect = frameLayout.frame
+								rect.origin.x -= extraValuePerSpace * CGFloat(index)
+								frameLayout.frame = rect
+								index += 1
+							}
 						}
 					}
 					break

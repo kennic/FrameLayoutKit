@@ -14,7 +14,7 @@ class TagListView: UIView {
 	let addButton = UIButton()
 	let removeButton = UIButton()
 	let frameLayout = StackFrameLayout(axis: .vertical)
-	let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
+	let colors: [UIColor] = [.red, .green, .blue, .brown, .yellow, .magenta, .black, .orange, .purple, .systemPink]
 	
 	var onChanged: ((TagListView) -> Void)?
 	
@@ -25,7 +25,8 @@ class TagListView: UIView {
 		
 		flowLayout.interItemSpacing = 4
 		flowLayout.lineSpacing = 4
-//		flowLayout.distribution = .equal
+		flowLayout.padding(top: 4, left: 4, bottom: 4, right: 4)
+		flowLayout.distribution = .left
 		
 		addButton.setTitle("Add Item", for: .normal)
 		addButton.backgroundColor = .systemBlue
@@ -41,6 +42,13 @@ class TagListView: UIView {
 		addSubview(addButton)
 		addSubview(removeButton)
 		addSubview(frameLayout)
+		
+		// Disable justified last stack
+		flowLayout.onNewStackBlock = { (sender, layout) in
+			sender.stacks.forEach {
+				$0.isJustified = $0 != sender.lastStack
+			}
+		}
 		
 		frameLayout + flowLayout
 		frameLayout + HStackLayout {
@@ -80,18 +88,17 @@ class TagListView: UIView {
 		tagButton.setTitle("  [\(count)]: \(title)  ", for: .normal)
 		tagButton.setTitleColor(.white, for: .normal)
 		tagButton.backgroundColor = color()
+		tagButton.layer.cornerRadius = 5.0
+		tagButton.layer.masksToBounds = true
 		
 		flowLayout.views.append(tagButton)
-		print("\(count + 1) items")
 		onChanged?(self)
 	}
 	
 	@objc func removeLastItem() {
 		guard let item = flowLayout.views.last else { return }
 		item.removeFromSuperview()
-		flowLayout.views.removeLast()
-		print("\(flowLayout.views.count) items")
-		
+		flowLayout.views.removeLast()		
 		onChanged?(self)
 	}
 	

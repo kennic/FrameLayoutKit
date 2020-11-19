@@ -73,6 +73,12 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
+	public var isJustified: Bool = false {
+		didSet {
+			setNeedsLayout()
+		}
+	}
+	
 	public var lineSpacing: CGFloat {
 		get { stackLayout.spacing }
 		set {
@@ -88,11 +94,28 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var rows: Int {
-		get { stackLayout.frameLayouts.count }
+	public var stackCount: Int {
+		return stackLayout.frameLayouts.count
 	}
 	
+	public var stacks: [StackFrameLayout] {
+		return stackLayout.frameLayouts as? [StackFrameLayout] ?? []
+	}
+	
+	public var firstStack: StackFrameLayout? {
+		return stackLayout.firstFrameLayout as? StackFrameLayout
+	}
+	
+	public var lastStack: StackFrameLayout? {
+		return stackLayout.lastFrameLayout as? StackFrameLayout
+	}
+	
+	let stackLayout = ScrollStackView(axis: .vertical, distribution: .top)
+	
+	fileprivate var lastSize: CGSize = .zero
 	public fileprivate(set) var viewCount: Int = 0
+	
+	/// Array of views that needs to be filled in this flow layout
 	public var views: [UIView] = [] {
 		didSet {
 			views.forEach { if $0.superview == nil { addSubview($0) } }
@@ -103,15 +126,7 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var firstRowLayout: StackFrameLayout? {
-		return stackLayout.firstFrameLayout as? StackFrameLayout
-	}
-	
-	public var lastRowLayout: StackFrameLayout? {
-		return stackLayout.lastFrameLayout as? StackFrameLayout
-	}
-	
-	let stackLayout = StackFrameLayout(axis: .vertical, distribution: .top)
+	public var onNewStackBlock: ((FlowFrameLayout, StackFrameLayout) -> Void)? = nil
 	
 	// MARK: -
 	
@@ -144,7 +159,7 @@ open class FlowFrameLayout: FrameLayout {
 	
 	public func viewsAt(column: Int) -> [UIView]? {
 		var results = [UIView]()
-		for r in 0..<rows {
+		for r in 0..<stackCount {
 			if let view = viewAt(row: r, column: column) {
 				results.append(view)
 			}
@@ -169,13 +184,13 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
-		guard let lastRows = lastRowLayout else { return nil }
+		guard let lastStack = lastStack else { return nil }
 		
 		if containsView {
-			return lastRows.frameLayouts.last(where: { $0.targetView != nil })
+			return lastStack.frameLayouts.last(where: { $0.targetView != nil })
 		}
 		else {
-			return lastRows.frameLayouts.last
+			return lastStack.frameLayouts.last
 		}
 	}
 	
@@ -184,12 +199,18 @@ open class FlowFrameLayout: FrameLayout {
 	fileprivate func newStack() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: axis, distribution: distribution)
 		layout.spacing = axis == .horizontal ? interItemSpacing : lineSpacing
+		layout.isJustified = isJustified
 		layout.debug = debug
 		
 		return layout
 	}
 	
-	fileprivate func calculateSize(fitSize: CGSize) -> (size: CGSize, map: [Int: Int]) {
+	/**
+	Returns size that fits and map of number of items per row
+	- parameter fitSize: Size that needs to be fit in
+	- returns Size that fits all contents, and map of number of items per row, format: `[row: numberOfItems]`
+	*/
+	public func calculateSize(fitSize: CGSize) -> (size: CGSize, map: [Int: Int]) {
 		var result: CGSize = .zero
 		var rowColMap: [Int: Int] = [:]
 		
@@ -296,7 +317,6 @@ open class FlowFrameLayout: FrameLayout {
 		return calculateSize(fitSize: size).size
 	}
 	
-	var lastSize: CGSize = .zero
 	open override func layoutSubviews() {
 		super.layoutSubviews()
 		
@@ -314,7 +334,6 @@ open class FlowFrameLayout: FrameLayout {
 			
 			var index = 0
 			let numberOfStack = map.keys.count
-			print("MAP: \(map)")
 			for i in 0..<numberOfStack {
 				if index == viewCount { break }
 				
@@ -328,6 +347,7 @@ open class FlowFrameLayout: FrameLayout {
 				}
 				
 				stackLayout + stack
+				onNewStackBlock?(self, stack)
 			}
 		}
 		

@@ -156,6 +156,19 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var frameLayouts: [FrameLayout] {
+		get { frameLayout.frameLayouts }
+		set { frameLayout.frameLayouts = newValue }
+	}
+	
+	public var firstFrameLayout: FrameLayout? {
+		return frameLayout.firstFrameLayout
+	}
+	
+	public var lastFrameLayout: FrameLayout? {
+		return frameLayout.lastFrameLayout
+	}
+	
 	/// Block will be called before calling sizeThatFits
 	public var preSizeThatFitsConfigurationBlock: ((ScrollStackView, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
@@ -271,8 +284,8 @@ open class ScrollStackView: UIView {
 	
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
-		if let view = view { scrollView.addSubview(view) }
 		let layout = frameLayout.add(view)
+		if let view = view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
 	}
@@ -284,8 +297,8 @@ open class ScrollStackView: UIView {
 	
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
-		if let view = view { scrollView.addSubview(view) }
 		let layout = frameLayout.insert(view, at: index)
+		if let view = view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
 	}

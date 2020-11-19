@@ -35,12 +35,44 @@ open class FrameLayout: UIView {
 	public var edgeInsets: UIEdgeInsets = .zero
 	/// Minimum size of frameLayout
 	public var minSize: CGSize = .zero
+	public var minWidth: CGFloat {
+		get { return minSize.width }
+		set { minSize = CGSize(width: minSize.width, height: newValue) }
+	}
+	public var minHeight: CGFloat {
+		get { return minSize.height }
+		set { minSize = CGSize(width: newValue, height: minSize.height) }
+	}
 	/// Maximum size of frameLayout
 	public var maxSize: CGSize = .zero
+	public var maxWidth: CGFloat {
+		get { return maxSize.width }
+		set { maxSize = CGSize(width: newValue, height: maxSize.height) }
+	}
+	public var maxHeight: CGFloat {
+		get { return maxSize.height }
+		set { maxSize = CGSize(width: maxSize.width, height: newValue) }
+	}
 	/// Minimum size of `targetView`
 	public var minContentSize: CGSize = .zero
+	public var minContentWidth: CGFloat {
+		get { return minContentSize.width }
+		set { minContentSize = CGSize(width: minContentSize.width, height: newValue) }
+	}
+	public var minContentHeight: CGFloat {
+		get { return minContentSize.height }
+		set { minContentSize = CGSize(width: newValue, height: minContentSize.height) }
+	}
 	/// Maximum size of targetView
 	public var maxContentSize: CGSize = .zero
+	public var maxContentWidth: CGFloat {
+		get { return maxContentSize.width }
+		set { maxContentSize = CGSize(width: newValue, height: maxContentSize.height) }
+	}
+	public var maxContentHeight: CGFloat {
+		get { return maxContentSize.height }
+		set { maxContentSize = CGSize(width: maxContentSize.width, height: newValue) }
+	}
 	/// Adding size to content size. `minSize` and `maxSize` still have higher priority
 	public var extendSize: CGSize = .zero
 	/// Vertical alignment
