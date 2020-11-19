@@ -244,7 +244,7 @@ open class FlowFrameLayout: FrameLayout {
 					
 					index += 1
 					
-					if remainingSize.width < 0 || contentSize.width > remainingSize.width {
+					if remainingSize.width < 0 {
 						index -= 1
 						result.height += rowHeight
 						
