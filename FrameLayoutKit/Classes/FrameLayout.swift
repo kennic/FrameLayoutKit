@@ -126,12 +126,32 @@ open class FrameLayout: UIView {
 		}
 	}
 	
+	public var fixWidth: CGFloat {
+		get { return fixSize.width }
+		set { fixSize = CGSize(width: newValue, height: fixSize.height) }
+	}
+	
+	public var fixHeight: CGFloat {
+		get { return fixSize.height }
+		set { fixSize = CGSize(width: fixSize.width, height: newValue) }
+	}
+	
 	/// Set the fix size of targetView
 	public var fixContentSize: CGSize = .zero {
 		didSet {
 			minContentSize = fixContentSize
 			maxContentSize = fixContentSize
 		}
+	}
+	
+	public var fixContentWidth: CGFloat {
+		get { return fixContentSize.width }
+		set { fixContentSize = CGSize(width: newValue, height: fixContentSize.height) }
+	}
+	
+	public var fixContentHeight: CGFloat {
+		get { return fixContentSize.height }
+		set { fixContentSize = CGSize(width: fixContentSize.width, height: newValue) }
 	}
 	
 	/// Set the alignment of both axis

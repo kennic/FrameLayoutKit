@@ -1022,6 +1022,25 @@ open class StackFrameLayout: FrameLayout {
 							offset += rect.height + gapSpace
 						}
 					}
+					else if isJustified {
+						let remainingHeight = containerFrame.height - usedSpace
+						let numberOfSpaces = numberOfVisibleFrames() - 1
+						
+						if remainingHeight > justifyThreshold, numberOfSpaces > 0 {
+							let spaces = CGFloat(numberOfSpaces)
+							let extraValuePerSpace = (remainingHeight / spaces) + (spacing / spaces)
+							let firstFrame = frameLayouts.first(where: { !$0.isEmpty })
+							
+							var index = 1
+							for frameLayout in frameLayouts {
+								if frameLayout == firstFrame || frameLayout.isEmpty { continue }
+								var rect = frameLayout.frame
+								rect.origin.y += extraValuePerSpace * CGFloat(index)
+								frameLayout.frame = rect
+								index += 1
+							}
+						}
+					}
 					break
 				
 				case .bottom, .right:
@@ -1112,6 +1131,25 @@ open class StackFrameLayout: FrameLayout {
 							}
 							
 							gapSpace = rect.height > 0 ? spacing : 0
+						}
+					}
+					else if isJustified {
+						let remainingHeight = containerFrame.height - usedSpace
+						let numberOfSpaces = numberOfVisibleFrames() - 1
+						
+						if remainingHeight > justifyThreshold, numberOfSpaces > 0 {
+							let spaces = CGFloat(numberOfSpaces)
+							let extraValuePerSpace = (remainingHeight / spaces) + (spacing / spaces)
+							let firstFrame = frameLayouts.first(where: { !$0.isEmpty })
+							
+							var index = 1
+							for frameLayout in frameLayouts {
+								if frameLayout == firstFrame || frameLayout.isEmpty { continue }
+								var rect = frameLayout.frame
+								rect.origin.y -= extraValuePerSpace * CGFloat(index)
+								frameLayout.frame = rect
+								index += 1
+							}
 						}
 					}
 					break
