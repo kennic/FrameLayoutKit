@@ -272,15 +272,13 @@ open class FlowFrameLayout: FrameLayout {
 				row += 1
 				
 				let contentSize = view.sizeThatFits(remainingSize)
-				if fitSize.height != CGFloat.infinity {
-					let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
-					remainingSize.height -= space
-				}
+				let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
+				remainingSize.height -= space
 				colWidth = max(colWidth, contentSize.width)
 				rowColMap[col] = row
 				index += 1
 				
-				if remainingSize.height < 0 {
+				if remainingSize.height < 0 || contentSize.height > remainingSize.height {
 					index -= 1
 					result.width += colWidth
 					remainingSize.width -= (colWidth + interItemSpacing)
@@ -338,7 +336,6 @@ open class FlowFrameLayout: FrameLayout {
 			
 			var index = 0
 			let numberOfStack = map.keys.count
-			print("MAP: \(map)")
 			for i in 0..<numberOfStack {
 				if index == viewCount { break }
 				
