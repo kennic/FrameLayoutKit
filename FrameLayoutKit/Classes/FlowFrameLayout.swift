@@ -225,6 +225,8 @@ open class FlowFrameLayout: FrameLayout {
 			result.height = result.width * heightRatio
 		}
 		else {
+			let fitSize = CGSize(width: max(fitSize.width - verticalEdgeValues, 0), height: max(fitSize.height - horizontalEdgeValues, 0))
+			
 			if axis == .horizontal {
 				var rowHeight: CGFloat = 0.0
 				var row = 1
@@ -267,7 +269,7 @@ open class FlowFrameLayout: FrameLayout {
 				}
 			}
 			else { // axis = .vertical
-				let fitSize = CGSize(width: fitSize.width, height: maxHeight == 0 ? UIScreen.main.bounds.size.height : maxHeight)
+				let fitSize = CGSize(width: fitSize.width, height: maxHeight <= 0 ? 32_000 : maxHeight)
 				var colWidth: CGFloat = 0.0
 				var row = 0
 				var col = 1
@@ -310,7 +312,6 @@ open class FlowFrameLayout: FrameLayout {
 			}
 			
 			result.limitedTo(minSize: minSize, maxSize: maxSize)
-			print("\(result)")
 		}
 		
 		if result.width > 0 {
