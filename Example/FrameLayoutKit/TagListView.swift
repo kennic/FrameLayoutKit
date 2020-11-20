@@ -80,9 +80,9 @@ class TagListView: UIView {
 	
 	@objc func addItem() {
 		let count = flowLayout.views.count
-		let title = Int.random(in: 0..<3) > 1 ? Int.random(in: 0..<1_000_000_000) : Int.random(in: 0..<1_000)
+		let title = Int.random(in: 0..<3) > 1 ? Int.random(in: 0..<1_000_000_000_000) : Int.random(in: 0..<100)
 		let tagButton = UIButton()
-		tagButton.titleLabel?.font = .systemFont(ofSize: 10)
+		tagButton.titleLabel?.font = .systemFont(ofSize: 20)
 		tagButton.titleLabel?.adjustsFontSizeToFitWidth = false
 		tagButton.titleLabel?.lineBreakMode = .byClipping
 		tagButton.setTitle("  [\(count)]: \(title)  ", for: .normal)

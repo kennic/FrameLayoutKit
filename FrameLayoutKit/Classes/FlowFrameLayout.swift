@@ -230,42 +230,39 @@ open class FlowFrameLayout: FrameLayout {
 			if axis == .horizontal {
 				var rowHeight: CGFloat = 0.0
 				var row = 1
-				var col = 0
+				var col = 1
 				var remainingSize = fitSize
-				var index = 0
 				
-				while index < viewCount {
-					let view = views[index]
+				for view in views {
 					if view.isHidden && ignoreHiddenView { continue }
-					col += 1
 					
 					let contentSize = view.sizeThatFits(remainingSize)
 					let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
 					remainingSize.width -= space
 					rowHeight = max(rowHeight, contentSize.height)
 					
-					index += 1
+					print("\(remainingSize.width)")
 					
-					if remainingSize.width < 0 {
-						index -= 1
-						result.height += rowHeight
-						
-						if viewCount > 1 {
-							result.width = max(result.width, fitSize.width - remainingSize.width)
-							result.height += lineSpacing
-							
-							rowHeight = 0
-							
-							row += 1
-							col = 0
-						}
+					if remainingSize.width < 0, col > 1 {
+						result.height += (lineSpacing + rowHeight)
+						result.width = max(result.width, fitSize.width - remainingSize.width)
 						
 						remainingSize.width = fitSize.width
 						remainingSize.height -= result.height
+						
+						let contentSize = view.sizeThatFits(remainingSize)
+						let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
+						remainingSize.width -= space
+						rowHeight = max(rowHeight, contentSize.height)
+						
+						row += 1
+						col = 1
 					}
 					
 					rowColMap[row] = col
 					result.height = max(result.height, rowHeight)
+					
+					col += 1
 				}
 			}
 			else { // axis = .vertical
@@ -292,6 +289,7 @@ open class FlowFrameLayout: FrameLayout {
 					
 					if remainingSize.height < 0 || contentSize.height > remainingSize.height {
 						index -= 1
+						
 						result.width += colWidth
 						remainingSize.width -= (colWidth + interItemSpacing)
 						
@@ -324,7 +322,7 @@ open class FlowFrameLayout: FrameLayout {
 		
 		result.width = min(result.width, fitSize.width)
 		result.height = min(result.height, fitSize.height)
-		
+		print("MAP: \(rowColMap)")
 		return (result, rowColMap)
 	}
 	
