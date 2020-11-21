@@ -236,16 +236,20 @@ open class FlowFrameLayout: FrameLayout {
 				for view in views {
 					if view.isHidden && ignoreHiddenView { continue }
 					
-					let contentSize = view.sizeThatFits(remainingSize)
-					let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
-					remainingSize.width -= space
-					rowHeight = max(rowHeight, contentSize.height)
+					if remainingSize.width > 0 {
+						let contentSize = view.sizeThatFits(remainingSize)
+						let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
+						remainingSize.width -= space
+						rowHeight = max(rowHeight, contentSize.height)
+					}
+					else if remainingSize.width == 0 {
+						remainingSize.width -= 1 // to trigger the following block
+					}
 					
-					print("\(remainingSize.width)")
+					result.width = max(result.width, fitSize.width - remainingSize.width)
 					
 					if remainingSize.width < 0, col > 1 {
 						result.height += (lineSpacing + rowHeight)
-						result.width = max(result.width, fitSize.width - remainingSize.width)
 						
 						remainingSize.width = fitSize.width
 						remainingSize.height -= result.height
@@ -268,44 +272,44 @@ open class FlowFrameLayout: FrameLayout {
 			else { // axis = .vertical
 				let fitSize = CGSize(width: fitSize.width, height: maxHeight <= 0 ? 32_000 : maxHeight)
 				var colWidth: CGFloat = 0.0
-				var row = 0
+				var row = 1
 				var col = 1
 				var remainingSize = fitSize
-				var index = 0
 				
-				while index < viewCount {
-					let view = views[index]
+				for view in views {
 					if view.isHidden && ignoreHiddenView { continue }
-					row += 1
 					
-					let contentSize = view.sizeThatFits(remainingSize)
-					let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
-					remainingSize.height -= space
-					colWidth = max(colWidth, contentSize.width)
-					rowColMap[col] = row
-					index += 1
+					if remainingSize.height > 0 {
+						let contentSize = view.sizeThatFits(remainingSize)
+						let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
+						remainingSize.height -= space
+						colWidth = max(colWidth, contentSize.width)
+					}
+					else if remainingSize.height == 0 {
+						remainingSize.height -= 1 // to trigger the following block
+					}
 					
 					result.height = max(result.height, fitSize.height - remainingSize.height)
 					
-					if remainingSize.height < 0 || contentSize.height > remainingSize.height {
-						index -= 1
-						
-						result.width += colWidth
-						remainingSize.width -= (colWidth + interItemSpacing)
-						
-						if viewCount > 1 {
-							result.width += interItemSpacing
-							
-							colWidth = 0
-							col += 1
-							row = 0
-						}
+					if remainingSize.height < 0, row > 1 {
+						result.width += (interItemSpacing + colWidth)
 						
 						remainingSize.width -= result.width
 						remainingSize.height = fitSize.height
+						
+						let contentSize = view.sizeThatFits(remainingSize)
+						let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
+						remainingSize.height -= space
+						colWidth = max(colWidth, contentSize.width)
+						
+						col += 1
+						row = 1
 					}
 					
+					rowColMap[col] = row
 					result.width = max(result.width, colWidth)
+					
+					row += 1
 				}
 			}
 			
@@ -322,7 +326,6 @@ open class FlowFrameLayout: FrameLayout {
 		
 		result.width = min(result.width, fitSize.width)
 		result.height = min(result.height, fitSize.height)
-		print("MAP: \(rowColMap)")
 		return (result, rowColMap)
 	}
 	
