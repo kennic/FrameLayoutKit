@@ -245,9 +245,9 @@ open class FlowFrameLayout: FrameLayout {
 						let contentSize = view.sizeThatFits(remainingSize)
 						let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
 						remainingSize.width -= space
-						rowHeight = contentSize.height
 						
-						result.height += (lineSpacing + rowHeight)
+						rowHeight = max(contentSize.height, 0)
+						if rowHeight > 0 { result.height += (lineSpacing + rowHeight) }
 						
 						row += 1
 						col = 1
@@ -288,9 +288,9 @@ open class FlowFrameLayout: FrameLayout {
 						let contentSize = view.sizeThatFits(remainingSize)
 						let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
 						remainingSize.height -= space
-						colWidth = contentSize.width
 						
-						result.width += (interItemSpacing + colWidth)
+						colWidth = max(contentSize.width, 0)
+						if colWidth > 0 { result.width += (interItemSpacing + colWidth) }
 						
 						col += 1
 						row = 1
