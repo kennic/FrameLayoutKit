@@ -118,8 +118,6 @@ open class FlowFrameLayout: FrameLayout {
 	/// Array of views that needs to be filled in this flow layout
 	public var views: [UIView] = [] {
 		didSet {
-			views.forEach { if $0.superview == nil { addSubview($0) } }
-			
 			lastSize = .zero
 			viewCount = views.count
 			setNeedsLayout()
@@ -140,6 +138,8 @@ open class FlowFrameLayout: FrameLayout {
 		
 		axis = .horizontal
 		isIntrinsicSizeEnabled = true
+		stackLayout.scrollView.clipsToBounds = true
+		
 		addSubview(stackLayout)
 	}
 	
@@ -153,22 +153,11 @@ open class FlowFrameLayout: FrameLayout {
 		return frameLayout(row: row, column: column)?.targetView
 	}
 	
-	public func viewsAt(row: Int) -> [UIView]? {
-		return rows(at: row)?.frameLayouts.compactMap( { return $0 } )
+	public func viewsAt(stack: Int) -> [UIView]? {
+		return stacks(at: stack)?.frameLayouts.compactMap( { return $0 } )
 	}
 	
-	public func viewsAt(column: Int) -> [UIView]? {
-		var results = [UIView]()
-		for r in 0..<stackCount {
-			if let view = viewAt(row: r, column: column) {
-				results.append(view)
-			}
-		}
-		
-		return results.isEmpty ? nil : results
-	}
-	
-	public func rows(at index: Int) -> StackFrameLayout? {
+	public func stacks(at index: Int) -> StackFrameLayout? {
 		guard index > -1, index < stackLayout.frameLayouts.count, let frameLayout = stackLayout.frameLayouts[index] as? StackFrameLayout else { return nil }
 		return frameLayout
 	}
@@ -211,8 +200,8 @@ open class FlowFrameLayout: FrameLayout {
 	- returns Size that fits all contents, and map of number of items per row, format: `[row: numberOfItems]`
 	*/
 	public func calculateSize(fitSize: CGSize) -> (size: CGSize, map: [Int: Int]) {
-		var result: CGSize = .zero
-		var rowColMap: [Int: Int] = [:]
+		var result = CGSize.zero
+		var rowColMap = [Int: Int]()
 		
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
@@ -243,21 +232,22 @@ open class FlowFrameLayout: FrameLayout {
 						rowHeight = max(rowHeight, contentSize.height)
 					}
 					else if remainingSize.width == 0 {
+						rowHeight = 0
 						remainingSize.width -= 1 // to trigger the following block
 					}
 					
 					result.width = max(result.width, fitSize.width - remainingSize.width)
 					
 					if remainingSize.width < 0, col > 1 {
-						result.height += (lineSpacing + rowHeight)
-						
 						remainingSize.width = fitSize.width
 						remainingSize.height -= result.height
 						
 						let contentSize = view.sizeThatFits(remainingSize)
 						let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
 						remainingSize.width -= space
-						rowHeight = max(rowHeight, contentSize.height)
+						rowHeight = contentSize.height
+						
+						result.height += (lineSpacing + rowHeight)
 						
 						row += 1
 						col = 1
@@ -292,15 +282,15 @@ open class FlowFrameLayout: FrameLayout {
 					result.height = max(result.height, fitSize.height - remainingSize.height)
 					
 					if remainingSize.height < 0, row > 1 {
-						result.width += (interItemSpacing + colWidth)
-						
 						remainingSize.width -= result.width
 						remainingSize.height = fitSize.height
 						
 						let contentSize = view.sizeThatFits(remainingSize)
 						let space = contentSize.height > 0 ? contentSize.height + (view != lastView ? lineSpacing : 0) : 0
 						remainingSize.height -= space
-						colWidth = max(colWidth, contentSize.width)
+						colWidth = contentSize.width
+						
+						result.width += (interItemSpacing + colWidth)
 						
 						col += 1
 						row = 1
@@ -312,8 +302,6 @@ open class FlowFrameLayout: FrameLayout {
 					row += 1
 				}
 			}
-			
-			result.limitedTo(minSize: minSize, maxSize: maxSize)
 		}
 		
 		if result.width > 0 {
@@ -324,14 +312,19 @@ open class FlowFrameLayout: FrameLayout {
 			result.height += horizontalEdgeValues
 		}
 		
-		result.width = min(result.width, fitSize.width)
-		result.height = min(result.height, fitSize.height)
+		if axis == .horizontal {
+			result.width = min(result.width, fitSize.width)
+		}
+		else {
+			result.height = min(result.height, fitSize.height)
+		}
+		
 		return (result, rowColMap)
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
 		preSizeThatFitsConfigurationBlock?(self, size)
-		return calculateSize(fitSize: size).size
+		return calculateSize(fitSize: size).size.limitTo(minSize: minSize, maxSize: maxSize)
 	}
 	
 	open override func layoutSubviews() {
@@ -341,12 +334,13 @@ open class FlowFrameLayout: FrameLayout {
 			didLayoutSubviewsBlock?(self)
 		}
 		
+		let boundSize = bounds.size
+		let contentSize = calculateSize(fitSize: boundSize)
+		
 		if lastSize != bounds.size {
 			lastSize = bounds.size
 			
-			let boundSize = bounds.size
-			let map = calculateSize(fitSize: boundSize).map
-			
+			let map = contentSize.map
 			stackLayout.removeAll()
 			
 			var index = 0
