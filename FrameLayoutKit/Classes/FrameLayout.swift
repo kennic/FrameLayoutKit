@@ -33,6 +33,22 @@ open class FrameLayout: UIView {
 	public var ignoreHiddenView = true
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
+	/// Add translation position to view
+	public var translationOffset: CGPoint = .zero
+	public var translationX: CGFloat {
+		get { translationOffset.x }
+		set {
+			translationOffset.x = newValue
+			setNeedsLayout()
+		}
+	}
+	public var translationY: CGFloat {
+		get { translationOffset.y }
+		set {
+			translationOffset.y = newValue
+			setNeedsLayout()
+		}
+	}
 	/// Minimum size of frameLayout
 	public var minSize: CGSize = .zero
 	public var minWidth: CGFloat {
@@ -468,6 +484,7 @@ open class FrameLayout: UIView {
 		
 		targetFrame.size.limitedTo(minSize: minContentSize, maxSize: maxContentSize)
 		targetFrame = targetFrame.integral
+		targetFrame = targetFrame.offsetBy(dx: translationOffset.x, dy: translationOffset.y)
 		
 		if targetView.superview == self {
 			targetView.frame = targetFrame
@@ -484,7 +501,7 @@ open class FrameLayout: UIView {
 					superView = superView!.superview
 				}
 				
-				targetView.frame = targetFrame
+				targetView.frame = targetFrame.offsetBy(dx: translationOffset.x, dy: translationOffset.y)
 			}
 			else {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
