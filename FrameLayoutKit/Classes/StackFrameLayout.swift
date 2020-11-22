@@ -349,7 +349,7 @@ open class StackFrameLayout: FrameLayout {
 			
 			var gapSpace: CGFloat = 0
 			var totalSpace: CGFloat = 0
-			var frameContentSize: CGSize
+			var frameContentSize: CGSize = .zero
 			
 			let isInvertedAlignment = distribution == .bottom || distribution == .right
 			let activeFrameLayouts: [FrameLayout] = (isInvertedAlignment ? frameLayouts.reversed() : frameLayouts)
@@ -384,13 +384,13 @@ open class StackFrameLayout: FrameLayout {
 							let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 							
 							var ratioIndex = 0
-							for frameLayout in flexibleFrames {
+							flexibleFrames.forEach {
 								let ratioValue = ratio[ratioIndex]
 								let cellWidth = contentWidth * ratioValue
 								frameContentSize = CGSize(width: cellWidth, height: contentSize.height)
-								frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+								frameContentSize = $0.sizeThatFits(frameContentSize)
 								
-								gapSpace = frameContentSize.width > 0 ? spacing : 0
+								gapSpace = frameContentSize.width > 0 && $0 != lastFrameLayout ? spacing : 0
 								totalSpace += frameContentSize.width + gapSpace
 								maxHeight = max(maxHeight, frameContentSize.height)
 								ratioIndex += 1
@@ -423,9 +423,9 @@ open class StackFrameLayout: FrameLayout {
 							let remainingWidth = contentSize.width - totalSpace - remainingSpace
 							let cellWidth = remainingWidth / CGFloat(flexibleFrameCount)
 							
-							for frameLayout in flexibleFrames {
+							flexibleFrames.forEach {
 								frameContentSize = CGSize(width: cellWidth, height: contentSize.height)
-								frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+								frameContentSize = $0.sizeThatFits(frameContentSize)
 								
 								totalSpace += frameContentSize.width
 								maxHeight = max(maxHeight, frameContentSize.height)
@@ -442,13 +442,13 @@ open class StackFrameLayout: FrameLayout {
 						let finalRatio = ratio.autoFill(total: visibleFrameCount)
 						
 						var ratioIndex = 0
-						for frameLayout in visibleFrameLayouts {
+						visibleFrameLayouts.forEach {
 							let ratioValue = finalRatio[ratioIndex]
 							let cellWidth = contentWidth * ratioValue
-							frameContentSize = CGSize(width: cellWidth, height: contentSize.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
-							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+							frameContentSize = CGSize(width: cellWidth, height: contentSize.height).limitTo(minSize: $0.minSize, maxSize: $0.maxSize)
+							frameContentSize = $0.sizeThatFits(frameContentSize)
 							
-							gapSpace = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
+							gapSpace = frameContentSize.width > 0 && $0 != lastFrameLayout ? spacing : 0
 							totalSpace += frameContentSize.width + gapSpace
 							maxHeight = max(maxHeight, frameContentSize.height)
 							ratioIndex += 1
@@ -487,13 +487,13 @@ open class StackFrameLayout: FrameLayout {
 					let ratio = flexibleFrames.map { $0.flexibleRatio }.autoFill(total: flexibleFrameCount)
 					
 					var ratioIndex = 0
-					for frameLayout in flexibleFrames {
+					flexibleFrames.forEach {
 						let ratioValue = ratio[ratioIndex]
 						let cellHeight = contentHeight * ratioValue
 						frameContentSize = CGSize(width: contentSize.width, height: cellHeight)
-						frameContentSize = frameLayout.sizeThatFits(frameContentSize)
+						frameContentSize = $0.sizeThatFits(frameContentSize)
 						
-						gapSpace = frameContentSize.height > 0 ? spacing : 0
+						gapSpace = frameContentSize.height > 0 && $0 != lastFrameLayout ? spacing : 0
 						totalSpace += frameContentSize.height + gapSpace
 						maxWidth = max(maxWidth, frameContentSize.width)
 						ratioIndex += 1
@@ -833,7 +833,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						if frameLayout.isEmpty { continue }
 						
-						gapSpace = frameLayout != lastFrameLayout && frameContentSize.width > 0 ? spacing : 0
+						gapSpace = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
 						usedSpace += frameContentSize.width + gapSpace
 					}
 					
@@ -1088,7 +1088,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						if frameLayout.isEmpty { continue }
 						
-						gapSpace = frameLayout == lastFrameLayout ? 0.0 : frameContentSize.height > 0 ? spacing : 0
+						gapSpace = frameContentSize.height > 0 && frameLayout != lastFrameLayout ? spacing : 0
 						usedSpace += frameContentSize.height + gapSpace
 					}
 					
