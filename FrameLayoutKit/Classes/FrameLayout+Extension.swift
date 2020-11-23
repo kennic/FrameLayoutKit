@@ -192,11 +192,11 @@ extension With where Self: FrameLayout {
 	/// So you can also nest a block of FrameLayout into another by:
 	///
 	///		let stack = StackFrameLayout(axis: .vertical)
-	///		stack.add(StackFrameLayout(.horizontal).with {
-	///			$0.add(label)
-	///			$0.add(imageView)
-	///		})
-	///		stack.add(textField)
+	///		stack + HStackLayout().with {
+	///			$0 + imageView
+	///			$0 + label
+	///		}
+	///		stack + textField
 	///
 	///
 	@discardableResult

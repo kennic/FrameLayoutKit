@@ -203,6 +203,10 @@ open class FrameLayout: UIView {
 				setNeedsDisplay()
 			}
 			#endif
+			
+			if superview == nil {
+				layoutIfNeeded()
+			}
 		}
 	}
 	
@@ -219,6 +223,10 @@ open class FrameLayout: UIView {
 				setNeedsDisplay()
 			}
 			#endif
+			
+			if superview == nil {
+				layoutIfNeeded()
+			}
 		}
 	}
 	
