@@ -332,6 +332,8 @@ open class StackFrameLayout: FrameLayout {
 			let contentSize = CGSize(width: max(size.width - verticalEdgeValues, 0), height: max(size.height - horizontalEdgeValues, 0))
 			
 			if isOverlapped {
+				result = .zero
+				
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					
@@ -343,6 +345,17 @@ open class StackFrameLayout: FrameLayout {
 				if heightRatio > 0 {
 					result.height = result.width * heightRatio
 				}
+				
+				if result.width > 0 {
+					result.width += verticalEdgeValues
+				}
+				
+				if result.height > 0 {
+					result.height += horizontalEdgeValues
+				}
+				
+				result.width = min(result.width, size.width)
+				result.height = min(result.height, size.height)
 				
 				return result
 			}
