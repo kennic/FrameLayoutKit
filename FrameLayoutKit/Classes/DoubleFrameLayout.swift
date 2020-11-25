@@ -578,13 +578,8 @@ open class DoubleFrameLayout: FrameLayout {
 			result.limitedTo(minSize: minSize, maxSize: maxSize)
 		}
 		
-		if result.width > 0 {
-			result.width += verticalEdgeValues
-		}
-		
-		if result.height > 0 {
-			result.height += horizontalEdgeValues
-		}
+		if result.width > 0 { result.width += verticalEdgeValues }
+		if result.height > 0 { result.height += horizontalEdgeValues }
 		
 		result.width = min(result.width, size.width)
 		result.height = min(result.height, size.height)

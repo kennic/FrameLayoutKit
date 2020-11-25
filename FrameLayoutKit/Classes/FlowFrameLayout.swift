@@ -201,7 +201,7 @@ open class FlowFrameLayout: FrameLayout {
 	*/
 	public func calculateSize(fitSize: CGSize) -> (size: CGSize, map: [Int: Int]) {
 		var result = CGSize.zero
-		var rowColMap = [Int: Int]()
+		var sizeMap = [Int: Int]()
 		
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right
 		let horizontalEdgeValues = edgeInsets.top + edgeInsets.bottom
@@ -253,7 +253,7 @@ open class FlowFrameLayout: FrameLayout {
 						col = 1
 					}
 					
-					rowColMap[row] = col
+					sizeMap[row] = col
 					result.height = max(result.height, rowHeight)
 					
 					col += 1
@@ -296,7 +296,7 @@ open class FlowFrameLayout: FrameLayout {
 						row = 1
 					}
 					
-					rowColMap[col] = row
+					sizeMap[col] = row
 					result.width = max(result.width, colWidth)
 					
 					row += 1
@@ -304,13 +304,8 @@ open class FlowFrameLayout: FrameLayout {
 			}
 		}
 		
-		if result.width > 0 {
-			result.width += verticalEdgeValues
-		}
-		
-		if result.height > 0 {
-			result.height += horizontalEdgeValues
-		}
+		if result.width > 0 { result.width += verticalEdgeValues }
+		if result.height > 0 { result.height += horizontalEdgeValues }
 		
 		if axis == .horizontal {
 			result.width = min(result.width, fitSize.width)
@@ -319,7 +314,7 @@ open class FlowFrameLayout: FrameLayout {
 			result.height = min(result.height, fitSize.height)
 		}
 		
-		return (result, rowColMap)
+		return (result, sizeMap)
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
