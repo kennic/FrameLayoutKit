@@ -601,6 +601,7 @@ open class StackFrameLayout: FrameLayout {
 						var offset: CGFloat = edgeInsets.left
 						for frameLayout in frameLayouts {
 							var rect = frameLayout.frame
+							let isEmpty = frameLayout.isEmpty
 							
 							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
@@ -616,7 +617,7 @@ open class StackFrameLayout: FrameLayout {
 								frameLayout.frame = rect
 							}
 							
-							if frameLayout.isEmpty { continue }
+							if isEmpty { continue }
 							
 							gapSpace = rect.width > 0 ? spacing : 0
 							offset += rect.width + gapSpace
@@ -660,6 +661,8 @@ open class StackFrameLayout: FrameLayout {
 					var flexibleFrames = [FrameLayout]()
 					
 					for frameLayout in invertedLayoutArray {
+						let isEmpty = frameLayout.isEmpty
+						
 						if frameLayout.isFlexible && !isEmpty {
 							flexibleFrames.append(frameLayout)
 							lastFrameLayout = frameLayout
@@ -680,7 +683,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						frameLayout.frame = targetFrame
 						
-						if frameLayout.isEmpty { continue }
+						if isEmpty { continue }
 						
 						gapSpace = frameContentSize.width > 0 ? spacing : 0
 						usedSpace += frameContentSize.width + gapSpace
@@ -697,6 +700,7 @@ open class StackFrameLayout: FrameLayout {
 						var offset: CGFloat = containerFrame.width + edgeInsets.left
 						for frameLayout in invertedLayoutArray {
 							var rect = frameLayout.frame
+							let isEmpty = frameLayout.isEmpty
 							
 							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
@@ -714,7 +718,7 @@ open class StackFrameLayout: FrameLayout {
 								frameLayout.frame = rect
 							}
 							
-							if frameLayout.isEmpty { continue }
+							if isEmpty { continue }
 							
 							gapSpace = rect.width > 0 ? spacing : 0
 						}
@@ -900,6 +904,7 @@ open class StackFrameLayout: FrameLayout {
 						var offset = edgeInsets.top
 						for frameLayout in frameLayouts {
 							var rect = frameLayout.frame
+							let isEmpty = frameLayout.isEmpty
 							
 							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
@@ -915,7 +920,7 @@ open class StackFrameLayout: FrameLayout {
 								frameLayout.frame = rect
 							}
 							
-							if frameLayout.isEmpty { continue }
+							if isEmpty { continue }
 							
 							gapSpace = rect.height > 0 ? spacing : 0
 							offset += rect.height + gapSpace
@@ -995,6 +1000,7 @@ open class StackFrameLayout: FrameLayout {
 						var offset = containerFrame.height + edgeInsets.top
 						for frameLayout in invertedLayoutArray {
 							var rect = frameLayout.frame
+							let isEmpty = frameLayout.isEmpty
 							
 							if frameLayout.isFlexible && !isEmpty {
 								let ratioValue = ratio[ratioIndex]
@@ -1012,7 +1018,7 @@ open class StackFrameLayout: FrameLayout {
 								frameLayout.frame = rect
 							}
 							
-							if frameLayout.isEmpty { continue }
+							if isEmpty { continue }
 							
 							gapSpace = rect.height > 0 ? spacing : 0
 						}
