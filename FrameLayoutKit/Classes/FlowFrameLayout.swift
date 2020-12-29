@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class FlowFrameLayout<T: UIView>: FrameLayout<UIView> {
+open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 	public var axis: NKLayoutAxis = .horizontal {
 		didSet {
 			stackLayout.axis = axis == .horizontal ? .vertical : .horizontal
@@ -116,7 +116,7 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<UIView> {
 	public fileprivate(set) var viewCount: Int = 0
 	
 	/// Array of views that needs to be filled in this flow layout
-	public var views: [UIView] = [] {
+	public var views: [T] = [] {
 		didSet {
 			lastSize = .zero
 			viewCount = views.count
@@ -149,12 +149,12 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<UIView> {
 	
 	// MARK: -
 	
-	public func viewAt(row: Int, column: Int) -> UIView? {
-		return frameLayout(row: row, column: column)?.targetView
+	public func viewAt(row: Int, column: Int) -> T? {
+		return frameLayout(row: row, column: column)?.targetView as? T
 	}
 	
-	public func viewsAt(stack: Int) -> [UIView]? {
-		return stacks(at: stack)?.frameLayouts.compactMap( { return $0 } )
+	public func viewsAt(stack: Int) -> [T]? {
+		return stacks(at: stack)?.frameLayouts.compactMap( { return $0.targetView as? T } )
 	}
 	
 	public func stacks(at index: Int) -> StackFrameLayout<UIView>? {

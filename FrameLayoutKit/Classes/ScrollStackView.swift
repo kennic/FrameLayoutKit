@@ -94,6 +94,22 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var minWidth: CGFloat {
+		get { frameLayout.minWidth }
+		set {
+			frameLayout.minWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var minHeight: CGFloat {
+		get { frameLayout.minHeight }
+		set {
+			frameLayout.minHeight = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var maxSize: CGSize {
 		get { frameLayout.maxSize }
 		set {
@@ -102,10 +118,42 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var maxWidth: CGFloat {
+		get { frameLayout.maxWidth }
+		set {
+			frameLayout.maxWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var maxHeight: CGFloat {
+		get { frameLayout.maxHeight }
+		set {
+			frameLayout.maxHeight = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var fixSize: CGSize {
 		get { frameLayout.fixSize }
 		set {
 			frameLayout.fixSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixWidth: CGFloat {
+		get { frameLayout.fixWidth }
+		set {
+			frameLayout.fixWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixHeight: CGFloat {
+		get { frameLayout.fixHeight }
+		set {
+			frameLayout.fixHeight = newValue
 			setNeedsLayout()
 		}
 	}
