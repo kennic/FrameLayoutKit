@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class GridFrameLayout<T: UIView>: FrameLayout<UIView>{
+open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	public var axis: NKLayoutAxis = .horizontal {
 		didSet {
 			arrangeViews()
@@ -169,7 +169,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<UIView>{
 	}
 	
 	public fileprivate(set) var viewCount: Int = 0
-	public var views: [UIView] = [] {
+	public var views: [T] = [] {
 		didSet {
 			views.forEach {
 				if $0.superview == nil {
@@ -219,16 +219,16 @@ open class GridFrameLayout<T: UIView>: FrameLayout<UIView>{
 	
 	// MARK: -
 	
-	public func viewAt(row: Int, column: Int) -> UIView? {
-		return frameLayout(row: row, column: column)?.targetView
+	public func viewAt(row: Int, column: Int) -> T? {
+		return frameLayout(row: row, column: column)?.targetView as? T
 	}
 	
-	public func viewsAt(row: Int) -> [UIView]? {
-		return rows(at: row)?.frameLayouts.compactMap( { return $0 } )
+	public func viewsAt(row: Int) -> [T]? {
+		return rows(at: row)?.frameLayouts.compactMap( { return $0.targetView as? T } )
 	}
 	
-	public func viewsAt(column: Int) -> [UIView]? {
-		var results = [UIView]()
+	public func viewsAt(column: Int) -> [T]? {
+		var results = [T]()
 		for r in 0..<rows {
 			if let view = viewAt(row: r, column: column) {
 				results.append(view)
