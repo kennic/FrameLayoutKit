@@ -26,9 +26,9 @@ public enum NKContentHorizontalAlignment {
 /**
 A single frameLayout handles size and position of a view
 */
-open class FrameLayout: UIView {
+open class FrameLayout<T: UIView>: UIView {
 	/// Target view that handled by this frameLayout
-	public var targetView: UIView? = nil
+	public var targetView: T? = nil
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// Padding edge insets
@@ -256,7 +256,7 @@ open class FrameLayout: UIView {
 		try block(self)
 	}
 	
-	convenience public init(targetView: UIView? = nil) {
+	convenience public init(targetView: T? = nil) {
 		self.init()
 		self.targetView = targetView
 	}

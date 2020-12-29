@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class StackFrameLayout: FrameLayout {
+open class StackFrameLayout<T: UIView>: FrameLayout<UIView> {
 	public var distribution: NKLayoutDistribution = .top
 	public var axis: NKLayoutAxis = .vertical
 	
@@ -101,15 +101,15 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var firstFrameLayout: FrameLayout? {
+	public var firstFrameLayout: FrameLayout<UIView>? {
 		get { frameLayouts.first }
 	}
 	
-	public var lastFrameLayout: FrameLayout? {
+	public var lastFrameLayout: FrameLayout<UIView>? {
 		get { frameLayouts.last }
 	}
 	
-	public internal(set) var frameLayouts: [FrameLayout] = []
+	public internal(set) var frameLayouts: [FrameLayout<UIView>] = []
 	
 	public var numberOfFrameLayouts: Int {
 		get { frameLayouts.count }
@@ -159,13 +159,13 @@ open class StackFrameLayout: FrameLayout {
 	// MARK: -
 	
 	@discardableResult
-	open func add(_ views: [UIView]) -> [FrameLayout] {
+	open func add(_ views: [UIView]) -> [FrameLayout<UIView>] {
 		return views.map { add($0) }
 	}
 	
 	@discardableResult
-	open func add(_ view: UIView? = nil) -> FrameLayout {
-		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+	open func add(_ view: UIView? = nil) -> FrameLayout<UIView> {
+		if let frameLayout = view as? FrameLayout<UIView>, frameLayout.superview == nil {
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
@@ -183,8 +183,8 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
-		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+	open func insert(_ view: UIView?, at index: Int) -> FrameLayout<UIView> {
+		if let frameLayout = view as? FrameLayout<UIView>, frameLayout.superview == nil {
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
@@ -202,7 +202,7 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func addSpace(_ size: CGFloat = 0) -> FrameLayout {
+	open func addSpace(_ size: CGFloat = 0) -> FrameLayout<UIView> {
 		let frameLayout = add()
 		frameLayout.minSize = CGSize(width: size, height: size)
 		return frameLayout
@@ -239,14 +239,14 @@ open class StackFrameLayout: FrameLayout {
 		frameLayouts.removeAll()
 	}
 	
-	open func replace(_ frameLayout: FrameLayout?, at index: Int, autoRemoveOldTargetView: Bool = false) {
+	open func replace(_ frameLayout: FrameLayout<UIView>?, at index: Int, autoRemoveOldTargetView: Bool = false) {
 		guard let frameLayout = frameLayout else {
 			removeFrameLayout(at: index, autoRemoveTargetView: autoRemoveOldTargetView)
 			return
 		}
 		
 		let count = frameLayouts.count
-		var currentFrameLayout: FrameLayout? = nil
+		var currentFrameLayout: FrameLayout<UIView>? = nil
 		
 		if index < count {
 			currentFrameLayout = frameLayouts[index]
@@ -272,16 +272,16 @@ open class StackFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	public func frameLayout(at index: Int) -> FrameLayout? {
+	public func frameLayout(at index: Int) -> FrameLayout<UIView>? {
 		guard index >= 0 && index < frameLayouts.count else { return nil }
 		return frameLayouts[index]
 	}
 	
-	public func frameLayout(with view: UIView) -> FrameLayout? {
+	public func frameLayout(with view: UIView) -> FrameLayout<UIView>? {
 		return frameLayouts.first(where: { $0.targetView == view })
 	}
 	
-	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
+	public func enumerate(_ block: ((FrameLayout<UIView>, Int, inout Bool) -> Void)) {
 		var stop: Bool = false
 		var index = 0
 		
@@ -305,7 +305,7 @@ open class StackFrameLayout: FrameLayout {
 		frameLayouts.forEach { $0.setNeedsLayout() }
 	}
 	
-	fileprivate func visibleFrames() -> [FrameLayout] {
+	fileprivate func visibleFrames() -> [FrameLayout<UIView>] {
 		return frameLayouts.filter { !$0.isEmpty }
 	}
 	
@@ -357,15 +357,15 @@ open class StackFrameLayout: FrameLayout {
 			var frameContentSize: CGSize = .zero
 			
 			let isInvertedAlignment = distribution == .bottom || distribution == .right
-			let activeFrameLayouts: [FrameLayout] = (isInvertedAlignment ? frameLayouts.reversed() : frameLayouts)
-			let lastFrameLayout: FrameLayout? = activeFrameLayouts.last(where: { !$0.isEmpty })
+			let activeFrameLayouts: [FrameLayout<UIView>] = (isInvertedAlignment ? frameLayouts.reversed() : frameLayouts)
+			let lastFrameLayout: FrameLayout<UIView>? = activeFrameLayouts.last(where: { !$0.isEmpty })
 			
 			if axis == .horizontal {
 				var maxHeight: CGFloat = 0
 				
 				switch distribution {
 					case .left, .right, .top, .bottom:
-						var flexibleFrames = [FrameLayout]()
+						var flexibleFrames = [FrameLayout<UIView>]()
 						for frameLayout in activeFrameLayouts {
 							if frameLayout.isEmpty { continue }
 							
@@ -406,7 +406,7 @@ open class StackFrameLayout: FrameLayout {
 					
 					case .equal, .center:
 						let visibleFrameLayouts = visibleFrames()
-						var flexibleFrames = [FrameLayout]()
+						var flexibleFrames = [FrameLayout<UIView>]()
 						frameContentSize = CGSize(width: contentSize.width / CGFloat(visibleFrameLayouts.count), height: contentSize.height)
 						
 						for frameLayout in visibleFrameLayouts {
@@ -469,7 +469,7 @@ open class StackFrameLayout: FrameLayout {
 			}
 			else { // if axis == .vertical {
 				var maxWidth: CGFloat = 0
-				var flexibleFrames = [FrameLayout]()
+				var flexibleFrames = [FrameLayout<UIView>]()
 				for frameLayout in frameLayouts {
 					if frameLayout.isEmpty { continue }
 					if frameLayout.isFlexible {
@@ -542,8 +542,8 @@ open class StackFrameLayout: FrameLayout {
 		var targetFrame = containerFrame
 		
 		let isInvertedAlignment = distribution == .bottom || distribution == .right
-		let invertedLayoutArray: [FrameLayout] = frameLayouts.reversed()
-		var lastFrameLayout: FrameLayout? = (isInvertedAlignment ? frameLayouts : invertedLayoutArray).first(where: { !$0.isEmpty })
+		let invertedLayoutArray: [FrameLayout<UIView>] = frameLayouts.reversed()
+		var lastFrameLayout: FrameLayout<UIView>? = (isInvertedAlignment ? frameLayouts : invertedLayoutArray).first(where: { !$0.isEmpty })
 		
 		if axis == .horizontal {
 			switch distribution {
@@ -559,7 +559,7 @@ open class StackFrameLayout: FrameLayout {
 						break
 					}
 					
-					var flexibleFrames = [FrameLayout]()
+					var flexibleFrames = [FrameLayout<UIView>]()
 					
 					for frameLayout in frameLayouts {
 						let isEmpty = frameLayout.isEmpty
@@ -658,7 +658,7 @@ open class StackFrameLayout: FrameLayout {
 						break
 					}
 					
-					var flexibleFrames = [FrameLayout]()
+					var flexibleFrames = [FrameLayout<UIView>]()
 					
 					for frameLayout in invertedLayoutArray {
 						let isEmpty = frameLayout.isEmpty
@@ -863,7 +863,7 @@ open class StackFrameLayout: FrameLayout {
 						break
 					}
 					
-					var flexibleFrames = [FrameLayout]()
+					var flexibleFrames = [FrameLayout<UIView>]()
 					
 					for frameLayout in frameLayouts {
 						let isEmpty = frameLayout.isEmpty
@@ -959,7 +959,7 @@ open class StackFrameLayout: FrameLayout {
 						break
 					}
 					
-					var flexibleFrames = [FrameLayout]()
+					var flexibleFrames = [FrameLayout<UIView>]()
 					
 					for frameLayout in invertedLayoutArray {
 						let isEmpty = frameLayout.isEmpty

@@ -56,7 +56,7 @@ public struct UnitPercentage<Value: FloatingPoint> {
 }
 */
 
-open class DoubleFrameLayout: FrameLayout {
+open class DoubleFrameLayout<T: UIView>: FrameLayout<UIView> {
 	public var distribution: NKLayoutDistribution = .top
 	public var axis: NKLayoutAxis = .vertical
 	
@@ -163,22 +163,22 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var topFrameLayout: FrameLayout {
+	public var topFrameLayout: FrameLayout<UIView> {
 		get { frameLayout1 }
 		set { frameLayout1 = newValue }
 	}
 	
-	public var leftFrameLayout: FrameLayout {
+	public var leftFrameLayout: FrameLayout<UIView> {
 		get { frameLayout1 }
 		set { frameLayout1 = newValue }
 	}
 	
-	public var bottomFrameLayout: FrameLayout {
+	public var bottomFrameLayout: FrameLayout<UIView> {
 		get { frameLayout2 }
 		set { frameLayout2 = newValue }
 	}
 	
-	public var rightFrameLayout: FrameLayout {
+	public var rightFrameLayout: FrameLayout<UIView> {
 		get { frameLayout2 }
 		set { frameLayout2 = newValue }
 	}
@@ -252,8 +252,8 @@ open class DoubleFrameLayout: FrameLayout {
 	// MARK: -
 	
 	@discardableResult
-	open func setLeft(_ view: UIView?) -> FrameLayout {
-		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+	open func setLeft(_ view: UIView?) -> FrameLayout<UIView> {
+		if let frameLayout = view as? FrameLayout<UIView>, frameLayout.superview == nil {
 			self.frameLayout1 = frameLayout
 			return frameLayout
 		}
@@ -263,8 +263,8 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func setRight(_ view: UIView?) -> FrameLayout {
-		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+	open func setRight(_ view: UIView?) -> FrameLayout<UIView> {
+		if let frameLayout = view as? FrameLayout<UIView>, frameLayout.superview == nil {
 			self.frameLayout2 = frameLayout
 			return frameLayout
 		}
@@ -274,12 +274,12 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func setTop(_ view: UIView?) -> FrameLayout {
+	open func setTop(_ view: UIView?) -> FrameLayout<UIView> {
 		return setLeft(view)
 	}
 	
 	@discardableResult
-	open func setBottom(_ view: UIView?) -> FrameLayout {
+	open func setBottom(_ view: UIView?) -> FrameLayout<UIView> {
 		return setRight(view)
 	}
 	

@@ -156,16 +156,16 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
-	public var frameLayouts: [FrameLayout] {
+	public var frameLayouts: [FrameLayout<UIView>] {
 		get { frameLayout.frameLayouts }
 		set { frameLayout.frameLayouts = newValue }
 	}
 	
-	public var firstFrameLayout: FrameLayout? {
+	public var firstFrameLayout: FrameLayout<UIView>? {
 		return frameLayout.firstFrameLayout
 	}
 	
-	public var lastFrameLayout: FrameLayout? {
+	public var lastFrameLayout: FrameLayout<UIView>? {
 		return frameLayout.lastFrameLayout
 	}
 	
@@ -262,15 +262,15 @@ open class ScrollStackView: UIView {
 		return frameLayout.frameLayout(at: index)?.targetView
 	}
 	
-	public func frameLayout(at index: Int) -> FrameLayout? {
+	public func frameLayout(at index: Int) -> FrameLayout<UIView>? {
 		return frameLayout.frameLayout(at: index)
 	}
 	
-	public func frameLayout(with view: UIView) -> FrameLayout? {
+	public func frameLayout(with view: UIView) -> FrameLayout<UIView>? {
 		return frameLayout.frameLayout(with: view)
 	}
 	
-	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
+	public func enumerate(_ block: ((FrameLayout<UIView>, Int, inout Bool) -> Void)) {
 		frameLayout.enumerate(block)
 	}
 	
@@ -283,7 +283,7 @@ open class ScrollStackView: UIView {
 	}
 	
 	@discardableResult
-	open func add(_ view: UIView?) -> FrameLayout {
+	open func add(_ view: UIView?) -> FrameLayout<UIView> {
 		let layout = frameLayout.add(view)
 		if let view = view { scrollView.addSubview(view) }
 		setNeedsLayout()
@@ -291,12 +291,12 @@ open class ScrollStackView: UIView {
 	}
 	
 	@discardableResult
-	open func add(_ views: [UIView]) -> [FrameLayout] {
+	open func add(_ views: [UIView]) -> [FrameLayout<UIView>] {
 		return views.map { add($0) }
 	}
 	
 	@discardableResult
-	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
+	open func insert(_ view: UIView?, at index: Int) -> FrameLayout<UIView> {
 		let layout = frameLayout.insert(view, at: index)
 		if let view = view { scrollView.addSubview(view) }
 		setNeedsLayout()
@@ -304,7 +304,7 @@ open class ScrollStackView: UIView {
 	}
 	
 	@discardableResult
-	open func addSpace(_ size: CGFloat = 0) -> FrameLayout {
+	open func addSpace(_ size: CGFloat = 0) -> FrameLayout<UIView> {
 		let layout = add(UIView())
 		layout.minSize = CGSize(width: axis == .horizontal ? size : 0, height: axis == .vertical ? size : 0)
 		return layout
