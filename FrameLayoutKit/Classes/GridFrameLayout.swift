@@ -325,16 +325,15 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	open func addColumn() {
 		stackLayout.frameLayouts.forEach { (layout) in
 			if let rowLayout = layout as? StackFrameLayout<UIView> {
-				rowLayout.add().with {
-					$0.debug = debug
-					
-					if fixColumnWidth > 0 {
-						$0.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
-					}
-					else {
-						$0.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
-						$0.maxSize = CGSize(width: maxColumnWidth, height: maxRowHeight)
-					}
+				let row = rowLayout.add()
+				row.debug = debug
+				
+				if fixColumnWidth > 0 {
+					row.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
+				}
+				else {
+					row.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
+					row.maxSize = CGSize(width: maxColumnWidth, height: maxRowHeight)
 				}
 			}
 		}
@@ -344,16 +343,15 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	open func insertColumn(at index: Int) {
 		stackLayout.frameLayouts.forEach { (layout) in
 			if let rowLayout = layout as? StackFrameLayout<UIView> {
-				rowLayout.insert(nil, at: index).with {
-					$0.debug = debug
-					
-					if fixColumnWidth > 0 {
-						$0.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
-					}
-					else {
-						$0.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
-						$0.maxSize = CGSize(width: maxColumnWidth, height: maxRowHeight)
-					}
+				let row = rowLayout.insert(nil, at: index)
+				row.debug = debug
+				
+				if fixColumnWidth > 0 {
+					row.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
+				}
+				else {
+					row.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
+					row.maxSize = CGSize(width: maxColumnWidth, height: maxRowHeight)
 				}
 			}
 		}

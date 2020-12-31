@@ -179,12 +179,12 @@ open class VStackLayout<T: UIView>: StackFrameLayout<T> {
 	
 }
 
-public protocol With {}
-extension With where Self: FrameLayout<UIView> {
+public protocol Then {}
+extension Then { // where Self: AnyObject {
 	
 	/// Add ability to set properties with closures just after initializing.
 	///
-	///     let frameLayout = FrameLayout().with {
+	///     let frameLayout = FrameLayout().then {
 	///       $0.alignment = (.top, .center)
 	///       $0.padding(top: 5, left: 5, bottom: 5, right: 5)
 	///     }
@@ -192,22 +192,25 @@ extension With where Self: FrameLayout<UIView> {
 	/// So you can also nest a block of FrameLayout into another by:
 	///
 	///		let stack = StackFrameLayout(axis: .vertical)
-	///		stack + HStackLayout().with {
-	///			$0 + imageView
+	///		stack + HStackLayout {
+	///			($0 + imageView).then {
+	///				$0.flexible()
+	///				$0.fixHeight = 50
+	///			}
 	///			$0 + label
 	///		}
 	///		stack + textField
 	///
 	///
 	@discardableResult
-	public func with(_ block: (Self) throws -> Void) rethrows -> Self {
+	public func then(_ block: (Self) throws -> Void) rethrows -> Self {
 		try block(self)
 		return self
 	}
 	
 }
 
-extension FrameLayout: With {}
+extension FrameLayout: Then {}
 
 extension CGSize {
 	

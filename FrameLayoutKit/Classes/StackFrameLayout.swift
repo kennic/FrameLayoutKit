@@ -173,7 +173,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		else {
 			if let view = view, view.superview == nil { addSubview(view) }
 			
-			let frameLayout = FrameLayout(targetView: view)
+			let frameLayout = FrameLayout<T>(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayouts.append(frameLayout)
@@ -192,7 +192,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		else {
 			if let view = view, view.superview == nil { addSubview(view) }
 			
-			let frameLayout = FrameLayout(targetView: view)
+			let frameLayout = FrameLayout<T>(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayouts.insert(frameLayout, at: index)
