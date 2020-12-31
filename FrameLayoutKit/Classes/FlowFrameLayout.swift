@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
+open class FlowFrameLayout: FrameLayout {
 	public var axis: NKLayoutAxis = .horizontal {
 		didSet {
 			stackLayout.axis = axis == .horizontal ? .vertical : .horizontal
@@ -98,15 +98,15 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		return stackLayout.frameLayouts.count
 	}
 	
-	public var stacks: [StackFrameLayout<UIView>] {
-		return stackLayout.frameLayouts as? [StackFrameLayout<UIView>] ?? []
+	public var stacks: [StackFrameLayout] {
+		return stackLayout.frameLayouts as? [StackFrameLayout] ?? []
 	}
 	
-	public var firstStack: StackFrameLayout<UIView>? {
+	public var firstStack: StackFrameLayout? {
 		return stackLayout.firstFrameLayout as? StackFrameLayout
 	}
 	
-	public var lastStack: StackFrameLayout<UIView>? {
+	public var lastStack: StackFrameLayout? {
 		return stackLayout.lastFrameLayout as? StackFrameLayout
 	}
 	
@@ -116,7 +116,7 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 	public fileprivate(set) var viewCount: Int = 0
 	
 	/// Array of views that needs to be filled in this flow layout
-	public var views: [T] = [] {
+	public var views: [UIView] = [] {
 		didSet {
 			lastSize = .zero
 			viewCount = views.count
@@ -149,30 +149,30 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 	
 	// MARK: -
 	
-	public func viewAt(row: Int, column: Int) -> T? {
-		return frameLayout(row: row, column: column)?.targetView as? T
+	public func viewAt(row: Int, column: Int) -> UIView? {
+		return frameLayout(row: row, column: column)?.targetView
 	}
 	
-	public func viewsAt(stack: Int) -> [T]? {
-		return stacks(at: stack)?.frameLayouts.compactMap( { return $0.targetView as? T } )
+	public func viewsAt(stack: Int) -> [UIView]? {
+		return stacks(at: stack)?.frameLayouts.compactMap( { return $0 } )
 	}
 	
-	public func stacks(at index: Int) -> StackFrameLayout<UIView>? {
+	public func stacks(at index: Int) -> StackFrameLayout? {
 		guard index > -1, index < stackLayout.frameLayouts.count, let frameLayout = stackLayout.frameLayouts[index] as? StackFrameLayout else { return nil }
 		return frameLayout
 	}
 	
-	public func frameLayout(row: Int, column: Int) -> FrameLayout<UIView>? {
+	public func frameLayout(row: Int, column: Int) -> FrameLayout? {
 		guard row > -1, row < stackLayout.frameLayouts.count else { return nil }
 		guard let rowLayout = stackLayout.frameLayouts[row] as? StackFrameLayout else { return nil }
 		return rowLayout.frameLayout(at: column)
 	}
 	
-	public func allFrameLayouts() -> [FrameLayout<UIView>] {
+	public func allFrameLayouts() -> [FrameLayout] {
 		return stackLayout.frameLayouts.compactMap { $0 as? StackFrameLayout }.flatMap { $0.frameLayouts }
 	}
 	
-	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout<UIView>? {
+	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
 		guard let lastStack = lastStack else { return nil }
 		
 		if containsView {
@@ -185,7 +185,7 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 	
 	// MARK: -
 	
-	fileprivate func newStack() -> StackFrameLayout<UIView> {
+	fileprivate func newStack() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: axis, distribution: distribution)
 		layout.spacing = axis == .horizontal ? interItemSpacing : lineSpacing
 		layout.isJustified = isJustified

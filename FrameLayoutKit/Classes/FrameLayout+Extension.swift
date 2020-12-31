@@ -12,7 +12,7 @@ import UIKit
 public extension FrameLayout {
 	
 	@discardableResult
-	static func +(lhs: FrameLayout<T>, rhs: T? = nil) -> FrameLayout<T> {
+	static func +(lhs: FrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		lhs.targetView = rhs
 		return lhs
 	}
@@ -23,34 +23,34 @@ infix operator ---
 public extension StackFrameLayout {
 	
 	@discardableResult
-	static func ---(lhs: StackFrameLayout<T>, _ size: CGFloat = 0) -> FrameLayout<T> {
+	static func ---(lhs: StackFrameLayout, _ size: CGFloat = 0) -> FrameLayout {
 		return lhs.addSpace(size)
 	}
 	
 	@discardableResult
-	static func +(lhs: StackFrameLayout<T>, rhs: T? = nil) -> FrameLayout<T> {
+	static func +(lhs: StackFrameLayout, rhs: UIView? = nil) -> FrameLayout {
 		return lhs.add(rhs)
 	}
 	
 	@discardableResult
-	static func +(lhs: StackFrameLayout<T>, rhs: [T]? = nil) -> [FrameLayout<T>] {
-		var results = [FrameLayout<T>]()
+	static func +(lhs: StackFrameLayout, rhs: [UIView]? = nil) -> [FrameLayout] {
+		var results = [FrameLayout]()
 		rhs?.forEach { results.append(lhs.add($0)) }
 		return results
 	}
 	
 	@discardableResult
-	static func +(lhs: StackFrameLayout<T>, rhs: CGFloat = 0) -> FrameLayout<T> {
+	static func +(lhs: StackFrameLayout, rhs: CGFloat = 0) -> FrameLayout {
 		return lhs.addSpace(rhs)
 	}
 	
 	@discardableResult
-	static func +(lhs: StackFrameLayout<T>, rhs: Double = 0) -> FrameLayout<T> {
+	static func +(lhs: StackFrameLayout, rhs: Double = 0) -> FrameLayout {
 		return lhs.addSpace(CGFloat(rhs))
 	}
 	
 	@discardableResult
-	static func +(lhs: StackFrameLayout<T>, rhs: Int = 0) -> FrameLayout<T> {
+	static func +(lhs: StackFrameLayout, rhs: Int = 0) -> FrameLayout {
 		return lhs.addSpace(CGFloat(rhs))
 	}
 	
@@ -59,34 +59,34 @@ public extension StackFrameLayout {
 public extension ScrollStackView {
 	
 	@discardableResult
-	static func ---(lhs: ScrollStackView, _ size: CGFloat = 0) -> FrameLayout<UIView> {
+	static func ---(lhs: ScrollStackView, _ size: CGFloat = 0) -> FrameLayout {
 		return lhs.addSpace(size)
 	}
 	
 	@discardableResult
-	static func +(lhs: ScrollStackView, rhs: UIView? = nil) -> FrameLayout<UIView> {
+	static func +(lhs: ScrollStackView, rhs: UIView? = nil) -> FrameLayout {
 		return lhs.add(rhs)
 	}
 	
 	@discardableResult
-	static func +(lhs: ScrollStackView, rhs: [UIView]? = nil) -> [FrameLayout<UIView>] {
-		var results = [FrameLayout<UIView>]()
+	static func +(lhs: ScrollStackView, rhs: [UIView]? = nil) -> [FrameLayout] {
+		var results = [FrameLayout]()
 		rhs?.forEach { results.append(lhs.add($0)) }
 		return results
 	}
 	
 	@discardableResult
-	static func +(lhs: ScrollStackView, rhs: CGFloat = 0) -> FrameLayout <UIView>{
+	static func +(lhs: ScrollStackView, rhs: CGFloat = 0) -> FrameLayout {
 		return lhs.addSpace(rhs)
 	}
 	
 	@discardableResult
-	static func +(lhs: ScrollStackView, rhs: Double = 0) -> FrameLayout<UIView> {
+	static func +(lhs: ScrollStackView, rhs: Double = 0) -> FrameLayout {
 		return lhs.addSpace(CGFloat(rhs))
 	}
 	
 	@discardableResult
-	static func +(lhs: ScrollStackView, rhs: Int = 0) -> FrameLayout<UIView> {
+	static func +(lhs: ScrollStackView, rhs: Int = 0) -> FrameLayout {
 		return lhs.addSpace(CGFloat(rhs))
 	}
 	
@@ -98,8 +98,8 @@ infix operator +>
 public extension DoubleFrameLayout {
 	
 	@discardableResult
-	static func <+(lhs: DoubleFrameLayout<T>, rhs: T? = nil) -> FrameLayout<T> {
-		if let frameLayout = rhs as? FrameLayout<T>, frameLayout.superview == nil {
+	static func <+(lhs: DoubleFrameLayout, rhs: UIView? = nil) -> FrameLayout {
+		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.leftFrameLayout = frameLayout
 		}
 		else {
@@ -110,8 +110,8 @@ public extension DoubleFrameLayout {
 	}
 	
 	@discardableResult
-	static func +>(lhs: DoubleFrameLayout<T>, rhs: T? = nil) -> FrameLayout<T> {
-		if let frameLayout = rhs as? FrameLayout<T>, frameLayout.superview == nil {
+	static func +>(lhs: DoubleFrameLayout, rhs: UIView? = nil) -> FrameLayout {
+		if let frameLayout = rhs as? FrameLayout, frameLayout.superview == nil {
 			lhs.rightFrameLayout = frameLayout
 		}
 		else {
@@ -125,7 +125,7 @@ public extension DoubleFrameLayout {
 
 // MARK: -
 
-open class StackLayout<T: UIView>: StackFrameLayout<T> {
+open class StackLayout: StackFrameLayout {
 	
 	@discardableResult
 	public init(_ block: (StackLayout) throws -> Void) rethrows {
@@ -139,7 +139,7 @@ open class StackLayout<T: UIView>: StackFrameLayout<T> {
 	
 }
 
-open class HStackLayout<T: UIView>: StackFrameLayout<T> {
+open class HStackLayout: StackFrameLayout {
 	
 	@discardableResult
 	public init(_ block: (HStackLayout) throws -> Void) rethrows {
@@ -159,7 +159,7 @@ open class HStackLayout<T: UIView>: StackFrameLayout<T> {
 	
 }
 
-open class VStackLayout<T: UIView>: StackFrameLayout<T> {
+open class VStackLayout: StackFrameLayout {
 	
 	@discardableResult
 	public init(_ block: (VStackLayout) throws -> Void) rethrows {
@@ -179,12 +179,12 @@ open class VStackLayout<T: UIView>: StackFrameLayout<T> {
 	
 }
 
-public protocol Then {}
-extension Then { // where Self: AnyObject {
+public protocol With {}
+extension With where Self: FrameLayout {
 	
 	/// Add ability to set properties with closures just after initializing.
 	///
-	///     let frameLayout = FrameLayout().then {
+	///     let frameLayout = FrameLayout().with {
 	///       $0.alignment = (.top, .center)
 	///       $0.padding(top: 5, left: 5, bottom: 5, right: 5)
 	///     }
@@ -192,25 +192,22 @@ extension Then { // where Self: AnyObject {
 	/// So you can also nest a block of FrameLayout into another by:
 	///
 	///		let stack = StackFrameLayout(axis: .vertical)
-	///		stack + HStackLayout {
-	///			($0 + imageView).then {
-	///				$0.flexible()
-	///				$0.fixHeight = 50
-	///			}
+	///		stack + HStackLayout().with {
+	///			$0 + imageView
 	///			$0 + label
 	///		}
 	///		stack + textField
 	///
 	///
 	@discardableResult
-	public func then(_ block: (Self) throws -> Void) rethrows -> Self {
+	public func with(_ block: (Self) throws -> Void) rethrows -> Self {
 		try block(self)
 		return self
 	}
 	
 }
 
-extension FrameLayout: Then {}
+extension FrameLayout: With {}
 
 extension CGSize {
 	

@@ -7,7 +7,7 @@
 
 import UIKit
 
-open class GridFrameLayout<T: UIView>: FrameLayout<T>{
+open class GridFrameLayout: FrameLayout {
 	public var axis: NKLayoutAxis = .horizontal {
 		didSet {
 			arrangeViews()
@@ -152,7 +152,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	public var columns: Int = 0 {
 		didSet {
 			stackLayout.frameLayouts.forEach { (layout) in
-				if let layout = layout as? StackFrameLayout<UIView> {
+				if let layout = layout as? StackFrameLayout {
 					layout.numberOfFrameLayouts = columns
 					layout.frameLayouts.forEach {
 						if fixColumnWidth > 0 {
@@ -169,7 +169,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	}
 	
 	public fileprivate(set) var viewCount: Int = 0
-	public var views: [T] = [] {
+	public var views: [UIView] = [] {
 		didSet {
 			views.forEach {
 				if $0.superview == nil {
@@ -182,11 +182,11 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 		}
 	}
 	
-	public var firstRowLayout: StackFrameLayout<UIView>? {
+	public var firstRowLayout: StackFrameLayout? {
 		return stackLayout.firstFrameLayout as? StackFrameLayout
 	}
 	
-	public var lastRowLayout: StackFrameLayout<UIView>? {
+	public var lastRowLayout: StackFrameLayout? {
 		return stackLayout.lastFrameLayout as? StackFrameLayout
 	}
 	
@@ -219,16 +219,16 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	
 	// MARK: -
 	
-	public func viewAt(row: Int, column: Int) -> T? {
-		return frameLayout(row: row, column: column)?.targetView as? T
+	public func viewAt(row: Int, column: Int) -> UIView? {
+		return frameLayout(row: row, column: column)?.targetView
 	}
 	
-	public func viewsAt(row: Int) -> [T]? {
-		return rows(at: row)?.frameLayouts.compactMap( { return $0.targetView as? T } )
+	public func viewsAt(row: Int) -> [UIView]? {
+		return rows(at: row)?.frameLayouts.compactMap( { return $0 } )
 	}
 	
-	public func viewsAt(column: Int) -> [T]? {
-		var results = [T]()
+	public func viewsAt(column: Int) -> [UIView]? {
+		var results = [UIView]()
 		for r in 0..<rows {
 			if let view = viewAt(row: r, column: column) {
 				results.append(view)
@@ -238,22 +238,22 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 		return results.isEmpty ? nil : results
 	}
 	
-	public func rows(at index: Int) -> StackFrameLayout<UIView>? {
+	public func rows(at index: Int) -> StackFrameLayout? {
 		guard index > -1, index < stackLayout.frameLayouts.count, let frameLayout = stackLayout.frameLayouts[index] as? StackFrameLayout else { return nil }
 		return frameLayout
 	}
 	
-	public func frameLayout(row: Int, column: Int) -> FrameLayout<UIView>? {
+	public func frameLayout(row: Int, column: Int) -> FrameLayout? {
 		guard row > -1, row < stackLayout.frameLayouts.count else { return nil }
 		guard let rowLayout = stackLayout.frameLayouts[row] as? StackFrameLayout else { return nil }
 		return rowLayout.frameLayout(at: column)
 	}
 	
-	public func allFrameLayouts() -> [FrameLayout<UIView>] {
+	public func allFrameLayouts() -> [FrameLayout] {
 		return stackLayout.frameLayouts.compactMap { $0 as? StackFrameLayout }.flatMap { $0.frameLayouts }
 	}
 	
-	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout<UIView>? {
+	public func lastFrameLayout(containsView: Bool = false) -> FrameLayout? {
 		guard let lastRows = lastRowLayout else { return nil }
 		
 		if containsView {
@@ -266,7 +266,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	
 	// MARK: -
 	
-	fileprivate func newRow() -> StackFrameLayout<UIView> {
+	fileprivate func newRow() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = horizontalSpacing
@@ -294,7 +294,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	}
 	
 	@discardableResult
-	open func addRow() -> StackFrameLayout<UIView> {
+	open func addRow() -> StackFrameLayout {
 		let layout = newRow()
 		stackLayout.add(layout)
 		setNeedsLayout()
@@ -302,7 +302,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	}
 	
 	@discardableResult
-	open func insertRow(at index: Int) -> StackFrameLayout<UIView> {
+	open func insertRow(at index: Int) -> StackFrameLayout {
 		let layout = newRow()
 		stackLayout.insert(layout, at: index)
 		setNeedsLayout()
@@ -324,7 +324,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	
 	open func addColumn() {
 		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout<UIView> {
+			if let rowLayout = layout as? StackFrameLayout {
 				let row = rowLayout.add()
 				row.debug = debug
 				
@@ -342,7 +342,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	
 	open func insertColumn(at index: Int) {
 		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout<UIView> {
+			if let rowLayout = layout as? StackFrameLayout {
 				let row = rowLayout.insert(nil, at: index)
 				row.debug = debug
 				
@@ -360,7 +360,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	
 	open func removeColumn(at index: Int) {
 		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout<UIView> {
+			if let rowLayout = layout as? StackFrameLayout {
 				rowLayout.removeFrameLayout(at: index)
 			}
 		}
@@ -369,7 +369,7 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	
 	open func removeLastColumn() {
 		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout<UIView> {
+			if let rowLayout = layout as? StackFrameLayout {
 				rowLayout.removeFrameLayout(at: rowLayout.frameLayouts.count - 1)
 			}
 		}
