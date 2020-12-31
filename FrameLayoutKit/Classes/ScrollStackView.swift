@@ -326,7 +326,7 @@ open class ScrollStackView: UIView {
 		super.layoutSubviews()
 		
 		let viewSize = bounds.size
-		let sizeToFit = isDirectionalLockEnabled == false ? contentFitSize : (axis == .horizontal ? CGSize(width: contentFitSize.width, height: viewSize.height) : CGSize(width: viewSize.width, height: contentFitSize.height))
+		let sizeToFit = !isDirectionalLockEnabled ? contentFitSize : (axis == .horizontal ? CGSize(width: contentFitSize.width, height: viewSize.height) : CGSize(width: viewSize.width, height: contentFitSize.height))
 		let contentSize = frameLayout.sizeThatFits(sizeToFit, intrinsic: true)
 		scrollView.contentSize = contentSize
 		scrollView.frame = bounds
@@ -334,12 +334,23 @@ open class ScrollStackView: UIView {
 		var contentFrame = bounds
 		if axis == .horizontal {
 			contentFrame.size.width = max(viewSize.width, contentSize.width)
-			scrollView.contentSize.height = min(viewSize.height, contentSize.height)
+			if isDirectionalLockEnabled {
+				scrollView.contentSize.height = min(viewSize.height, contentSize.height)
+			}
+			else {
+				contentFrame.size.height = max(viewSize.height, contentSize.height)
+			}
 		}
 		else {
 			contentFrame.size.height = max(viewSize.height, contentSize.height)
-			scrollView.contentSize.width = min(viewSize.width, contentSize.width)
+			if isDirectionalLockEnabled {
+				scrollView.contentSize.width = min(viewSize.width, contentSize.width)
+			}
+			else {
+				contentFrame.size.width = max(viewSize.width, contentSize.width)
+			}
 		}
+		
 		frameLayout.frame = contentFrame
 		didLayoutSubviewsBlock?(self)
 	}
