@@ -32,6 +32,14 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	open var isDirectionalLockEnabled: Bool {
+		get { scrollView.isDirectionalLockEnabled }
+		set {
+			scrollView.isDirectionalLockEnabled = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	override open var frame: CGRect {
 		didSet {
 			setNeedsLayout()
@@ -78,10 +86,42 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var minContentWidth: CGFloat {
+		get { frameLayout.minContentWidth }
+		set {
+			frameLayout.minContentWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var minContentHeight: CGFloat {
+		get { frameLayout.minContentHeight }
+		set {
+			frameLayout.minContentHeight = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var maxContentSize: CGSize {
 		get { frameLayout.maxContentSize }
 		set {
 			frameLayout.maxContentSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var maxContentWidth: CGFloat {
+		get { frameLayout.maxContentWidth }
+		set {
+			frameLayout.maxContentWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var maxContentHeight: CGFloat {
+		get { frameLayout.maxContentHeight }
+		set {
+			frameLayout.maxContentHeight = newValue
 			setNeedsLayout()
 		}
 	}
@@ -94,6 +134,22 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var minWidth: CGFloat {
+		get { frameLayout.minWidth }
+		set {
+			frameLayout.minWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var minHeight: CGFloat {
+		get { frameLayout.minHeight }
+		set {
+			frameLayout.minHeight = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var maxSize: CGSize {
 		get { frameLayout.maxSize }
 		set {
@@ -102,10 +158,42 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var maxWidth: CGFloat {
+		get { frameLayout.maxWidth }
+		set {
+			frameLayout.maxWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var maxHeight: CGFloat {
+		get { frameLayout.maxHeight }
+		set {
+			frameLayout.maxHeight = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var fixSize: CGSize {
 		get { frameLayout.fixSize }
 		set {
 			frameLayout.fixSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixWidth: CGFloat {
+		get { frameLayout.fixWidth }
+		set {
+			frameLayout.fixWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixHeight: CGFloat {
+		get { frameLayout.fixHeight }
+		set {
+			frameLayout.fixHeight = newValue
 			setNeedsLayout()
 		}
 	}
@@ -238,7 +326,7 @@ open class ScrollStackView: UIView {
 		super.layoutSubviews()
 		
 		let viewSize = bounds.size
-		let sizeToFit = axis == .horizontal ? CGSize(width: contentFitSize.width, height: viewSize.height) : CGSize(width: viewSize.width, height: contentFitSize.height)
+		let sizeToFit = isDirectionalLockEnabled == false ? contentFitSize : (axis == .horizontal ? CGSize(width: contentFitSize.width, height: viewSize.height) : CGSize(width: viewSize.width, height: contentFitSize.height))
 		let contentSize = frameLayout.sizeThatFits(sizeToFit, intrinsic: true)
 		scrollView.contentSize = contentSize
 		scrollView.frame = bounds
