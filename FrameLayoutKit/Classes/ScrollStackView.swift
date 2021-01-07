@@ -397,8 +397,8 @@ open class ScrollStackView: UIView {
 	
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
-		if let view = view { scrollView.addSubview(view) }
 		let layout = frameLayout.add(view)
+		if let view = view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
 	}
@@ -410,8 +410,8 @@ open class ScrollStackView: UIView {
 	
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
-		if let view = view { scrollView.insertSubview(view, at: index) }
 		let layout = frameLayout.insert(view, at: index)
+		if let view = view { scrollView.insertSubview(view, at: index) }
 		setNeedsLayout()
 		return layout
 	}
@@ -439,10 +439,11 @@ open class ScrollStackView: UIView {
 		views = []
 	}
 	
-	open func relayoutSubviews(animateDuration: TimeInterval = 0.35, options: UIView.AnimationOptions = .allowUserInteraction, completion: ((Bool) -> Void)? = nil) {
+	open func relayoutSubviews(animateDuration: TimeInterval = 0.35, options: UIView.AnimationOptions = .curveEaseInOut, completion: ((Bool) -> Void)? = nil) {
 		setNeedsLayout()
+		
 		UIView.animate(withDuration: animateDuration, delay: 0.0, options: options, animations: {
-			self.layoutSubviews()
+			self.layoutIfNeeded()
 		}, completion: completion)
 	}
 	
