@@ -171,7 +171,14 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil { addSubview(view) }
+			if let view = view, view.superview == nil {
+				#if DEBUG
+				if !isUserInteractionEnabled, view is UIControl {
+					print("[FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout")
+				}
+				#endif
+				addSubview(view)
+			}
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
@@ -190,7 +197,14 @@ open class StackFrameLayout: FrameLayout {
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil { addSubview(view) }
+			if let view = view, view.superview == nil {
+				#if DEBUG
+				if !isUserInteractionEnabled, view is UIControl {
+					print("[FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout")
+				}
+				#endif
+				addSubview(view)
+			}
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug

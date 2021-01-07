@@ -91,6 +91,14 @@ open class FrameLayout: UIView {
 	}
 	/// Adding size to content size. `minSize` and `maxSize` still have higher priority
 	public var extendSize: CGSize = .zero
+	public var extendWidth: CGFloat {
+		get { extendSize.width }
+		set { extendSize.width = newValue }
+	}
+	public var extendHeight: CGFloat {
+		get { extendSize.height }
+		set { extendSize.height = newValue }
+	}
 	/// Vertical alignment
 	public var verticalAlignment: NKContentVerticalAlignment = .fill
 	/// Horizontal alignment

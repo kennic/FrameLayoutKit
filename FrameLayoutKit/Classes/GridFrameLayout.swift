@@ -224,7 +224,7 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	public func viewsAt(row: Int) -> [UIView]? {
-		return rows(at: row)?.frameLayouts.compactMap( { return $0 } )
+		return rows(at: row)?.frameLayouts.compactMap( { return $0.targetView } )
 	}
 	
 	public func viewsAt(column: Int) -> [UIView]? {

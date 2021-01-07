@@ -154,7 +154,7 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	public func viewsAt(stack: Int) -> [UIView]? {
-		return stacks(at: stack)?.frameLayouts.compactMap( { return $0 } )
+		return stacks(at: stack)?.frameLayouts.compactMap( { return $0.targetView } )
 	}
 	
 	public func stacks(at index: Int) -> StackFrameLayout? {

@@ -206,10 +206,24 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
-	public var contentFitSize: CGSize = CGSize(width: CGFloat.infinity, height: CGFloat.infinity) {
-		didSet {
+	public var extendWidth: CGFloat {
+		get { frameLayout.extendWidth }
+		set {
+			frameLayout.extendWidth = newValue
 			setNeedsLayout()
 		}
+	}
+	
+	public var extendHeight: CGFloat {
+		get { frameLayout.extendHeight }
+		set {
+			frameLayout.extendHeight = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var contentFitSize: CGSize = CGSize(width: CGFloat.infinity, height: CGFloat.infinity) {
+		didSet { setNeedsLayout() }
 	}
 	
 	public var ignoreHiddenView: Bool {
@@ -383,8 +397,8 @@ open class ScrollStackView: UIView {
 	
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
-		let layout = frameLayout.add(view)
 		if let view = view { scrollView.addSubview(view) }
+		let layout = frameLayout.add(view)
 		setNeedsLayout()
 		return layout
 	}
@@ -396,8 +410,8 @@ open class ScrollStackView: UIView {
 	
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
+		if let view = view { scrollView.insertSubview(view, at: index) }
 		let layout = frameLayout.insert(view, at: index)
-		if let view = view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
 	}
@@ -425,11 +439,11 @@ open class ScrollStackView: UIView {
 		views = []
 	}
 	
-	open func relayoutSubviews(animateDuration: TimeInterval = 0.35) {
+	open func relayoutSubviews(animateDuration: TimeInterval = 0.35, options: UIView.AnimationOptions = .allowUserInteraction, completion: ((Bool) -> Void)? = nil) {
 		setNeedsLayout()
-		UIView.animate(withDuration: animateDuration) {
-			self.layoutIfNeeded()
-		}
+		UIView.animate(withDuration: animateDuration, delay: 0.0, options: options, animations: {
+			self.layoutSubviews()
+		}, completion: completion)
 	}
 	
 	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
