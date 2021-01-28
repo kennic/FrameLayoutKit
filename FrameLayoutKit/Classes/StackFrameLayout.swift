@@ -995,7 +995,7 @@ open class StackFrameLayout: FrameLayout {
 						
 						gapSpace = 0
 						var ratioIndex = 0
-						var offset = containerFrame.height + edgeInsets.top
+						var offset = containerFrame.maxY
 						for frameLayout in invertedLayoutArray {
 							var rect = frameLayout.frame
 							let isEmpty = frameLayout.isEmpty
@@ -1009,14 +1009,14 @@ open class StackFrameLayout: FrameLayout {
 								ratioIndex += 1
 							}
 							
+							if isEmpty { continue }
+							
 							offset -= rect.height + gapSpace
 							
 							if rect.minY != offset || frameLayout.frame.size != rect.size {
 								rect.origin.y = offset
 								frameLayout.frame = rect
 							}
-							
-							if isEmpty { continue }
 							
 							gapSpace = rect.height > 0 ? spacing : 0
 						}
