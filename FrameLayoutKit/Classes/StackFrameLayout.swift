@@ -378,7 +378,7 @@ open class StackFrameLayout: FrameLayout {
 				var maxHeight: CGFloat = 0
 				
 				switch distribution {
-					case .left, .right, .top, .bottom:
+					case .left, .right, .top, .bottom, .center:
 						var flexibleFrames = [FrameLayout]()
 						for frameLayout in activeFrameLayouts {
 							if frameLayout.isEmpty { continue }
@@ -418,37 +418,20 @@ open class StackFrameLayout: FrameLayout {
 						
 						break
 					
-					case .equal, .center:
+					case .equal:
 						let visibleFrameLayouts = visibleFrames()
-						var flexibleFrames = [FrameLayout]()
-						frameContentSize = CGSize(width: contentSize.width / CGFloat(visibleFrameLayouts.count), height: contentSize.height)
+						let visibleFrameCount = visibleFrameLayouts.count
+						let spaces = CGFloat(visibleFrameCount - 1) * spacing
+						let contentWidth = contentSize.width - spaces
+						let cellWidth = contentWidth / CGFloat(visibleFrameCount)
 						
-						for frameLayout in visibleFrameLayouts {
-							if frameLayout.isFlexible {
-								flexibleFrames.append(frameLayout)
-								continue
-							}
+						visibleFrameLayouts.forEach {
+							frameContentSize = CGSize(width: cellWidth, height: contentSize.height).limitTo(minSize: $0.minSize, maxSize: $0.maxSize)
+							frameContentSize = $0.sizeThatFits(frameContentSize)
 							
-							frameContentSize = frameLayout.sizeThatFits(frameContentSize)
-							
-							gapSpace = frameContentSize.width > 0 && frameLayout != lastFrameLayout ? spacing : 0
+							gapSpace = frameContentSize.width > 0 && $0 != lastFrameLayout ? spacing : 0
 							totalSpace += frameContentSize.width + gapSpace
 							maxHeight = max(maxHeight, frameContentSize.height)
-						}
-						
-						let flexibleFrameCount = flexibleFrames.count
-						if flexibleFrameCount > 0 {
-							let remainingSpace = CGFloat(flexibleFrameCount - 1) * spacing
-							let remainingWidth = contentSize.width - totalSpace - remainingSpace
-							let cellWidth = remainingWidth / CGFloat(flexibleFrameCount)
-							
-							flexibleFrames.forEach {
-								frameContentSize = CGSize(width: cellWidth, height: contentSize.height)
-								frameContentSize = $0.sizeThatFits(frameContentSize)
-								
-								totalSpace += frameContentSize.width
-								maxHeight = max(maxHeight, frameContentSize.height)
-							}
 						}
 						
 						break
@@ -762,11 +745,11 @@ open class StackFrameLayout: FrameLayout {
 					let visibleFrameLayouts = visibleFrames()
 					let visibleFrameCount = visibleFrameLayouts.count
 					let spaces = CGFloat(visibleFrameCount - 1) * spacing
-					let cellSize = (containerFrame.width - spaces) / CGFloat(Float(visibleFrameCount))
+					let cellWidth = (containerFrame.width - spaces) / CGFloat(Float(visibleFrameCount))
 					
 					if isOverlapped {
 						for frameLayout in frameLayouts {
-							frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: cellSize, height: containerFrame.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
+							frameContentSize = frameLayout.isFlexible ? containerFrame.size : CGSize(width: cellWidth, height: containerFrame.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 							
 							targetFrame.origin.x = containerFrame.minX
 							targetFrame.size.width = frameContentSize.width
@@ -777,14 +760,15 @@ open class StackFrameLayout: FrameLayout {
 					}
 					
 					for frameLayout in frameLayouts {
-						frameContentSize = CGSize(width: cellSize, height: containerFrame.height)
+						frameContentSize = CGSize(width: cellWidth, height: containerFrame.height).limitTo(minSize: frameLayout.minSize, maxSize: frameLayout.maxSize)
 						targetFrame.origin.x = containerFrame.minX + usedSpace
 						targetFrame.size.width = frameContentSize.width
 						frameLayout.frame = targetFrame
 						
 						if frameLayout.isEmpty { continue }
 						
-						usedSpace += frameContentSize.width + spacing
+						gapSpace = frameContentSize.width > 0 ? spacing : 0
+						usedSpace += frameContentSize.width + gapSpace
 					}
 					break
 				
