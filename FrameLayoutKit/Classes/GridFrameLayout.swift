@@ -14,6 +14,7 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
+	/// Auto set number of columns or rows base on its size
 	public var isAutoSize = false
 	
 	public override var isIntrinsicSizeEnabled: Bool {

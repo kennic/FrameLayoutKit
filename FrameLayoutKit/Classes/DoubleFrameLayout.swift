@@ -293,7 +293,7 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	open override func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self, size)
+		willSizeThatFitsBlock?(self, size)
 		
 		var result: CGSize = size
 		

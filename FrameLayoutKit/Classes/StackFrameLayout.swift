@@ -55,6 +55,27 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
+	/// Set minContentSize for every FrameLayout inside
+	open var minItemSize: CGSize = .zero {
+		didSet {
+			frameLayouts.forEach { $0.minContentSize = minItemSize }
+		}
+	}
+	
+	/// Set maxContentSize for every FrameLayout inside
+	open var maxItemSize: CGSize = .zero {
+		didSet {
+			frameLayouts.forEach { $0.maxContentSize = maxItemSize }
+		}
+	}
+	
+	/// Set fixContentSize for every FrameLayout inside
+	open var fixItemSize: CGSize = .zero {
+		didSet {
+			frameLayouts.forEach { $0.fixContentSize = fixItemSize }
+		}
+	}
+	
 	/// Allow content view to expand its height to fill its frameLayout when the layout is higher than the view itself
 	override open var allowContentVerticalGrowing: Bool {
 		didSet {
@@ -183,6 +204,9 @@ open class StackFrameLayout: FrameLayout {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
+			frameLayout.fixContentSize = fixItemSize
+			frameLayout.minContentSize = minItemSize
+			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
@@ -209,6 +233,9 @@ open class StackFrameLayout: FrameLayout {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
+			frameLayout.fixContentSize = fixItemSize
+			frameLayout.minContentSize = minItemSize
+			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
@@ -330,7 +357,7 @@ open class StackFrameLayout: FrameLayout {
 	// MARK: -
 	
 	open override func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self, size)
+		willSizeThatFitsBlock?(self, size)
 		
 		var result: CGSize = size
 		let verticalEdgeValues = edgeInsets.left + edgeInsets.right

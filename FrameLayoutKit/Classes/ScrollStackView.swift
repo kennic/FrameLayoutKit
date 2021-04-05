@@ -198,6 +198,33 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	/// Set minContentSize for every FrameLayout inside
+	open var minItemSize: CGSize {
+		get { frameLayout.minItemSize }
+		set {
+			frameLayout.minItemSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	/// Set maxContentSize for every FrameLayout inside
+	open var maxItemSize: CGSize {
+		get { frameLayout.maxItemSize }
+		set {
+			frameLayout.maxItemSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	/// Set fixContentSize for every FrameLayout inside
+	open var fixItemSize: CGSize {
+		get { frameLayout.fixItemSize }
+		set {
+			frameLayout.fixItemSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var extendSize: CGSize {
 		get { frameLayout.extendSize }
 		set {
@@ -272,9 +299,22 @@ open class ScrollStackView: UIView {
 	}
 	
 	/// Block will be called before calling sizeThatFits
-	public var preSizeThatFitsConfigurationBlock: ((ScrollStackView, CGSize) -> Void)?
+	@available(*, deprecated, renamed: "willSizeThatFitsBlock")
+	public var preSizeThatFitsConfigurationBlock: ((ScrollStackView, CGSize) -> Void)? {
+		get { willSizeThatFitsBlock }
+		set { willSizeThatFitsBlock = newValue }
+	}
+	
+	@available(*, deprecated, renamed: "willLayoutSubviewsBlock")
+	public var preLayoutConfigurationBlock: ((ScrollStackView) -> Void)? {
+		get { willLayoutSubviewsBlock }
+		set { willLayoutSubviewsBlock = newValue }
+	}
+	
+	/// Block will be called before calling sizeThatFits
+	public var willSizeThatFitsBlock: ((ScrollStackView, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
-	public var preLayoutConfigurationBlock: ((ScrollStackView) -> Void)?
+	public var willLayoutSubviewsBlock: ((ScrollStackView) -> Void)?
 	/// Block will be called at the end of layoutSubviews function
 	public var didLayoutSubviewsBlock: ((ScrollStackView) -> Void)?
 	
@@ -331,12 +371,12 @@ open class ScrollStackView: UIView {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self, size)
+		willSizeThatFitsBlock?(self, size)
 		return frameLayout.sizeThatFits(size)
 	}
 	
 	override open func layoutSubviews() {
-		preLayoutConfigurationBlock?(self)
+		willLayoutSubviewsBlock?(self)
 		super.layoutSubviews()
 		
 		let viewSize = bounds.size

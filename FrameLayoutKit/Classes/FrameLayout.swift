@@ -191,9 +191,22 @@ open class FrameLayout: UIView {
 	}
 	
 	/// Block will be called before calling sizeThatFits
-	public var preSizeThatFitsConfigurationBlock: ((FrameLayout, CGSize) -> Void)?
+	@available(*, deprecated, renamed: "willSizeThatFitsBlock")
+	public var preSizeThatFitsConfigurationBlock: ((FrameLayout, CGSize) -> Void)? {
+		get { willSizeThatFitsBlock }
+		set { willSizeThatFitsBlock = newValue }
+	}
+	
+	@available(*, deprecated, renamed: "willLayoutSubviewsBlock")
+	public var preLayoutConfigurationBlock: ((FrameLayout) -> Void)? {
+		get { willLayoutSubviewsBlock }
+		set { willLayoutSubviewsBlock = newValue }
+	}
+	
+	/// Block will be called before calling sizeThatFits
+	public var willSizeThatFitsBlock: ((FrameLayout, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
-	public var preLayoutConfigurationBlock: ((FrameLayout) -> Void)?
+	public var willLayoutSubviewsBlock: ((FrameLayout) -> Void)?
 	/// Block will be called at the end of layoutSubviews function
 	public var didLayoutSubviewsBlock: ((FrameLayout) -> Void)?
 	
@@ -246,7 +259,7 @@ open class FrameLayout: UIView {
 		return [:]
 	}()
 	
-	/// Returns `true` if `targetView` is nil or hidden. Only if `ignoreHiddenView` is `true`
+	/// Returns `true` if `targetView` is nil or hidden. And if `ignoreHiddenView` is `true`
 	public var isEmpty: Bool {
 		return ((targetView?.isHidden ?? false || isHidden) && ignoreHiddenView)
 	}
@@ -332,7 +345,7 @@ open class FrameLayout: UIView {
 	}
 	
 	open func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self, size)
+		willSizeThatFitsBlock?(self, size)
 		guard !isEmpty || !ignoreHiddenView else { return .zero }
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 { return minSize }
@@ -366,7 +379,7 @@ open class FrameLayout: UIView {
 	}
 	
 	override open func layoutSubviews() {
-		preLayoutConfigurationBlock?(self)
+		willLayoutSubviewsBlock?(self)
 		super.layoutSubviews()
 		
 		defer {

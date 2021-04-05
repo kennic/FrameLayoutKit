@@ -318,7 +318,7 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
-		preSizeThatFitsConfigurationBlock?(self, size)
+		willSizeThatFitsBlock?(self, size)
 		return calculateSize(fitSize: size).size.limitTo(minSize: minSize, maxSize: maxSize)
 	}
 	

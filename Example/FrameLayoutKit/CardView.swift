@@ -102,12 +102,12 @@ class CardView: UIView {
 				$0.spacing = 10
 				
 				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
-					$0.preSizeThatFitsConfigurationBlock = { (sender, size) in
+					$0.willSizeThatFitsBlock = { (sender, size) in
 						if let label = sender.targetView as? UILabel {
 							label.text = "\(size.width) x \(size.height)"
 						}
 					}
-					$0.preLayoutConfigurationBlock = { sender in
+					$0.willLayoutSubviewsBlock = { sender in
 						if let label = sender.targetView as? UILabel {
 							let size = sender.frame.size
 							label.text = "\(size.width) x \(size.height)"
