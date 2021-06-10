@@ -416,7 +416,7 @@ open class FrameLayout: UIView {
 				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.width, contentSize.width) : contentSize.width
 			}
 			
-			targetFrame.origin.x = containerFrame.maxX - contentSize.width
+			targetFrame.origin.x = containerFrame.maxX - targetFrame.width
 			break
 			
 		case .center:
@@ -427,7 +427,7 @@ open class FrameLayout: UIView {
 				targetFrame.size.width = allowContentHorizontalShrinking ? min(containerFrame.width, contentSize.width) : contentSize.width
 			}
 			
-			targetFrame.origin.x = containerFrame.minX + (containerFrame.width - contentSize.width) / 2
+			targetFrame.origin.x = containerFrame.minX + (containerFrame.width - targetFrame.width) / 2
 			break
 			
 		case .fill:
