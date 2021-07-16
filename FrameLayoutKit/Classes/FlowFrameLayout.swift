@@ -221,6 +221,7 @@ open class FlowFrameLayout: FrameLayout {
 				var row = 1
 				var col = 1
 				var remainingSize = fitSize
+				var previousRowHeight: CGFloat?
 				
 				for view in views {
 					if view.isHidden && ignoreHiddenView { continue }
@@ -230,6 +231,14 @@ open class FlowFrameLayout: FrameLayout {
 						let space = contentSize.width > 0 ? contentSize.width + (view != lastView ? interItemSpacing : 0) : 0
 						remainingSize.width -= space
 						rowHeight = max(rowHeight, contentSize.height)
+						
+						if col > 1 && previousRowHeight != nil && contentSize.height > previousRowHeight! {
+							remainingSize.width = -1 // to trigger the following block
+						}
+						
+						if row == 1 {
+							previousRowHeight = rowHeight
+						}
 					}
 					else if remainingSize.width == 0 {
 						rowHeight = 0
@@ -247,7 +256,10 @@ open class FlowFrameLayout: FrameLayout {
 						remainingSize.width -= space
 						
 						rowHeight = max(contentSize.height, 0)
-						if rowHeight > 0 { result.height += (lineSpacing + rowHeight) }
+						if rowHeight > 0 {
+							result.height += (lineSpacing + rowHeight)
+							previousRowHeight = rowHeight
+						}
 						
 						row += 1
 						col = 1
