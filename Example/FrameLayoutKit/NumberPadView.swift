@@ -10,7 +10,7 @@ import UIKit
 import FrameLayoutKit
 
 class NumberPadView: UIView {
-	let frameLayout = GridFrameLayout(axis: .horizontal, column: 3, rows: 4)
+	let frameLayout = GridFrameLayout<UIButton>(axis: .horizontal, column: 3, rows: 4)
 	let titleMap = "1 2 3 4 5 6 7 8 9 * 0 #"
 	let colors: [UIColor] = [.red, .green, .blue, .brown, .gray, .yellow, .magenta, .black, .orange, .purple]
 	

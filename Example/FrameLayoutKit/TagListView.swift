@@ -10,7 +10,7 @@ import UIKit
 import FrameLayoutKit
 
 class TagListView: UIView {
-	let flowLayout = FlowFrameLayout(axis: .horizontal)
+	let flowLayout = FlowFrameLayout<UIButton>(axis: .horizontal)
 	let addButton = UIButton()
 	let removeButton = UIButton()
 	let frameLayout = StackFrameLayout(axis: .vertical)
