@@ -56,7 +56,7 @@ public struct UnitPercentage<Value: FloatingPoint> {
 }
 */
 
-open class DoubleFrameLayout: FrameLayout {
+open class DoubleFrameLayout<T: UIView>: FrameLayout<T> {
 	public var distribution: NKLayoutDistribution = .top
 	public var axis: NKLayoutAxis = .vertical
 	
@@ -135,7 +135,7 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	// MARK: -
 	
-	public var frameLayout1: FrameLayout = FrameLayout() {
+	public var frameLayout1: FrameLayout = FrameLayout<T>() {
 		didSet {
 			if frameLayout1 != oldValue {
 				if oldValue.superview == self {
@@ -149,7 +149,7 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var frameLayout2: FrameLayout = FrameLayout() {
+	public var frameLayout2: FrameLayout = FrameLayout<T>() {
 		didSet {
 			if frameLayout2 != oldValue {
 				if oldValue.superview == self {
@@ -163,22 +163,22 @@ open class DoubleFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var topFrameLayout: FrameLayout {
+	public var topFrameLayout: FrameLayout<T> {
 		get { frameLayout1 }
 		set { frameLayout1 = newValue }
 	}
 	
-	public var leftFrameLayout: FrameLayout {
+	public var leftFrameLayout: FrameLayout<T> {
 		get { frameLayout1 }
 		set { frameLayout1 = newValue }
 	}
 	
-	public var bottomFrameLayout: FrameLayout {
+	public var bottomFrameLayout: FrameLayout<T> {
 		get { frameLayout2 }
 		set { frameLayout2 = newValue }
 	}
 	
-	public var rightFrameLayout: FrameLayout {
+	public var rightFrameLayout: FrameLayout<T> {
 		get { frameLayout2 }
 		set { frameLayout2 = newValue }
 	}
@@ -197,7 +197,7 @@ open class DoubleFrameLayout: FrameLayout {
 		try block(self)
 	}
 	
-	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {
+	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [T]? = nil) {
 		self.init()
 		
 		self.axis = axis
@@ -252,8 +252,8 @@ open class DoubleFrameLayout: FrameLayout {
 	// MARK: -
 	
 	@discardableResult
-	open func setLeft(_ view: UIView?) -> FrameLayout {
-		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+	open func setLeft(_ view: T?) -> FrameLayout<T> {
+		if let frameLayout = view as? FrameLayout<T>, frameLayout.superview == nil {
 			self.frameLayout1 = frameLayout
 			return frameLayout
 		}
@@ -263,8 +263,8 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func setRight(_ view: UIView?) -> FrameLayout {
-		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+	open func setRight(_ view: T?) -> FrameLayout<T> {
+		if let frameLayout = view as? FrameLayout<T>, frameLayout.superview == nil {
 			self.frameLayout2 = frameLayout
 			return frameLayout
 		}
@@ -274,12 +274,12 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func setTop(_ view: UIView?) -> FrameLayout {
+	open func setTop(_ view: T?) -> FrameLayout<T> {
 		return setLeft(view)
 	}
 	
 	@discardableResult
-	open func setBottom(_ view: UIView?) -> FrameLayout {
+	open func setBottom(_ view: T?) -> FrameLayout<T> {
 		return setRight(view)
 	}
 	
