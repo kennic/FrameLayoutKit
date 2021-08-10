@@ -179,6 +179,14 @@ open class VStackLayout: StackFrameLayout {
 	
 }
 
+public extension FlowFrameLayout {
+	
+	@discardableResult
+	static func +(lhs: FlowFrameLayout, rhs: UIView) -> UIView {
+		return lhs.add(rhs)
+	}
+}
+
 public protocol With {}
 extension With where Self: FrameLayout {
 	
