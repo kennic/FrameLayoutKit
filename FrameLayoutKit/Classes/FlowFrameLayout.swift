@@ -149,6 +149,33 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 	
 	// MARK: -
 	
+	@discardableResult
+	public func add(_ view: T) -> T {
+		views.append(view)
+		setNeedsLayout()
+		return view
+	}
+	
+	public func removeFirst() {
+		views.removeFirst()
+		setNeedsLayout()
+	}
+	
+	public func removeLast() {
+		views.removeLast()
+		setNeedsLayout()
+	}
+	
+	public func remove(at index: Int) {
+		views.remove(at: index)
+		setNeedsLayout()
+	}
+	
+	public func removeAll() {
+		views.removeAll()
+		setNeedsLayout()
+	}
+	
 	public func viewAt(row: Int, column: Int) -> T? {
 		return frameLayout(row: row, column: column)?.targetView as? T
 	}

@@ -91,7 +91,7 @@ class TagListView: UIView {
 		tagButton.layer.cornerRadius = 5.0
 		tagButton.layer.masksToBounds = true
 		
-		flowLayout.views.append(tagButton)
+		flowLayout + tagButton
 		onChanged?(self)
 	}
 	
