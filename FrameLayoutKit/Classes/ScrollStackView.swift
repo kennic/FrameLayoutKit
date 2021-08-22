@@ -9,9 +9,13 @@ import UIKit
 
 open class ScrollStackView: UIView {
 	
-	public var views: [UIView] {
+	open var views: [UIView] {
 		get { frameLayouts.compactMap { $0.targetView } }
-		set {
+		set { _views = newValue }
+	}
+	
+	fileprivate var _views: [UIView] = [] {
+		didSet {
 			updateLayout()
 			setNeedsLayout()
 		}
@@ -476,8 +480,9 @@ open class ScrollStackView: UIView {
 		setNeedsLayout()
 	}
 	
-	open func removeAll() {
-		views = []
+	open func removeAll(autoRemoveTargetView: Bool = true) {
+		frameLayout.removeAll(autoRemoveTargetView: autoRemoveTargetView)
+		setNeedsLayout()
 	}
 	
 	open func relayoutSubviews(animateDuration: TimeInterval = 0.35, options: UIView.AnimationOptions = .curveEaseInOut, completion: ((Bool) -> Void)? = nil) {
@@ -509,11 +514,11 @@ open class ScrollStackView: UIView {
 	// MARK: -
 	
 	fileprivate func updateLayout() {
-		if views.isEmpty {
+		if _views.isEmpty {
 			frameLayout.removeAll(autoRemoveTargetView: true)
 		}
 		else {
-			let total = views.count
+			let total = _views.count
 			
 			if frameLayout.frameLayouts.count > total {
 				frameLayout.enumerate({ (layout, index, stop) in
