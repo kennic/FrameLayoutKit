@@ -69,10 +69,10 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
-	/// Set fixContentSize for every FrameLayout inside
+	/// Set fixedContentSize for every FrameLayout inside
 	open var fixItemSize: CGSize = .zero {
 		didSet {
-			frameLayouts.forEach { $0.fixContentSize = fixItemSize }
+			frameLayouts.forEach { $0.fixedContentSize = fixItemSize }
 		}
 	}
 	
@@ -204,7 +204,7 @@ open class StackFrameLayout: FrameLayout {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
-			frameLayout.fixContentSize = fixItemSize
+			frameLayout.fixedContentSize = fixItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.append(frameLayout)
@@ -233,7 +233,7 @@ open class StackFrameLayout: FrameLayout {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
-			frameLayout.fixContentSize = fixItemSize
+			frameLayout.fixedContentSize = fixItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.insert(frameLayout, at: index)
@@ -1189,6 +1189,78 @@ fileprivate extension Array where Element == CGFloat {
 		}
 		
 		return finalRatio
+	}
+	
+}
+
+// MARK: - HStackLayout
+
+open class HStackLayout: StackFrameLayout {
+	
+	@discardableResult
+	public init(_ block: (HStackLayout) throws -> Void) rethrows {
+		super.init()
+		axis = .horizontal
+		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .horizontal
+	}
+	
+	required public init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+}
+
+// MARK: - VStackLayout
+
+open class VStackLayout: StackFrameLayout {
+	
+	@discardableResult
+	public init(_ block: (VStackLayout) throws -> Void) rethrows {
+		super.init()
+		axis = .vertical
+		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .vertical
+	}
+	
+	required public init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+}
+
+// MARK: - ZStackLayout
+
+open class ZStackLayout: StackFrameLayout {
+	
+	@discardableResult
+	public init(_ block: (ZStackLayout) throws -> Void) rethrows {
+		super.init()
+		axis = .vertical
+		isOverlapped = true
+		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .vertical
+		isOverlapped = true
+	}
+	
+	required public init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	open override func add(_ view: UIView? = nil) -> FrameLayout {
+		return super.add(view).with { $0.flexible() }
 	}
 	
 }

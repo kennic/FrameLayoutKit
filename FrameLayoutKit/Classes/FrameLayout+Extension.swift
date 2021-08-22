@@ -139,46 +139,6 @@ open class StackLayout: StackFrameLayout {
 	
 }
 
-open class HStackLayout: StackFrameLayout {
-	
-	@discardableResult
-	public init(_ block: (HStackLayout) throws -> Void) rethrows {
-		super.init()
-		axis = .horizontal
-		try block(self)
-	}
-	
-	override public init() {
-		super.init()
-		axis = .horizontal
-	}
-	
-	required public init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-}
-
-open class VStackLayout: StackFrameLayout {
-	
-	@discardableResult
-	public init(_ block: (VStackLayout) throws -> Void) rethrows {
-		super.init()
-		axis = .vertical
-		try block(self)
-	}
-	
-	override public init() {
-		super.init()
-		axis = .vertical
-	}
-	
-	required public init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-	
-}
-
 public extension FlowFrameLayout {
 	
 	@discardableResult

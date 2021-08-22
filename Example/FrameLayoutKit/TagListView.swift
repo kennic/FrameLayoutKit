@@ -54,7 +54,7 @@ class TagListView: UIView {
 		frameLayout + HStackLayout {
 			$0 + [removeButton, addButton]
 			$0.distribution = .equal
-			$0.fixSize = CGSize(width: 0, height: 50)
+			$0.fixedSize = CGSize(width: 0, height: 50)
 		}
 		
 		frameLayout.spacing = 4

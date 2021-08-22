@@ -47,9 +47,9 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	override public var fixSize: CGSize {
+	override public var fixedSize: CGSize {
 		didSet {
-			stackLayout.fixSize = fixSize
+			stackLayout.fixedSize = fixedSize
 			setNeedsLayout()
 		}
 	}
@@ -70,7 +70,7 @@ open class GridFrameLayout: FrameLayout {
 	
 	public var fixRowHeight: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { $0.fixSize = CGSize(width: $0.fixSize.width, height: fixRowHeight) }
+			stackLayout.frameLayouts.forEach { $0.fixedSize = CGSize(width: $0.fixedSize.width, height: fixRowHeight) }
 			setNeedsLayout()
 		}
 	}
@@ -91,7 +91,7 @@ open class GridFrameLayout: FrameLayout {
 	
 	public var fixColumnWidth: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height) }
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.fixedSize = CGSize(width: fixColumnWidth, height: $0.fixedSize.height) }
 			setNeedsLayout()
 		}
 	}
@@ -157,7 +157,7 @@ open class GridFrameLayout: FrameLayout {
 					layout.numberOfFrameLayouts = columns
 					layout.frameLayouts.forEach {
 						if fixColumnWidth > 0 {
-							$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
+							$0.fixedSize = CGSize(width: fixColumnWidth, height: $0.fixedSize.height)
 						}
 						else {
 							$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
@@ -274,7 +274,7 @@ open class GridFrameLayout: FrameLayout {
 		layout.debug = debug
 		
 		if fixRowHeight > 0 {
-			layout.fixSize = CGSize(width: 0, height: fixRowHeight)
+			layout.fixedSize = CGSize(width: 0, height: fixRowHeight)
 		}
 		else {
 			layout.minSize = CGSize(width: 0, height: minRowHeight)
@@ -283,7 +283,7 @@ open class GridFrameLayout: FrameLayout {
 		
 		layout.frameLayouts.forEach {
 			if fixColumnWidth > 0 {
-				$0.fixSize = CGSize(width: fixColumnWidth, height: $0.fixSize.height)
+				$0.fixedSize = CGSize(width: fixColumnWidth, height: $0.fixedSize.height)
 			}
 			else {
 				$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
@@ -330,7 +330,7 @@ open class GridFrameLayout: FrameLayout {
 				row.debug = debug
 				
 				if fixColumnWidth > 0 {
-					row.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
+					row.fixedSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
 				}
 				else {
 					row.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
@@ -348,7 +348,7 @@ open class GridFrameLayout: FrameLayout {
 				row.debug = debug
 				
 				if fixColumnWidth > 0 {
-					row.fixSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
+					row.fixedSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
 				}
 				else {
 					row.minSize = CGSize(width: minColumnWidth, height: minRowHeight)

@@ -9,8 +9,9 @@ import UIKit
 
 open class ScrollStackView: UIView {
 	
-	public var views: [UIView] = [] {
-		didSet {
+	public var views: [UIView] {
+		get { frameLayouts.compactMap { $0.targetView } }
+		set {
 			updateLayout()
 			setNeedsLayout()
 		}
@@ -174,26 +175,26 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
-	public var fixSize: CGSize {
-		get { frameLayout.fixSize }
+	public var fixedSize: CGSize {
+		get { frameLayout.fixedSize }
 		set {
-			frameLayout.fixSize = newValue
+			frameLayout.fixedSize = newValue
 			setNeedsLayout()
 		}
 	}
 	
-	public var fixWidth: CGFloat {
-		get { frameLayout.fixWidth }
+	public var fixedWidth: CGFloat {
+		get { frameLayout.fixedWidth }
 		set {
-			frameLayout.fixWidth = newValue
+			frameLayout.fixedWidth = newValue
 			setNeedsLayout()
 		}
 	}
 	
-	public var fixHeight: CGFloat {
-		get { frameLayout.fixHeight }
+	public var fixedHeight: CGFloat {
+		get { frameLayout.fixedHeight }
 		set {
-			frameLayout.fixHeight = newValue
+			frameLayout.fixedHeight = newValue
 			setNeedsLayout()
 		}
 	}
@@ -216,7 +217,7 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
-	/// Set fixContentSize for every FrameLayout inside
+	/// Set fixedContentSize for every FrameLayout inside
 	open var fixItemSize: CGSize {
 		get { frameLayout.fixItemSize }
 		set {

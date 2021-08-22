@@ -51,9 +51,9 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
-	override public var fixSize: CGSize {
+	override public var fixedSize: CGSize {
 		didSet {
-			stackLayout.fixSize = fixSize
+			stackLayout.fixedSize = fixedSize
 			setNeedsLayout()
 		}
 	}
