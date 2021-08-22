@@ -480,8 +480,8 @@ open class ScrollStackView: UIView {
 		setNeedsLayout()
 	}
 	
-	open func removeAll(autoRemoveTargetView: Bool = true) {
-		frameLayout.removeAll(autoRemoveTargetView: autoRemoveTargetView)
+	open func removeAll() {
+		frameLayout.removeAll(autoRemoveTargetView: true)
 		setNeedsLayout()
 	}
 	
