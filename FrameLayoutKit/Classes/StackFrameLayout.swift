@@ -246,7 +246,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	@discardableResult
 	open func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) -> Self {
-		guard index >= 0 && index < frameLayouts.count else { return }
+		guard index >= 0 && index < frameLayouts.count else { return self }
 		
 		let frameLayout = frameLayouts[index]
 		if frameLayout.superview == self {
