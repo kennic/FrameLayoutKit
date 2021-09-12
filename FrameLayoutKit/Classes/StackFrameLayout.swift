@@ -122,13 +122,8 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var firstFrameLayout: FrameLayout? {
-		get { frameLayouts.first }
-	}
-	
-	public var lastFrameLayout: FrameLayout? {
-		get { frameLayouts.last }
-	}
+	public var firstFrameLayout: FrameLayout? { frameLayouts.first }
+	public var lastFrameLayout: FrameLayout? { frameLayouts.last }
 	
 	public internal(set) var frameLayouts: [FrameLayout] = []
 	
@@ -249,7 +244,8 @@ open class StackFrameLayout: FrameLayout {
 		return frameLayout
 	}
 	
-	open func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) {
+	@discardableResult
+	open func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) -> Self {
 		guard index >= 0 && index < frameLayouts.count else { return }
 		
 		let frameLayout = frameLayouts[index]
@@ -263,9 +259,11 @@ open class StackFrameLayout: FrameLayout {
 		
 		frameLayout.targetView = nil
 		frameLayouts.remove(at: index)
+		return self
 	}
 	
-	open func removeAll(autoRemoveTargetView: Bool = false) {
+	@discardableResult
+	open func removeAll(autoRemoveTargetView: Bool = false) -> Self {
 		for layout in frameLayouts {
 			if autoRemoveTargetView {
 				layout.targetView?.removeFromSuperview()
@@ -278,12 +276,14 @@ open class StackFrameLayout: FrameLayout {
 		}
 		
 		frameLayouts.removeAll()
+		return self
 	}
 	
-	open func replace(_ frameLayout: FrameLayout?, at index: Int, autoRemoveOldTargetView: Bool = false) {
+	@discardableResult
+	open func replace(_ frameLayout: FrameLayout?, at index: Int, autoRemoveOldTargetView: Bool = false) -> Self {
 		guard let frameLayout = frameLayout else {
 			removeFrameLayout(at: index, autoRemoveTargetView: autoRemoveOldTargetView)
-			return
+			return self
 		}
 		
 		let count = frameLayouts.count
@@ -304,11 +304,15 @@ open class StackFrameLayout: FrameLayout {
 		else if index == count {
 			insert(nil, at: index)
 		}
+		
+		return self
 	}
 	
-	public func invert() {
+	@discardableResult
+	public func invert() -> Self {
 		frameLayouts = frameLayouts.reversed()
 		setNeedsLayout()
+		return self
 	}
 	
 	// MARK: -
@@ -334,9 +338,11 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
-	public func justified(threshold: CGFloat = 0) {
+	@discardableResult
+	public func justified(threshold: CGFloat = 0) -> Self {
 		justifyThreshold = threshold
 		isJustified = true
+		return self
 	}
 	
 	// MARK: -

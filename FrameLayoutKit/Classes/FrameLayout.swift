@@ -111,10 +111,6 @@ open class FrameLayout: UIView {
 		get { extendSize.height }
 		set { extendSize.height = newValue }
 	}
-	/// Vertical alignment
-	public var verticalAlignment: NKContentVerticalAlignment = .fill
-	/// Horizontal alignment
-	public var horizontalAlignment: NKContentHorizontalAlignment = .fill
 	/// Width of `targetView` will be stretched out to fill frameLayout if the width of this frameLayout is larger than `targetView`'s width
 	public var allowContentVerticalGrowing = false
 	/// Width of `targetView` will be shrinked down to fit frameLayout if the width of this frameLayout is smaller than `targetView`'s width
@@ -195,12 +191,7 @@ open class FrameLayout: UIView {
 	}
 	
 	/// Set the alignment of both axis
-	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
-		didSet {
-			verticalAlignment = alignment.vertical
-			horizontalAlignment = alignment.horizontal
-		}
-	}
+	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill)
 	
 	/// Block will be called before calling sizeThatFits
 	public var willSizeThatFitsBlock: ((FrameLayout, CGSize) -> Void)?
@@ -293,17 +284,23 @@ open class FrameLayout: UIView {
 	
 	// MARK: -
 	
-	open func flexible(ratio: CGFloat = -1) {
+	@discardableResult
+	open func flexible(ratio: CGFloat = -1) -> Self {
 		isFlexible = true
 		flexibleRatio = ratio
+		return self
 	}
 	
-	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+	@discardableResult
+	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
 		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+		return self
 	}
 	
-	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+	@discardableResult
+	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
 		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
+		return self
 	}
 	
 	#if DEBUG
@@ -391,9 +388,9 @@ open class FrameLayout: UIView {
 		#else
 		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
 		#endif
-		let contentSize = (horizontalAlignment != .fill || verticalAlignment != .fill) || (minContentSize != .zero || maxContentSize != .zero) ? contentSizeThatFits(size: containerFrame.size) : .zero
+		let contentSize = (alignment.horizontal != .fill || alignment.vertical != .fill) || (minContentSize != .zero || maxContentSize != .zero) ? contentSizeThatFits(size: containerFrame.size) : .zero
 		
-		switch horizontalAlignment {
+		switch alignment.horizontal {
 		case .left:
 			if allowContentHorizontalGrowing {
 				targetFrame.size.width = max(containerFrame.width, contentSize.width)
@@ -444,7 +441,7 @@ open class FrameLayout: UIView {
 			break
 		}
 		
-		switch verticalAlignment {
+		switch alignment.vertical {
 		case .top:
 			if allowContentVerticalGrowing {
 				targetFrame.size.height = max(containerFrame.height, contentSize.height)

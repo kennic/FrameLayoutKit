@@ -102,13 +102,8 @@ open class FlowFrameLayout: FrameLayout {
 		return stackLayout.frameLayouts as? [StackFrameLayout] ?? []
 	}
 	
-	public var firstStack: StackFrameLayout? {
-		return stackLayout.firstFrameLayout as? StackFrameLayout
-	}
-	
-	public var lastStack: StackFrameLayout? {
-		return stackLayout.lastFrameLayout as? StackFrameLayout
-	}
+	public var firstStack: StackFrameLayout? { stackLayout.firstFrameLayout as? StackFrameLayout }
+	public var lastStack: StackFrameLayout? { stackLayout.lastFrameLayout as? StackFrameLayout }
 	
 	let stackLayout = ScrollStackView(axis: .vertical, distribution: .top)
 	
