@@ -110,4 +110,19 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func translationOffset(_ value: CGPoint) -> Self {
+		translationOffset = value
+		return self
+	}
+	
+	@discardableResult public func translationX(_ value: CGFloat) -> Self {
+		translationX = value
+		return self
+	}
+	
+	@discardableResult public func translationY(_ value: CGFloat) -> Self {
+		translationY = value
+		return self
+	}
+	
 }
