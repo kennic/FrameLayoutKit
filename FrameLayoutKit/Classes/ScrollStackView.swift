@@ -9,7 +9,12 @@ import UIKit
 
 open class ScrollStackView: UIView {
 	
-	public var views: [UIView] = [] {
+	open var views: [UIView] {
+		get { frameLayouts.compactMap { $0.targetView } }
+		set { _views = newValue }
+	}
+	
+	fileprivate var _views: [UIView] = [] {
 		didSet {
 			updateLayout()
 			setNeedsLayout()
@@ -76,6 +81,30 @@ open class ScrollStackView: UIView {
 	public var isOverlapped: Bool {
 		get { frameLayout.isOverlapped }
 		set { frameLayout.isOverlapped = newValue }
+	}
+	
+	public var fixedContentSize: CGSize {
+		get { frameLayout.fixedContentSize }
+		set {
+			frameLayout.fixedContentSize = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixedContentWidth: CGFloat {
+		get { frameLayout.fixedContentWidth }
+		set {
+			frameLayout.fixedContentWidth = newValue
+			setNeedsLayout()
+		}
+	}
+	
+	public var fixedContentHeight: CGFloat {
+		get { frameLayout.fixedContentHeight }
+		set {
+			frameLayout.fixedContentHeight = newValue
+			setNeedsLayout()
+		}
 	}
 	
 	public var minContentSize: CGSize {
@@ -174,26 +203,26 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
-	public var fixSize: CGSize {
-		get { frameLayout.fixSize }
+	public var fixedSize: CGSize {
+		get { frameLayout.fixedSize }
 		set {
-			frameLayout.fixSize = newValue
+			frameLayout.fixedSize = newValue
 			setNeedsLayout()
 		}
 	}
 	
-	public var fixWidth: CGFloat {
-		get { frameLayout.fixWidth }
+	public var fixedWidth: CGFloat {
+		get { frameLayout.fixedWidth }
 		set {
-			frameLayout.fixWidth = newValue
+			frameLayout.fixedWidth = newValue
 			setNeedsLayout()
 		}
 	}
 	
-	public var fixHeight: CGFloat {
-		get { frameLayout.fixHeight }
+	public var fixedHeight: CGFloat {
+		get { frameLayout.fixedHeight }
 		set {
-			frameLayout.fixHeight = newValue
+			frameLayout.fixedHeight = newValue
 			setNeedsLayout()
 		}
 	}
@@ -216,7 +245,7 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
-	/// Set fixContentSize for every FrameLayout inside
+	/// Set fixedContentSize for every FrameLayout inside
 	open var fixItemSize: CGSize {
 		get { frameLayout.fixItemSize }
 		set {
@@ -290,13 +319,8 @@ open class ScrollStackView: UIView {
 		set { frameLayout.frameLayouts = newValue }
 	}
 	
-	public var firstFrameLayout: FrameLayout<UIView>? {
-		return frameLayout.firstFrameLayout
-	}
-	
-	public var lastFrameLayout: FrameLayout<UIView>? {
-		return frameLayout.lastFrameLayout
-	}
+	public var firstFrameLayout: FrameLayout<UIView>? { frameLayout.firstFrameLayout }
+	public var lastFrameLayout: FrameLayout<UIView>? { frameLayout.lastFrameLayout }
 	
 	/// Block will be called before calling sizeThatFits
 	@available(*, deprecated, renamed: "willSizeThatFitsBlock")
@@ -427,12 +451,16 @@ open class ScrollStackView: UIView {
 		frameLayout.enumerate(block)
 	}
 	
-	public func flexible(ratio: CGFloat = -1) {
+	@discardableResult
+	public func flexible(ratio: CGFloat = -1) -> Self {
 		frameLayout.flexible(ratio: ratio)
+		return self
 	}
 	
-	public func invert() {
+	@discardableResult
+	public func invert() -> Self {
 		frameLayout.invert()
+		return self
 	}
 	
 	@discardableResult
@@ -463,20 +491,27 @@ open class ScrollStackView: UIView {
 		return layout
 	}
 	
-	open func replace(view: UIView, at index: Int) {
+	@discardableResult
+	open func replace(view: UIView, at index: Int) -> Self {
 		self.view(at: index)?.removeFromSuperview()
 		scrollView.addSubview(view)
 		frameLayout.frameLayout(at: index)?.targetView = view
 		setNeedsLayout()
+		return self
 	}
-	
-	open func removeView(at index: Int) {
+
+	@discardableResult
+	open func removeView(at index: Int) -> Self {
 		frameLayout.removeFrameLayout(at: index, autoRemoveTargetView: true)
 		setNeedsLayout()
+		return self
 	}
 	
-	open func removeAll() {
-		views = []
+	@discardableResult
+	open func removeAll() -> Self {
+		frameLayout.removeAll(autoRemoveTargetView: true)
+		setNeedsLayout()
+		return self
 	}
 	
 	open func relayoutSubviews(animateDuration: TimeInterval = 0.35, options: UIView.AnimationOptions = .curveEaseInOut, completion: ((Bool) -> Void)? = nil) {
@@ -487,12 +522,16 @@ open class ScrollStackView: UIView {
 		}, completion: completion)
 	}
 	
-	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+	@discardableResult
+	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
 		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+		return self
 	}
 	
-	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+	@discardableResult
+	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
 		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
+		return self
 	}
 	
 	override open func setNeedsLayout() {
@@ -508,11 +547,11 @@ open class ScrollStackView: UIView {
 	// MARK: -
 	
 	fileprivate func updateLayout() {
-		if views.isEmpty {
+		if _views.isEmpty {
 			frameLayout.removeAll(autoRemoveTargetView: true)
 		}
 		else {
-			let total = views.count
+			let total = _views.count
 			
 			if frameLayout.frameLayouts.count > total {
 				frameLayout.enumerate({ (layout, index, stop) in

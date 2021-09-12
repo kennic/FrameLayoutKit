@@ -69,10 +69,10 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	/// Set fixContentSize for every FrameLayout inside
+	/// Set fixedContentSize for every FrameLayout inside
 	open var fixItemSize: CGSize = .zero {
 		didSet {
-			frameLayouts.forEach { $0.fixContentSize = fixItemSize }
+			frameLayouts.forEach { $0.fixedContentSize = fixItemSize }
 		}
 	}
 	
@@ -122,13 +122,8 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	public var firstFrameLayout: FrameLayout<T>? {
-		get { frameLayouts.first }
-	}
-	
-	public var lastFrameLayout: FrameLayout<T>? {
-		get { frameLayouts.last }
-	}
+	public var firstFrameLayout: FrameLayout<T>? { frameLayouts.first }
+	public var lastFrameLayout: FrameLayout<T>? { frameLayouts.last }
 	
 	public internal(set) var frameLayouts: [FrameLayout<T>] = []
 	
@@ -204,7 +199,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
-			frameLayout.fixContentSize = fixItemSize
+			frameLayout.fixedContentSize = fixItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.append(frameLayout)
@@ -233,7 +228,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
 			frameLayout.ignoreHiddenView = ignoreHiddenView
-			frameLayout.fixContentSize = fixItemSize
+			frameLayout.fixedContentSize = fixItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.insert(frameLayout, at: index)
@@ -249,8 +244,9 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		return frameLayout
 	}
 	
-	open func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) {
-		guard index >= 0 && index < frameLayouts.count else { return }
+	@discardableResult
+	open func removeFrameLayout(at index: Int, autoRemoveTargetView: Bool = false) -> Self {
+		guard index >= 0 && index < frameLayouts.count else { return self }
 		
 		let frameLayout = frameLayouts[index]
 		if frameLayout.superview == self {
@@ -263,9 +259,11 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		
 		frameLayout.targetView = nil
 		frameLayouts.remove(at: index)
+		return self
 	}
 	
-	open func removeAll(autoRemoveTargetView: Bool = false) {
+	@discardableResult
+	open func removeAll(autoRemoveTargetView: Bool = false) -> Self {
 		for layout in frameLayouts {
 			if autoRemoveTargetView {
 				layout.targetView?.removeFromSuperview()
@@ -278,12 +276,14 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 		
 		frameLayouts.removeAll()
+		return self
 	}
 	
-	open func replace(_ frameLayout: FrameLayout<T>?, at index: Int, autoRemoveOldTargetView: Bool = false) {
+	@discardableResult
+	open func replace(_ frameLayout: FrameLayout<T>?, at index: Int, autoRemoveOldTargetView: Bool = false) -> Self {
 		guard let frameLayout = frameLayout else {
 			removeFrameLayout(at: index, autoRemoveTargetView: autoRemoveOldTargetView)
-			return
+			return self
 		}
 		
 		let count = frameLayouts.count
@@ -304,11 +304,15 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		else if index == count {
 			insert(nil, at: index)
 		}
+		
+		return self
 	}
 	
-	public func invert() {
+	@discardableResult
+	public func invert() -> Self {
 		frameLayouts = frameLayouts.reversed()
 		setNeedsLayout()
+		return self
 	}
 	
 	// MARK: -
@@ -334,9 +338,11 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	public func justified(threshold: CGFloat = 0) {
+	@discardableResult
+	public func justified(threshold: CGFloat = 0) -> Self {
 		justifyThreshold = threshold
 		isJustified = true
+		return self
 	}
 	
 	// MARK: -
@@ -1189,6 +1195,78 @@ fileprivate extension Array where Element == CGFloat {
 		}
 		
 		return finalRatio
+	}
+	
+}
+
+// MARK: - HStackLayout
+
+open class HStackLayout: StackFrameLayout<UIView> {
+	
+	@discardableResult
+	public init(_ block: (HStackLayout) throws -> Void) rethrows {
+		super.init()
+		axis = .horizontal
+		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .horizontal
+	}
+	
+	required public init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+}
+
+// MARK: - VStackLayout
+
+open class VStackLayout: StackFrameLayout<UIView> {
+	
+	@discardableResult
+	public init(_ block: (VStackLayout) throws -> Void) rethrows {
+		super.init()
+		axis = .vertical
+		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .vertical
+	}
+	
+	required public init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+}
+
+// MARK: - ZStackLayout
+
+open class ZStackLayout: StackFrameLayout<UIView> {
+	
+	@discardableResult
+	public init(_ block: (ZStackLayout) throws -> Void) rethrows {
+		super.init()
+		axis = .vertical
+		isOverlapped = true
+		try block(self)
+	}
+	
+	override public init() {
+		super.init()
+		axis = .vertical
+		isOverlapped = true
+	}
+	
+	required public init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	open override func add(_ view: UIView? = nil) -> FrameLayout<UIView> {
+		return super.add(view).with { $0.flexible() }
 	}
 	
 }

@@ -137,29 +137,17 @@ open class DoubleFrameLayout<T: UIView>: FrameLayout<T> {
 	
 	public var frameLayout1: FrameLayout = FrameLayout<T>() {
 		didSet {
-			if frameLayout1 != oldValue {
-				if oldValue.superview == self {
-					oldValue.removeFromSuperview()
-				}
-				
-				if frameLayout1 != self {
-					addSubview(frameLayout1)
-				}
-			}
+			guard frameLayout1 != oldValue else { return }
+			if oldValue.superview == self { oldValue.removeFromSuperview() }
+			if frameLayout1 != self { addSubview(frameLayout1) }
 		}
 	}
 	
 	public var frameLayout2: FrameLayout = FrameLayout<T>() {
 		didSet {
-			if frameLayout2 != oldValue {
-				if oldValue.superview == self {
-					oldValue.removeFromSuperview()
-				}
-				
-				if frameLayout2 != self {
-					addSubview(frameLayout2)
-				}
-			}
+			guard frameLayout2 != oldValue else { return }
+			if oldValue.superview == self { oldValue.removeFromSuperview() }
+			if frameLayout2 != self { addSubview(frameLayout2) }
 		}
 	}
 	

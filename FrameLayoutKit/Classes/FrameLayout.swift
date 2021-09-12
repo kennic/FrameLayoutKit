@@ -24,7 +24,7 @@ public enum NKContentHorizontalAlignment {
 }
 
 /**
-A single frameLayout handles size and position of a view
+FrameLayout is the fundamental component of the kit. This class will automatically adjust the size and position of the view assigned to it based on the size and position of the frameLayout itself, and the specified alignment value.
 */
 open class FrameLayout<T: UIView>: UIView {
 	/// Target view that handled by this frameLayout
@@ -35,6 +35,7 @@ open class FrameLayout<T: UIView>: UIView {
 	public var edgeInsets: UIEdgeInsets = .zero
 	/// Add translation position to view
 	public var translationOffset: CGPoint = .zero
+	/// Add x translation to view
 	public var translationX: CGFloat {
 		get { translationOffset.x }
 		set {
@@ -42,6 +43,7 @@ open class FrameLayout<T: UIView>: UIView {
 			setNeedsLayout()
 		}
 	}
+	/// Add y translation to view
 	public var translationY: CGFloat {
 		get { translationOffset.y }
 		set {
@@ -49,60 +51,66 @@ open class FrameLayout<T: UIView>: UIView {
 			setNeedsLayout()
 		}
 	}
-	/// Minimum size of frameLayout
+	/// Minimum size of this frameLayout
 	public var minSize: CGSize = .zero
+	/// Mininum width of this frameLayout
 	public var minWidth: CGFloat {
 		get { minSize.width }
 		set { minSize.width = newValue }
 	}
+	/// Mininum height of this frameLayout
 	public var minHeight: CGFloat {
 		get { minSize.height }
 		set { minSize.height = newValue }
 	}
 	/// Maximum size of frameLayout
 	public var maxSize: CGSize = .zero
+	/// Maximum width of this frameLayout
 	public var maxWidth: CGFloat {
 		get { maxSize.width }
 		set { maxSize.width = newValue }
 	}
+	/// Maximum height of this frameLayout
 	public var maxHeight: CGFloat {
 		get { maxSize.height }
 		set { maxSize.height = newValue }
 	}
 	/// Minimum size of `targetView`
 	public var minContentSize: CGSize = .zero
+	/// Mininum width of `targetView`
 	public var minContentWidth: CGFloat {
 		get { minContentSize.width }
 		set { minContentSize.width = newValue }
 	}
+	/// Mininum height of `targetView`
 	public var minContentHeight: CGFloat {
 		get { minContentSize.height }
 		set { minContentSize.height = newValue }
 	}
 	/// Maximum size of targetView
 	public var maxContentSize: CGSize = .zero
+	/// Maximum width of `targetView`
 	public var maxContentWidth: CGFloat {
 		get { maxContentSize.width }
 		set { maxContentSize.width = newValue }
 	}
+	/// Maximum height of `targetView`
 	public var maxContentHeight: CGFloat {
 		get { maxContentSize.height }
 		set { maxContentSize.height = newValue }
 	}
-	/// Adding size to content size. `minSize` and `maxSize` still have higher priority
+	/// Adding size to content size. `minSize` and `maxSize` is still the limitation.
 	public var extendSize: CGSize = .zero
+	/// Extending width to content size
 	public var extendWidth: CGFloat {
 		get { extendSize.width }
 		set { extendSize.width = newValue }
 	}
+	/// Extending height to content size
 	public var extendHeight: CGFloat {
 		get { extendSize.height }
 		set { extendSize.height = newValue }
 	}
-	/// Vertical alignment
-	public var verticalAlignment: NKContentVerticalAlignment = .fill
-	/// Horizontal alignment
-	public var horizontalAlignment: NKContentHorizontalAlignment = .fill
 	/// Width of `targetView` will be stretched out to fill frameLayout if the width of this frameLayout is larger than `targetView`'s width
 	public var allowContentVerticalGrowing = false
 	/// Width of `targetView` will be shrinked down to fit frameLayout if the width of this frameLayout is smaller than `targetView`'s width
@@ -128,7 +136,7 @@ open class FrameLayout<T: UIView>: UIView {
 		}
 	}
 	
-	/// Show the dash line of the frameLayout for debugging. This works in development mode only, release version will ignore this
+	/// Show the dash line of the frameLayout for debugging. This works in development mode only, released version will ignore this
 	public var debug: Bool = false {
 		didSet {
 			#if DEBUG
@@ -146,62 +154,44 @@ open class FrameLayout<T: UIView>: UIView {
 		}
 	}
 	
-	/// Set the fix size of frameLayout
-	public var fixSize: CGSize = .zero {
+	/// Set the fixed size of frameLayout
+	public var fixedSize: CGSize = .zero {
 		didSet {
-			minSize = fixSize
-			maxSize = fixSize
+			minSize = fixedSize
+			maxSize = fixedSize
 		}
 	}
 	
-	public var fixWidth: CGFloat {
-		get { fixSize.width }
-		set { fixSize.width = newValue }
+	public var fixedWidth: CGFloat {
+		get { fixedSize.width }
+		set { fixedSize.width = newValue }
 	}
 	
-	public var fixHeight: CGFloat {
-		get { fixSize.height }
-		set { fixSize.height = newValue }
+	public var fixedHeight: CGFloat {
+		get { fixedSize.height }
+		set { fixedSize.height = newValue }
 	}
 	
-	/// Set the fix size of targetView
-	public var fixContentSize: CGSize = .zero {
+	/// Set the fixed size of targetView
+	public var fixedContentSize: CGSize = .zero {
 		didSet {
-			minContentSize = fixContentSize
-			maxContentSize = fixContentSize
+			minContentSize = fixedContentSize
+			maxContentSize = fixedContentSize
 		}
 	}
 	
-	public var fixContentWidth: CGFloat {
-		get { fixContentSize.width }
-		set { fixContentSize.width = newValue }
+	public var fixedContentWidth: CGFloat {
+		get { fixedContentSize.width }
+		set { fixedContentSize.width = newValue }
 	}
 	
-	public var fixContentHeight: CGFloat {
-		get { fixContentSize.height }
-		set { fixContentSize.height = newValue }
+	public var fixedContentHeight: CGFloat {
+		get { fixedContentSize.height }
+		set { fixedContentSize.height = newValue }
 	}
 	
 	/// Set the alignment of both axis
-	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill) {
-		didSet {
-			verticalAlignment = alignment.vertical
-			horizontalAlignment = alignment.horizontal
-		}
-	}
-	
-	/// Block will be called before calling sizeThatFits
-	@available(*, deprecated, renamed: "willSizeThatFitsBlock")
-	public var preSizeThatFitsConfigurationBlock: ((FrameLayout, CGSize) -> Void)? {
-		get { willSizeThatFitsBlock }
-		set { willSizeThatFitsBlock = newValue }
-	}
-	
-	@available(*, deprecated, renamed: "willLayoutSubviewsBlock")
-	public var preLayoutConfigurationBlock: ((FrameLayout) -> Void)? {
-		get { willLayoutSubviewsBlock }
-		set { willLayoutSubviewsBlock = newValue }
-	}
+	public var alignment: (vertical: NKContentVerticalAlignment, horizontal: NKContentHorizontalAlignment) = (.fill, .fill)
 	
 	/// Block will be called before calling sizeThatFits
 	public var willSizeThatFitsBlock: ((FrameLayout, CGSize) -> Void)?
@@ -213,9 +203,7 @@ open class FrameLayout<T: UIView>: UIView {
 	override open var frame: CGRect {
 		get { super.frame }
 		set {
-			if newValue.isInfinite || newValue.isNull || newValue.minX.isNaN || newValue.minY.isNaN || newValue.width.isNaN || newValue.height.isNaN {
-				return
-			}
+			if newValue.isInfinite || newValue.isNull || newValue.minX.isNaN || newValue.minY.isNaN || newValue.width.isNaN || newValue.height.isNaN { return }
 			
 			super.frame = newValue
 			setNeedsLayout()
@@ -296,17 +284,23 @@ open class FrameLayout<T: UIView>: UIView {
 	
 	// MARK: -
 	
-	open func flexible(ratio: CGFloat = -1) {
+	@discardableResult
+	open func flexible(ratio: CGFloat = -1) -> Self {
 		isFlexible = true
 		flexibleRatio = ratio
+		return self
 	}
 	
-	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+	@discardableResult
+	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
 		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+		return self
 	}
 	
-	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) {
+	@discardableResult
+	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
 		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
+		return self
 	}
 	
 	#if DEBUG
@@ -394,9 +388,9 @@ open class FrameLayout<T: UIView>: UIView {
 		#else
 		let containerFrame = UIEdgeInsetsInsetRect(bounds, edgeInsets)
 		#endif
-		let contentSize = (horizontalAlignment != .fill || verticalAlignment != .fill) || (minContentSize != .zero || maxContentSize != .zero) ? contentSizeThatFits(size: containerFrame.size) : .zero
+		let contentSize = (alignment.horizontal != .fill || alignment.vertical != .fill) || (minContentSize != .zero || maxContentSize != .zero) ? contentSizeThatFits(size: containerFrame.size) : .zero
 		
-		switch horizontalAlignment {
+		switch alignment.horizontal {
 		case .left:
 			if allowContentHorizontalGrowing {
 				targetFrame.size.width = max(containerFrame.width, contentSize.width)
@@ -447,7 +441,7 @@ open class FrameLayout<T: UIView>: UIView {
 			break
 		}
 		
-		switch verticalAlignment {
+		switch alignment.vertical {
 		case .top:
 			if allowContentVerticalGrowing {
 				targetFrame.size.height = max(containerFrame.height, contentSize.height)
@@ -569,7 +563,7 @@ open class FrameLayout<T: UIView>: UIView {
 		var result: CGSize
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 {
-			result = minSize // fixSize
+			result = minSize // fixedSize
 		}
 		else {
 			if shouldCacheSize {

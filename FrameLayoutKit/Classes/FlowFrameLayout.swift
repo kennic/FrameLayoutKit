@@ -51,9 +51,9 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	override public var fixSize: CGSize {
+	override public var fixedSize: CGSize {
 		didSet {
-			stackLayout.fixSize = fixSize
+			stackLayout.fixedSize = fixedSize
 			setNeedsLayout()
 		}
 	}
@@ -102,13 +102,8 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		return stackLayout.frameLayouts as? [StackFrameLayout<UIView>] ?? []
 	}
 	
-	public var firstStack: StackFrameLayout<UIView>? {
-		return stackLayout.firstFrameLayout as? StackFrameLayout
-	}
-	
-	public var lastStack: StackFrameLayout<UIView>? {
-		return stackLayout.lastFrameLayout as? StackFrameLayout
-	}
+	public var firstStack: StackFrameLayout<UIView>? { stackLayout.firstFrameLayout as? StackFrameLayout }
+	public var lastStack: StackFrameLayout<UIView>? { stackLayout.lastFrameLayout as? StackFrameLayout }
 	
 	let stackLayout = ScrollStackView(axis: .vertical, distribution: .top)
 	
