@@ -21,6 +21,21 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func extends(size: CGSize) -> Self {
+		extendSize = size
+		return self
+	}
+	
+	@discardableResult public func extends(width: CGFloat) -> Self {
+		extendSize.width = width
+		return self
+	}
+	
+	@discardableResult public func extends(height: CGFloat) -> Self {
+		extendSize.height = height
+		return self
+	}
+	
 	@discardableResult public func fixedSize(_ value: CGSize) -> Self {
 		fixedSize = value
 		return self
