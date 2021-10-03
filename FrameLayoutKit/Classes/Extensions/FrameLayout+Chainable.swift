@@ -151,6 +151,11 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func bindingEdgeInsets(_ value: UIEdgeInsets) -> Self {
+		bindingEdgeInsets = value
+		return self
+	}
+	
 	@discardableResult public func enable(_ value: Bool) -> Self {
 		isEnabled = value
 		return self
