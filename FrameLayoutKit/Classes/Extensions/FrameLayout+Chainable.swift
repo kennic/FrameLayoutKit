@@ -126,6 +126,11 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func heightRatio(_ value: CGFloat) -> Self {
+		heightRatio = value
+		return self
+	}
+	
 	@discardableResult public func translationOffset(_ value: CGPoint) -> Self {
 		translationOffset = value
 		return self
@@ -138,6 +143,11 @@ extension FrameLayout {
 	
 	@discardableResult public func translationY(_ value: CGFloat) -> Self {
 		translationY = value
+		return self
+	}
+	
+	@discardableResult public func bindFrame(to views: UIView ...) -> Self {
+		bindingViews = views
 		return self
 	}
 	

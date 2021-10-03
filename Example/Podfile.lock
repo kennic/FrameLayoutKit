@@ -1,5 +1,5 @@
 PODS:
-  - FrameLayoutKit (6.0)
+  - FrameLayoutKit (6.1.0)
 
 DEPENDENCIES:
   - FrameLayoutKit (from `../`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FrameLayoutKit: 91bddcc240c628e8cf247b34b7525ad0ffac271c
+  FrameLayoutKit: c8b002d2fad0155bcf833239e8283af17e818568
 
 PODFILE CHECKSUM: ac097e09a36888b120812ddf1779def87475dc02
 
-COCOAPODS: 1.11.0
+COCOAPODS: 1.11.2

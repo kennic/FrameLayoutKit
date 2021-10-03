@@ -29,8 +29,12 @@ FrameLayout is the fundamental component of the kit. This class will automatical
 open class FrameLayout: UIView {
 	/// Target view that handled by this frameLayout
 	public var targetView: UIView? = nil
+	/// Additional views that will have their frames binding to `targetView`'s frame
+	public var bindingViews: [UIView]? = nil
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
+	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It also ignore willSizeThatFits and willLayoutSubviews.
+	public var isEnabled = true
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
 	/// Add translation position to view
@@ -207,6 +211,7 @@ open class FrameLayout: UIView {
 			
 			super.frame = newValue
 			setNeedsLayout()
+			
 			#if DEBUG
 			if debug {
 				setNeedsDisplay()
@@ -339,6 +344,8 @@ open class FrameLayout: UIView {
 	}
 	
 	open func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
+		if !isEnabled { return .zero }
+		
 		willSizeThatFitsBlock?(self, size)
 		guard !isEmpty || !ignoreHiddenView else { return .zero }
 		
@@ -373,6 +380,8 @@ open class FrameLayout: UIView {
 	}
 	
 	override open func layoutSubviews() {
+		if !isEnabled { return }
+		
 		willLayoutSubviewsBlock?(self)
 		super.layoutSubviews()
 		
@@ -524,6 +533,17 @@ open class FrameLayout: UIView {
 			}
 			else {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
+			}
+		}
+		
+		guard let bindingViews = bindingViews else { return }
+		targetFrame = targetView.frame
+		bindingViews.forEach {
+			if $0.superview != targetView.superview, let superView1 = $0.superview, let superView2 = targetView.superview {
+				$0.frame = superView2.convert(targetFrame, to: superView1)
+			}
+			else {
+				$0.frame = targetFrame
 			}
 		}
 	}

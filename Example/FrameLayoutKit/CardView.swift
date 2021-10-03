@@ -18,6 +18,8 @@ class CardView: UIView {
 	let messageLabel = UILabel()
 	let expandButton = UIButton(type: .contactAdd)
 	let frameLayout = StackFrameLayout(axis: .horizontal)
+	let redView = UIView()
+	var messageFrameLayout: FrameLayout!
 	
 	var onSizeChanged: ((CardView) -> Void)?
 	
@@ -30,6 +32,8 @@ class CardView: UIView {
 		layer.shadowRadius = 5
 		layer.shadowOpacity = 0.6
 		layer.masksToBounds = false
+		
+		redView.backgroundColor = .systemRed
 		
 		expandButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
 		
@@ -50,14 +54,12 @@ class CardView: UIView {
 		messageLabel.font = .systemFont(ofSize: 18, weight: .regular)
 		messageLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
 		
-		[nameLabel, dateLabel, messageLabel].forEach { (label) in
-			label.numberOfLines = 0
-			label.textColor = .black
+		[nameLabel, dateLabel, messageLabel].forEach {
+			$0.numberOfLines = 0
+			$0.textColor = .black
 		}
 		
-		[earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { (view) in
-			addSubview(view)
-		}
+		[redView, earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { addSubview($0) }
 		
 		// Standard syntax:
 		
@@ -81,7 +83,7 @@ class CardView: UIView {
 		frameLayout + VStackLayout {
 			($0 + earthImageView).alignment = (.top, .center)
 			($0 + 0).flexible()
-			($0 + rocketImageView).alignment = (.center, .center)
+			($0 + rocketImageView).align(vertical: .center, horizontal: .center).bindFrame(to: redView) // Example of binding views: redView will stick together with rocketImageView
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
@@ -93,7 +95,7 @@ class CardView: UIView {
 			}
 			$0 + dateLabel
 //			$0 + 10.0
-			$0 + messageLabel
+			messageFrameLayout = ($0 + messageLabel)
 			
 			//--- Example of split(ratio) distribution ---
 			($0 + 0.0).flexible()
@@ -148,7 +150,9 @@ class CardView: UIView {
 	}
 	
 	@objc func onButtonTap() {
-		messageLabel.isHidden = !messageLabel.isHidden
+		messageFrameLayout.isEnabled.toggle()
+		UIView.animate(withDuration: 0.25) { self.messageLabel.alpha = self.messageFrameLayout.isEnabled ? 1.0 : 0.0 }
+		
 		setNeedsLayout()
 		onSizeChanged?(self)
 	}
