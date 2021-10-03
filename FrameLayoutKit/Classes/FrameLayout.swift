@@ -31,6 +31,8 @@ open class FrameLayout: UIView {
 	public var targetView: UIView? = nil
 	/// Additional views that will have their frames binding to `targetView`'s frame
 	public var bindingViews: [UIView]? = nil
+	/// edgeInsets that will be applied to binding views
+	public var bindingEdgeInsets: UIEdgeInsets = .zero
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It also ignore willSizeThatFits and willLayoutSubviews.
@@ -537,7 +539,11 @@ open class FrameLayout: UIView {
 		}
 		
 		guard let bindingViews = bindingViews else { return }
-		targetFrame = targetView.frame
+		#if swift(>=4.2)
+		targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
+		#else
+		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
+		#endif
 		bindingViews.forEach {
 			if $0.superview != targetView.superview, let superView1 = $0.superview, let superView2 = targetView.superview {
 				$0.frame = superView2.convert(targetFrame, to: superView1)
