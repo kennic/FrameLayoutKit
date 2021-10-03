@@ -20,5 +20,25 @@ extension FlowFrameLayout {
 		return self
 	}
 	
+	@discardableResult public func justified(_ value: Bool) -> Self {
+		isJustified = value
+		return self
+	}
+	
+	@discardableResult public func interitemSpacing(_ value: CGFloat) -> Self {
+		interItemSpacing = value
+		return self
+	}
+	
+	@discardableResult public func lineSpacing(_ value: CGFloat) -> Self {
+		lineSpacing = value
+		return self
+	}
+	
+	@discardableResult public func intrinsicSizeEnabled(_ value: Bool) -> Self {
+		isIntrinsicSizeEnabled = value
+		return self
+	}
+	
 }
 

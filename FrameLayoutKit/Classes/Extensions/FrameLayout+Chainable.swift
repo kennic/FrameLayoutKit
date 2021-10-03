@@ -151,4 +151,59 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func enable(_ value: Bool) -> Self {
+		isEnabled = value
+		return self
+	}
+	
+	@discardableResult public func debug(_ value: Bool) -> Self {
+		debug = value
+		return self
+	}
+	
+	@discardableResult public func debugColor(_ value: UIColor) -> Self {
+		debugColor = value
+		return self
+	}
+	
+	@discardableResult public func contentVerticalGrowing(_ value: Bool) -> Self {
+		allowContentVerticalGrowing = value
+		return self
+	}
+	
+	@discardableResult public func contentVerticalShrinking(_ value: Bool) -> Self {
+		allowContentVerticalShrinking = value
+		return self
+	}
+	
+	@discardableResult public func contentHorizontalGrowing(_ value: Bool) -> Self {
+		allowContentHorizontalGrowing = value
+		return self
+	}
+	
+	@discardableResult public func contentHorizontalShriking(_ value: Bool) -> Self {
+		allowContentHorizontalShrinking = value
+		return self
+	}
+	
+	@discardableResult public func ignoreHiddenView(_ value: Bool) -> Self {
+		ignoreHiddenView = value
+		return self
+	}
+	
+	@discardableResult public func willLayoutSubviews(_ block: @escaping (FrameLayout) -> Void) -> Self {
+		willLayoutSubviewsBlock = block
+		return self
+	}
+	
+	@discardableResult public func didLayoutSubviews(_ block: @escaping (FrameLayout) -> Void) -> Self {
+		didLayoutSubviewsBlock = block
+		return self
+	}
+	
+	@discardableResult public func willSizeThatFits(_ block: @escaping (FrameLayout, CGSize) -> Void) -> Self {
+		willSizeThatFitsBlock = block
+		return self
+	}
+	
 }

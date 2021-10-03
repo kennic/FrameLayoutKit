@@ -25,4 +25,39 @@ extension StackFrameLayout {
 		return self
 	}
 	
+	@discardableResult public func overlapped(_ value: Bool) -> Self {
+		isOverlapped = value
+		return self
+	}
+	
+	@discardableResult public func justified(_ value: Bool) -> Self {
+		isJustified = value
+		return self
+	}
+	
+	@discardableResult public func justifyThreshold(_ value: CGFloat) -> Self {
+		justifyThreshold = value
+		return self
+	}
+	
+	@discardableResult public func minItemSize(_ value: CGSize) -> Self {
+		minItemSize = value
+		return self
+	}
+	
+	@discardableResult public func maxItemSize(_ value: CGSize) -> Self {
+		maxItemSize = value
+		return self
+	}
+	
+	@discardableResult public func fixItemSize(_ value: CGSize) -> Self {
+		fixItemSize = value
+		return self
+	}
+	
+	@discardableResult public func clipToBounds(_ value: Bool) -> Self {
+		clipsToBounds = value
+		return self
+	}
+	
 }

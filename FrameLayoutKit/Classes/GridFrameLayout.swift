@@ -68,9 +68,9 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var fixRowHeight: CGFloat = 0 {
+	public var fixedRowHeight: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.forEach { $0.fixedSize = CGSize(width: $0.fixedSize.width, height: fixRowHeight) }
+			stackLayout.frameLayouts.forEach { $0.fixedSize = CGSize(width: $0.fixedSize.width, height: fixedRowHeight) }
 			setNeedsLayout()
 		}
 	}
@@ -89,9 +89,9 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var fixColumnWidth: CGFloat = 0 {
+	public var fixedColumnWidth: CGFloat = 0 {
 		didSet {
-			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.fixedSize = CGSize(width: fixColumnWidth, height: $0.fixedSize.height) }
+			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { $0.fixedSize = CGSize(width: fixedColumnWidth, height: $0.fixedSize.height) }
 			setNeedsLayout()
 		}
 	}
@@ -156,8 +156,8 @@ open class GridFrameLayout: FrameLayout {
 				if let layout = layout as? StackFrameLayout {
 					layout.numberOfFrameLayouts = columns
 					layout.frameLayouts.forEach {
-						if fixColumnWidth > 0 {
-							$0.fixedSize = CGSize(width: fixColumnWidth, height: $0.fixedSize.height)
+						if fixedColumnWidth > 0 {
+							$0.fixedSize = CGSize(width: fixedColumnWidth, height: $0.fixedSize.height)
 						}
 						else {
 							$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
@@ -273,8 +273,8 @@ open class GridFrameLayout: FrameLayout {
 		layout.spacing = horizontalSpacing
 		layout.debug = debug
 		
-		if fixRowHeight > 0 {
-			layout.fixedSize = CGSize(width: 0, height: fixRowHeight)
+		if fixedRowHeight > 0 {
+			layout.fixedSize = CGSize(width: 0, height: fixedRowHeight)
 		}
 		else {
 			layout.minSize = CGSize(width: 0, height: minRowHeight)
@@ -282,8 +282,8 @@ open class GridFrameLayout: FrameLayout {
 		}
 		
 		layout.frameLayouts.forEach {
-			if fixColumnWidth > 0 {
-				$0.fixedSize = CGSize(width: fixColumnWidth, height: $0.fixedSize.height)
+			if fixedColumnWidth > 0 {
+				$0.fixedSize = CGSize(width: fixedColumnWidth, height: $0.fixedSize.height)
 			}
 			else {
 				$0.minSize = CGSize(width: minColumnWidth, height: $0.minSize.height)
@@ -329,8 +329,8 @@ open class GridFrameLayout: FrameLayout {
 				let row = rowLayout.add()
 				row.debug = debug
 				
-				if fixColumnWidth > 0 {
-					row.fixedSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
+				if fixedColumnWidth > 0 {
+					row.fixedSize = CGSize(width: fixedColumnWidth, height: fixedRowHeight)
 				}
 				else {
 					row.minSize = CGSize(width: minColumnWidth, height: minRowHeight)
@@ -347,8 +347,8 @@ open class GridFrameLayout: FrameLayout {
 				let row = rowLayout.insert(nil, at: index)
 				row.debug = debug
 				
-				if fixColumnWidth > 0 {
-					row.fixedSize = CGSize(width: fixColumnWidth, height: fixRowHeight)
+				if fixedColumnWidth > 0 {
+					row.fixedSize = CGSize(width: fixedColumnWidth, height: fixedRowHeight)
 				}
 				else {
 					row.minSize = CGSize(width: minColumnWidth, height: minRowHeight)

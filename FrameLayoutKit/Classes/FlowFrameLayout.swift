@@ -94,14 +94,8 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
-	public var stackCount: Int {
-		return stackLayout.frameLayouts.count
-	}
-	
-	public var stacks: [StackFrameLayout] {
-		return stackLayout.frameLayouts as? [StackFrameLayout] ?? []
-	}
-	
+	public var stackCount: Int { stackLayout.frameLayouts.count }
+	public var stacks: [StackFrameLayout] { stackLayout.frameLayouts as? [StackFrameLayout] ?? [] }
 	public var firstStack: StackFrameLayout? { stackLayout.firstFrameLayout as? StackFrameLayout }
 	public var lastStack: StackFrameLayout? { stackLayout.lastFrameLayout as? StackFrameLayout }
 	

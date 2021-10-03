@@ -25,4 +25,9 @@ extension DoubleFrameLayout {
 		return self
 	}
 	
+	@discardableResult public func overlapped(_ value: Bool) -> Self {
+		isOverlapped = value
+		return self
+	}
+	
 }
