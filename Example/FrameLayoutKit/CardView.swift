@@ -18,6 +18,7 @@ class CardView: UIView {
 	let messageLabel = UILabel()
 	let expandButton = UIButton(type: .contactAdd)
 	let frameLayout = StackFrameLayout(axis: .horizontal)
+	let blueView = UIView()
 	let redView = UIView()
 	var messageFrameLayout: FrameLayout!
 	
@@ -33,6 +34,7 @@ class CardView: UIView {
 		layer.shadowOpacity = 0.6
 		layer.masksToBounds = false
 		
+		blueView.backgroundColor = .systemBlue
 		redView.backgroundColor = .systemRed
 		
 		expandButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
@@ -59,7 +61,7 @@ class CardView: UIView {
 			$0.textColor = .black
 		}
 		
-		[redView, earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { addSubview($0) }
+		[blueView, redView, earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { addSubview($0) }
 		
 		// Standard syntax:
 		
@@ -84,6 +86,7 @@ class CardView: UIView {
 			($0 + earthImageView).alignment = (.top, .center)
 			($0 + 0).flexible()
 			($0 + rocketImageView).align(vertical: .center, horizontal: .center).bindFrame(to: redView) // Example of binding views: redView will stick together with rocketImageView
+			$0.bindFrame(to: blueView) // Example of binding views: blueView will stick together with this VStackLayout
 		}
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
