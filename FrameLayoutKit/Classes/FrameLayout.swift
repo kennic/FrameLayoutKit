@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreGraphics
 
 public enum NKContentVerticalAlignment {
 	case center
@@ -545,7 +546,10 @@ open class FrameLayout: UIView {
 		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
 		#endif
 		bindingViews.compactMap{$0}.forEach {
-			if $0.superview != targetView.superview, let superView1 = $0.superview, let superView2 = targetView.superview {
+			if $0.superview == targetView {
+				$0.frame = CGRect(origin: .zero, size: targetFrame.size)
+			}
+			else if $0.superview != targetView.superview, let superView1 = $0.superview, let superView2 = targetView.superview {
 				$0.frame = superView2.convert(targetFrame, to: superView1)
 			}
 			else {
