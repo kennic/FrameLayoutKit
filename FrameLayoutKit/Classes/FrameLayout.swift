@@ -29,11 +29,12 @@ FrameLayout is the fundamental component of the kit. This class will automatical
 */
 open class FrameLayout: UIView {
 	/// Target view that handled by this frameLayout
-	public var targetView: UIView? = nil
+	public var targetView: UIView?
 	/// Additional views that will have their frames binding to `targetView`'s frame
-	public var bindingViews: [UIView]? = nil
+	public var bindingViews: [UIView]?
 	/// edgeInsets that will be applied to binding views
 	public var bindingEdgeInsets: UIEdgeInsets = .zero
+	public var lazyBindingViews: (() -> [UIView?]?)?
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It also ignore willSizeThatFits and willLayoutSubviews.
@@ -539,13 +540,16 @@ open class FrameLayout: UIView {
 			}
 		}
 		
-		guard let bindingViews = bindingViews else { return }
+		var bindViews = bindingViews ?? []
+		if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
+		
+		guard !bindViews.isEmpty else { return }
 		#if swift(>=4.2)
 		targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
 		#else
 		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
 		#endif
-		bindingViews.forEach {
+		bindViews.forEach {
 			if $0.superview == targetView {
 				$0.frame = CGRect(origin: .zero, size: targetFrame.size)
 			}

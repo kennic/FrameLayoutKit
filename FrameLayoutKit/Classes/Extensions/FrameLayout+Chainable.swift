@@ -146,6 +146,11 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func lazyBindFrame(to: @escaping (() -> [UIView?])) -> Self {
+		lazyBindingViews = to
+		return self
+	}
+	
 	@discardableResult public func bindFrame(to views: UIView ...) -> Self {
 		bindingViews = views
 		return self
