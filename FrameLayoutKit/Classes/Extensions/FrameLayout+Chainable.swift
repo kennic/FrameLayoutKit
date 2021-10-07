@@ -146,7 +146,7 @@ extension FrameLayout {
 		return self
 	}
 	
-	@discardableResult public func bindFrame(to views: UIView? ...) -> Self {
+	@discardableResult public func bindFrame(to views: UIView ...) -> Self {
 		bindingViews = views
 		return self
 	}

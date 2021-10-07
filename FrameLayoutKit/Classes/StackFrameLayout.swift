@@ -143,7 +143,7 @@ open class StackFrameLayout: FrameLayout {
 				}
 			}
 			else if newValue > count {
-				while frameLayouts.count < newValue {
+				for _ in 0..<(newValue - count) {
 					add()
 				}
 			}

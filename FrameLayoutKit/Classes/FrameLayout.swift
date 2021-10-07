@@ -31,7 +31,7 @@ open class FrameLayout: UIView {
 	/// Target view that handled by this frameLayout
 	public var targetView: UIView? = nil
 	/// Additional views that will have their frames binding to `targetView`'s frame
-	public var bindingViews: [UIView?]? = nil
+	public var bindingViews: [UIView]? = nil
 	/// edgeInsets that will be applied to binding views
 	public var bindingEdgeInsets: UIEdgeInsets = .zero
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
@@ -545,7 +545,7 @@ open class FrameLayout: UIView {
 		#else
 		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
 		#endif
-		bindingViews.compactMap{$0}.forEach {
+		bindingViews.forEach {
 			if $0.superview == targetView {
 				$0.frame = CGRect(origin: .zero, size: targetFrame.size)
 			}
