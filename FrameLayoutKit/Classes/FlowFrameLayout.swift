@@ -122,7 +122,7 @@ open class FlowFrameLayout: FrameLayout {
 		self.axis = axis
 	}
 	
-	override public init() {
+	public required init() {
 		super.init()
 		
 		axis = .horizontal

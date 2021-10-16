@@ -279,7 +279,7 @@ open class FrameLayout: UIView {
 		self.targetView = targetView
 	}
 	
-	public init() {
+	public required init() {
 		super.init(frame: .zero)
 		
 		backgroundColor = .clear

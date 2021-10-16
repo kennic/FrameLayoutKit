@@ -206,7 +206,7 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	override public init() {
+	public required init() {
 		super.init()
 		
 		axis = .horizontal

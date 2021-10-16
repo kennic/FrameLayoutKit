@@ -366,7 +366,7 @@ open class ScrollStackView: UIView {
 		try block(self)
 	}
 	
-	public init() {
+	public required init() {
 		super.init(frame: .zero)
 		
 		scrollView.bounces = true

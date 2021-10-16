@@ -137,6 +137,10 @@ open class StackLayout: StackFrameLayout {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	public required init() {
+		fatalError("init() has not been implemented")
+	}
+	
 }
 
 public extension FlowFrameLayout {
