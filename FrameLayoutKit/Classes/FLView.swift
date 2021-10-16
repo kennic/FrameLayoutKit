@@ -8,7 +8,7 @@
 import UIKit
 
 open class FLView<T: FrameLayout>: UIView {
-	let frameLayout = T()
+	public let frameLayout = T()
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
 		return frameLayout.sizeThatFits(size)
