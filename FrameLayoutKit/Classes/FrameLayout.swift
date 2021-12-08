@@ -406,7 +406,7 @@ open class FrameLayout: UIView {
 			guard !targetFrame.isEmpty else { return }
 			
 			bindViews.forEach {
-				if $0.superview == targetView {
+				if $0.superview == self.targetView {
 					$0.frame = CGRect(origin: .zero, size: targetFrame.size)
 				}
 				else if $0.superview != superview, let superView1 = $0.superview, let superView2 = superview {
