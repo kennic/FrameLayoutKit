@@ -48,9 +48,8 @@ The [Swift Package Manager](https://swift.org/package-manager/) is a tool for au
 
 If you are using Xcode 11 or later:
  1. Click `File`
- 2. `Swift Packages`
- 3. `Add Package Dependency...`
- 4. Specify the git URL for FrameLayoutKit.
+ 2. `Add Packages...`
+ 3. Specify the git URL for FrameLayoutKit.
 
 ```swift
 https://github.com/kennic/FrameLayoutKit.git
