@@ -143,7 +143,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 				}
 			}
 			else if newValue > count {
-				while frameLayouts.count < newValue {
+				for _ in 0..<(newValue - count) {
 					add()
 				}
 			}
@@ -163,7 +163,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	override public init() {
+	public required init() {
 		super.init()
 		isIntrinsicSizeEnabled = true
 	}
@@ -1210,7 +1210,7 @@ open class HStackLayout: StackFrameLayout<UIView> {
 		try block(self)
 	}
 	
-	override public init() {
+	required public init() {
 		super.init()
 		axis = .horizontal
 	}
@@ -1232,7 +1232,7 @@ open class VStackLayout: StackFrameLayout<UIView> {
 		try block(self)
 	}
 	
-	override public init() {
+	required public init() {
 		super.init()
 		axis = .vertical
 	}
@@ -1255,7 +1255,7 @@ open class ZStackLayout: StackFrameLayout<UIView> {
 		try block(self)
 	}
 	
-	override public init() {
+	required public init() {
 		super.init()
 		axis = .vertical
 		isOverlapped = true

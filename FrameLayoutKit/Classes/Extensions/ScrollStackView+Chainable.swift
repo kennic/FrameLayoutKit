@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension ScrollStackView {
 	
@@ -21,6 +22,26 @@ extension ScrollStackView {
 	
 	@discardableResult public func distribution(_ value: NKLayoutDistribution) -> Self {
 		distribution = value
+		return self
+	}
+	
+	@discardableResult public func directionalLock(_ value: Bool) -> Self {
+		isDirectionalLockEnabled = value
+		return self
+	}
+	
+	@discardableResult public func extends(size: CGSize) -> Self {
+		extendSize = size
+		return self
+	}
+	
+	@discardableResult public func extends(width: CGFloat) -> Self {
+		extendSize.width = width
+		return self
+	}
+	
+	@discardableResult public func extends(height: CGFloat) -> Self {
+		extendSize.height = height
 		return self
 	}
 	
@@ -111,6 +132,46 @@ extension ScrollStackView {
 	
 	@discardableResult public func minContentHeight(_ value: CGFloat) -> Self {
 		minContentHeight = value
+		return self
+	}
+	
+	@discardableResult public func contentFitSize(_ value: CGSize) -> Self {
+		contentFitSize = value
+		return self
+	}
+	
+	@discardableResult public func heightRatio(_ value: CGFloat) -> Self {
+		heightRatio = value
+		return self
+	}
+	
+	@discardableResult public func flexible(_ value: Bool) -> Self {
+		isFlexible = value
+		return self
+	}
+	
+	@discardableResult public func overlapped(_ value: Bool) -> Self {
+		isOverlapped = value
+		return self
+	}
+	
+	@discardableResult public func minItemSize(_ value: CGSize) -> Self {
+		minItemSize = value
+		return self
+	}
+	
+	@discardableResult public func maxItemSize(_ value: CGSize) -> Self {
+		maxItemSize = value
+		return self
+	}
+	
+	@discardableResult public func fixItemSize(_ value: CGSize) -> Self {
+		fixItemSize = value
+		return self
+	}
+	
+	@discardableResult public func clipToBounds(_ value: Bool) -> Self {
+		clipsToBounds = value
 		return self
 	}
 	

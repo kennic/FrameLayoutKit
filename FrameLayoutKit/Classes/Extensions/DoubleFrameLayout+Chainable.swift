@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension DoubleFrameLayout {
 	
@@ -21,6 +22,11 @@ extension DoubleFrameLayout {
 	
 	@discardableResult public func distribution(_ value: NKLayoutDistribution) -> Self {
 		distribution = value
+		return self
+	}
+	
+	@discardableResult public func overlapped(_ value: Bool) -> Self {
+		isOverlapped = value
 		return self
 	}
 	

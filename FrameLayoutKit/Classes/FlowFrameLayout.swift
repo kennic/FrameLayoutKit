@@ -94,14 +94,8 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	public var stackCount: Int {
-		return stackLayout.frameLayouts.count
-	}
-	
-	public var stacks: [StackFrameLayout<UIView>] {
-		return stackLayout.frameLayouts as? [StackFrameLayout<UIView>] ?? []
-	}
-	
+	public var stackCount: Int { stackLayout.frameLayouts.count }
+	public var stacks: [StackFrameLayout<UIView>] { stackLayout.frameLayouts as? [StackFrameLayout<UIView>] ?? [] }
 	public var firstStack: StackFrameLayout<UIView>? { stackLayout.firstFrameLayout as? StackFrameLayout }
 	public var lastStack: StackFrameLayout<UIView>? { stackLayout.lastFrameLayout as? StackFrameLayout }
 	
@@ -128,7 +122,7 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		self.axis = axis
 	}
 	
-	override public init() {
+	public required init() {
 		super.init()
 		
 		axis = .horizontal

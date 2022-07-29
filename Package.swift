@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "FrameLayoutKit",
-	platforms: [.iOS(.v8), .tvOS(.v9)],
+	platforms: [.iOS(.v9), .tvOS(.v9)],
     products: [
         .library(
             name: "FrameLayoutKit",
@@ -17,5 +17,5 @@ let package = Package(
 			path: "FrameLayoutKit/Classes",
 			exclude: ["Example"])
     ],
-	swiftLanguageVersions: [.v4_2]
+	swiftLanguageVersions: [.v5]
 )

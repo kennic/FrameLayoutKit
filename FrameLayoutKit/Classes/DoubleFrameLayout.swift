@@ -226,7 +226,7 @@ open class DoubleFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
-	override public init() {
+	public required init() {
 		super.init()
 		
 		addSubview(frameLayout1)

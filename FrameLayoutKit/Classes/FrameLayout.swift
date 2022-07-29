@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreGraphics
 
 public enum NKContentVerticalAlignment {
 	case center
@@ -29,8 +30,15 @@ FrameLayout is the fundamental component of the kit. This class will automatical
 open class FrameLayout<T: UIView>: UIView {
 	/// Target view that handled by this frameLayout
 	public var targetView: T? = nil
+	/// Additional views that will have their frames binding to `targetView`'s frame
+	public var bindingViews: [UIView]?
+	/// edgeInsets that will be applied to binding views
+	public var bindingEdgeInsets: UIEdgeInsets = .zero
+	public var lazyBindingViews: (() -> [UIView?]?)?
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
+	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It also ignore willSizeThatFits and willLayoutSubviews.
+	public var isEnabled = true
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
 	/// Add translation position to view
@@ -207,6 +215,7 @@ open class FrameLayout<T: UIView>: UIView {
 			
 			super.frame = newValue
 			setNeedsLayout()
+			
 			#if DEBUG
 			if debug {
 				setNeedsDisplay()
@@ -270,7 +279,7 @@ open class FrameLayout<T: UIView>: UIView {
 		self.targetView = targetView
 	}
 	
-	public init() {
+	public required init() {
 		super.init(frame: .zero)
 		
 		backgroundColor = .clear
@@ -339,6 +348,8 @@ open class FrameLayout<T: UIView>: UIView {
 	}
 	
 	open func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
+		if !isEnabled { return .zero }
+		
 		willSizeThatFitsBlock?(self, size)
 		guard !isEmpty || !ignoreHiddenView else { return .zero }
 		
@@ -373,6 +384,8 @@ open class FrameLayout<T: UIView>: UIView {
 	}
 	
 	override open func layoutSubviews() {
+		if !isEnabled { return }
+		
 		willLayoutSubviewsBlock?(self)
 		super.layoutSubviews()
 		
@@ -380,7 +393,32 @@ open class FrameLayout<T: UIView>: UIView {
 			didLayoutSubviewsBlock?(self)
 		}
 		
-		guard let targetView = targetView, !bounds.isEmpty else { return }
+		guard let targetView = targetView, !bounds.isEmpty else {
+			var bindViews = bindingViews ?? []
+			if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
+			
+			guard !bindViews.isEmpty else { return }
+			#if swift(>=4.2)
+			let targetFrame = frame.inset(by: bindingEdgeInsets)
+			#else
+			let targetFrame = UIEdgeInsetsInsetRect(frame, bindingEdgeInsets)
+			#endif
+			guard !targetFrame.isEmpty else { return }
+			
+			bindViews.forEach {
+				if $0.superview == self.targetView {
+					$0.frame = CGRect(origin: .zero, size: targetFrame.size)
+				}
+				else if $0.superview != superview, let superView1 = $0.superview, let superView2 = superview {
+					$0.frame = superView2.convert(targetFrame, to: superView1)
+				}
+				else {
+					$0.frame = targetFrame
+				}
+			}
+			
+			return
+		}
 		
 		var targetFrame: CGRect = .zero
 		#if swift(>=4.2)
@@ -524,6 +562,27 @@ open class FrameLayout<T: UIView>: UIView {
 			}
 			else {
 				targetView.frame = convert(targetFrame, to: targetView.superview)
+			}
+		}
+		
+		var bindViews = bindingViews ?? []
+		if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
+		
+		guard !bindViews.isEmpty else { return }
+		#if swift(>=4.2)
+		targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
+		#else
+		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
+		#endif
+		bindViews.forEach {
+			if $0.superview == targetView {
+				$0.frame = CGRect(origin: .zero, size: targetFrame.size)
+			}
+			else if $0.superview != targetView.superview, let superView1 = $0.superview, let superView2 = targetView.superview {
+				$0.frame = superView2.convert(targetFrame, to: superView1)
+			}
+			else {
+				$0.frame = targetFrame
 			}
 		}
 	}

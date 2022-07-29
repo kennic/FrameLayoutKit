@@ -387,7 +387,7 @@
 			baseConfigurationReference = 23024746510C90D82DBB9804 /* Pods-FrameLayoutKit_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = FrameLayoutKit_Example.entitlements;
+				CODE_SIGN_ENTITLEMENTS = FrameLayoutKit/FrameLayoutKit_Example.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 385YL4KG69;
 				INFOPLIST_FILE = FrameLayoutKit/Info.plist;
@@ -409,7 +409,7 @@
 			baseConfigurationReference = AB5553AC3A0BA7787C1FD21B /* Pods-FrameLayoutKit_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = FrameLayoutKit_Example.entitlements;
+				CODE_SIGN_ENTITLEMENTS = FrameLayoutKit/FrameLayoutKit_Example.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = 385YL4KG69;
 				INFOPLIST_FILE = FrameLayoutKit/Info.plist;
