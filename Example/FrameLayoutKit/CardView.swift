@@ -17,7 +17,11 @@ class CardView: UIView {
 	let dateLabel = UILabel()
 	let messageLabel = UILabel()
 	let expandButton = UIButton(type: .contactAdd)
-	let frameLayout = StackFrameLayout(axis: .horizontal)
+	let frameLayout = HStackLayout() {
+		$0.spacing = 15.0
+		$0.padding(top: 15, left: 15, bottom: 15, right: 15)
+		$0.debug = true
+	}
 	let blueView = UIView()
 	let redView = UIView()
 	var messageFrameLayout: FrameLayout!
@@ -61,7 +65,7 @@ class CardView: UIView {
 			$0.textColor = .black
 		}
 		
-		[blueView, redView, earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton].forEach { addSubview($0) }
+		[blueView, redView, earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton, frameLayout].forEach { addSubview($0) }
 		
 		// Standard syntax:
 		
@@ -107,12 +111,7 @@ class CardView: UIView {
 				$0.spacing = 10
 				
 				($0 + [Label(.yellow), Label(.green), Label(.brown), Label(.systemPink), Label(.blue)]).forEach {
-					$0.willSizeThatFitsBlock = { (sender, size) in
-						if let label = sender.targetView as? UILabel {
-							label.text = "\(size.width) x \(size.height)"
-						}
-					}
-					$0.willLayoutSubviewsBlock = { sender in
+					$0.didLayoutSubviewsBlock = { sender in
 						if let label = sender.targetView as? UILabel {
 							let size = sender.frame.size
 							label.text = "\(size.width) x \(size.height)"
@@ -126,10 +125,7 @@ class CardView: UIView {
 			$0.spacing = 5.0
 		}
 		
-		frameLayout.spacing = 15.0
-		frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-		frameLayout.debug = true
-		addSubview(frameLayout)
+		
 	}
 	
 	func Label(_ color: UIColor) -> UILabel {

@@ -165,8 +165,8 @@ extension ScrollStackView {
 		return self
 	}
 	
-	@discardableResult public func fixItemSize(_ value: CGSize) -> Self {
-		fixItemSize = value
+	@discardableResult public func fixedItemSize(_ value: CGSize) -> Self {
+		fixedItemSize = value
 		return self
 	}
 	

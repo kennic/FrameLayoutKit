@@ -34,10 +34,11 @@ open class FrameLayout: UIView {
 	public var bindingViews: [UIView]?
 	/// edgeInsets that will be applied to binding views
 	public var bindingEdgeInsets: UIEdgeInsets = .zero
+	/// other views that will be binded to this frame
 	public var lazyBindingViews: (() -> [UIView?]?)?
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
-	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It also ignore willSizeThatFits and willLayoutSubviews.
+	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It will also ignore `willSizeThatFits` and `willLayoutSubviews` blocks.
 	public var isEnabled = true
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
@@ -297,6 +298,12 @@ open class FrameLayout: UIView {
 	open func flexible(ratio: CGFloat = -1) -> Self {
 		isFlexible = true
 		flexibleRatio = ratio
+		return self
+	}
+	
+	@discardableResult
+	open func inflexible() -> Self {
+		isFlexible = false
 		return self
 	}
 	

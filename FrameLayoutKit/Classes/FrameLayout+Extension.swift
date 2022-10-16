@@ -92,8 +92,8 @@ public extension ScrollStackView {
 	
 }
 
-infix operator <+
-infix operator +>
+infix operator <+ // frameLayout <+ label
+infix operator +> // frameLayout +> imageView
 
 public extension DoubleFrameLayout {
 	
@@ -151,6 +151,9 @@ public extension FlowFrameLayout {
 	}
 }
 
+/*
+--- No longer need this protocol since we have nested functions ---
+ 
 public protocol With {}
 extension With where Self: FrameLayout {
 	
@@ -180,6 +183,7 @@ extension With where Self: FrameLayout {
 }
 
 extension FrameLayout: With {}
+ */
 
 extension CGSize {
 	

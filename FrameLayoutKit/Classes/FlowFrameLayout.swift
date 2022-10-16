@@ -16,9 +16,7 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	public var distribution: NKLayoutDistribution = .left {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public override var isIntrinsicSizeEnabled: Bool {
@@ -74,9 +72,7 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	public var isJustified: Bool = false {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var lineSpacing: CGFloat {
