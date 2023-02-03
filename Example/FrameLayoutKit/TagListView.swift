@@ -13,7 +13,7 @@ class TagListView: UIView {
 	let flowLayout = FlowFrameLayout<UIButton>(axis: .horizontal)
 	let addButton = UIButton()
 	let removeButton = UIButton()
-	let frameLayout = StackFrameLayout(axis: .vertical)
+	let frameLayout = VStackLayout().spacing(4.0)
 	let colors: [UIColor] = [.red, .green, .blue, .brown, .yellow, .magenta, .black, .orange, .purple, .systemPink]
 	
 	var onChanged: ((TagListView) -> Void)?
@@ -23,10 +23,11 @@ class TagListView: UIView {
 		
 		backgroundColor = .gray
 		
-		flowLayout.interItemSpacing = 4
-		flowLayout.lineSpacing = 4
-		flowLayout.padding(top: 4, left: 4, bottom: 4, right: 4)
-		flowLayout.distribution = .left
+		flowLayout
+			.interitemSpacing(4)
+			.lineSpacing(4)
+			.padding(top: 4, left: 4, bottom: 4, right: 4)
+			.distribution(.left)
 		
 		addButton.setTitle("Add Item", for: .normal)
 		addButton.backgroundColor = .systemBlue
@@ -53,11 +54,10 @@ class TagListView: UIView {
 		frameLayout + flowLayout
 		frameLayout + HStackLayout {
 			$0 + [removeButton, addButton]
-			$0.distribution = .equal
-			$0.fixedSize = CGSize(width: 0, height: 50)
+			
+			$0.distribution(.equal)
+			  .fixedSize(CGSize(width: 0, height: 50))
 		}
-		
-		frameLayout.spacing = 4
 	}
 	
 	required init?(coder: NSCoder) {

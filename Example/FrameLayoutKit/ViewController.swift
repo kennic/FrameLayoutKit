@@ -35,9 +35,11 @@ class ViewController: UIViewController {
 		scrollStackView + NumberPadView()
 		scrollStackView + tagListView
 		
-		scrollStackView.spacing = 20
-		scrollStackView.edgeInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-		scrollStackView.distribution = .center
+		scrollStackView
+			.spacing(20)
+			.padding(top: 50, left: 50, bottom: 50, right: 50)
+			.distribution(.center)
+		
 		view.addSubview(scrollStackView)
     }
 	

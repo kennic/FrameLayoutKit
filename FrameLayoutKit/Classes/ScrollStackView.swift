@@ -46,15 +46,11 @@ open class ScrollStackView: UIView {
 	}
 	
 	override open var frame: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var bounds: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var axis: NKLayoutAxis {
@@ -246,10 +242,10 @@ open class ScrollStackView: UIView {
 	}
 	
 	/// Set fixedContentSize for every FrameLayout inside
-	open var fixItemSize: CGSize {
-		get { frameLayout.fixItemSize }
+	open var fixedItemSize: CGSize {
+		get { frameLayout.fixedItemSize }
 		set {
-			frameLayout.fixItemSize = newValue
+			frameLayout.fixedItemSize = newValue
 			setNeedsLayout()
 		}
 	}

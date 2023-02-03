@@ -20,21 +20,15 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	public var isOverlapped: Bool = false {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var isJustified: Bool = false {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var justifyThreshold: CGFloat = 0.0 {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var ignoreHiddenView: Bool {
@@ -70,9 +64,9 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	/// Set fixedContentSize for every FrameLayout inside
-	open var fixItemSize: CGSize = .zero {
+	open var fixedItemSize: CGSize = .zero {
 		didSet {
-			frameLayouts.forEach { $0.fixedContentSize = fixItemSize }
+			frameLayouts.forEach { $0.fixedContentSize = fixedItemSize }
 		}
 	}
 	
@@ -105,15 +99,11 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	override open var frame: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var bounds: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var clipsToBounds: Bool {
@@ -188,18 +178,21 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 		else {
 			if let view = view, view.superview == nil {
+				/*
 				#if DEBUG
-				if !isUserInteractionEnabled, view is UIControl {
+				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
 					print("⚠️ [FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout.")
 				}
 				#endif
+				*/
 				addSubview(view)
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
+			frameLayout.debugColor = debugColor
 			frameLayout.ignoreHiddenView = ignoreHiddenView
-			frameLayout.fixedContentSize = fixItemSize
+			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.append(frameLayout)
@@ -217,18 +210,21 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 		else {
 			if let view = view, view.superview == nil {
+				/*
 				#if DEBUG
-				if !isUserInteractionEnabled, view is UIControl {
+				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
 					print("⚠️ [FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout.")
 				}
 				#endif
+				*/
 				addSubview(view)
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
+			frameLayout.debugColor = debugColor
 			frameLayout.ignoreHiddenView = ignoreHiddenView
-			frameLayout.fixedContentSize = fixItemSize
+			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			frameLayouts.insert(frameLayout, at: index)
@@ -1266,7 +1262,7 @@ open class ZStackLayout: StackFrameLayout<UIView> {
 	}
 	
 	open override func add(_ view: UIView? = nil) -> FrameLayout<UIView> {
-		return super.add(view).with { $0.flexible() }
+		return super.add(view).flexible()
 	}
 	
 }

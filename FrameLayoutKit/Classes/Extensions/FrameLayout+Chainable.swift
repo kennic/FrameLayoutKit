@@ -11,7 +11,11 @@ import UIKit
 /**
 Supports chaining syntax:
 
-frameLayout.flexible().align(vertical: .center, horizontal: .left).padding(top: 10, bottom: 20).minHeight(100)
+frameLayout
+ .flexible()
+ .align(vertical: .center, horizontal: .left)
+ .padding(top: 10, bottom: 20)
+ .minHeight(100)
 */
 
 extension FrameLayout {

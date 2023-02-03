@@ -30,6 +30,7 @@ class NumberPadView: UIView {
 			button.setTitle(title, for: .normal)
 			button.backgroundColor = color(index: i)
 			button.showsTouchWhenHighlighted = true
+			button.titleLabel?.font = .systemFont(ofSize: 24, weight: .medium)
 			i += 1
 			return button
 		}

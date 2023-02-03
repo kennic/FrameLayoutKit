@@ -118,15 +118,11 @@ open class DoubleFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	override open var frame: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var bounds: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var description: String {
@@ -172,9 +168,7 @@ open class DoubleFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	public var isOverlapped: Bool = false {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	// MARK: -

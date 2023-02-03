@@ -30,4 +30,14 @@ extension DoubleFrameLayout {
 		return self
 	}
 	
+	@discardableResult public func leftView(_ view: UIView?) -> Self {
+		setLeft(view)
+		return self
+	}
+	
+	@discardableResult public func rightView(_ view: UIView?) -> Self {
+		setRight(view)
+		return self
+	}
+	
 }

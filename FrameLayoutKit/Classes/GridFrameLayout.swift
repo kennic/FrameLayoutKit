@@ -218,6 +218,12 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 		super.init(coder: aDecoder)
 	}
 	
+	@discardableResult
+	public init(_ block: (GridFrameLayout) throws -> Void) rethrows {
+		super.init()
+		try block(self)
+	}
+	
 	// MARK: -
 	
 	public func viewAt(row: Int, column: Int) -> T? {
