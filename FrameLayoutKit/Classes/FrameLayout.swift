@@ -28,6 +28,9 @@ public enum NKContentHorizontalAlignment {
 FrameLayout is the fundamental component of the kit. This class will automatically adjust the size and position of the view assigned to it based on the size and position of the frameLayout itself, and the specified alignment value.
 */
 open class FrameLayout: UIView {
+	/// Show warnings on debug console when adding a UIControl without `isUserInteractionEnabled` turned on, which will make that control untouchabe
+	public static var showDebugWarnings = false
+	
 	/// Target view that handled by this frameLayout
 	public var targetView: UIView?
 	/// Additional views that will have their frames binding to `targetView`'s frame

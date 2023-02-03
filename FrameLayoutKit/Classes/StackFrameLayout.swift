@@ -20,21 +20,15 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	public var isOverlapped: Bool = false {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var isJustified: Bool = false {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var justifyThreshold: CGFloat = 0.0 {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var ignoreHiddenView: Bool {
@@ -105,15 +99,11 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	override open var frame: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var bounds: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var clipsToBounds: Bool {
@@ -188,18 +178,17 @@ open class StackFrameLayout: FrameLayout {
 		}
 		else {
 			if let view = view, view.superview == nil {
-				/*
 				#if DEBUG
-				if !isUserInteractionEnabled, view is UIControl {
+				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
 					print("⚠️ [FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout.")
 				}
 				#endif
-				*/
 				addSubview(view)
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
+			frameLayout.debugColor = debugColor
 			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
@@ -220,7 +209,7 @@ open class StackFrameLayout: FrameLayout {
 		else {
 			if let view = view, view.superview == nil {
 				#if DEBUG
-				if !isUserInteractionEnabled, view is UIControl {
+				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
 					print("⚠️ [FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout.")
 				}
 				#endif
@@ -229,6 +218,7 @@ open class StackFrameLayout: FrameLayout {
 			
 			let frameLayout = FrameLayout(targetView: view)
 			frameLayout.debug = debug
+			frameLayout.debugColor = debugColor
 			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize

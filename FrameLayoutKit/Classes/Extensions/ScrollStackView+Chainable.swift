@@ -175,4 +175,9 @@ extension ScrollStackView {
 		return self
 	}
 	
+	@discardableResult public func debug(_ value: Bool) -> Self {
+		debug = value
+		return self
+	}
+	
 }

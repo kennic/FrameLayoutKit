@@ -46,15 +46,11 @@ open class ScrollStackView: UIView {
 	}
 	
 	override open var frame: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	override open var bounds: CGRect {
-		didSet {
-			setNeedsLayout()
-		}
+		didSet { setNeedsLayout() }
 	}
 	
 	public var axis: NKLayoutAxis {
