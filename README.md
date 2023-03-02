@@ -96,9 +96,11 @@ frameLayout + VStackLayout {
 	$0.spacing = 5.0 // spacing between views
 }
 
-frameLayout.spacing = 15.0
-frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-frameLayout.debug = true // show debug frame
+frameLayout
+   .spacing(15)
+   .padding(top: 15, left: 15, bottom: 15, right: 15)
+   .debug(true)
+}
 }
 ```
 
