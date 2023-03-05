@@ -180,4 +180,19 @@ extension ScrollStackView {
 		return self
 	}
 	
+	@discardableResult public func willLayoutSubviews(_ block: @escaping (ScrollStackView) -> Void) -> Self {
+		willLayoutSubviewsBlock = block
+		return self
+	}
+	
+	@discardableResult public func didLayoutSubviews(_ block: @escaping (ScrollStackView) -> Void) -> Self {
+		didLayoutSubviewsBlock = block
+		return self
+	}
+	
+	@discardableResult public func willSizeThatFits(_ block: @escaping (ScrollStackView, CGSize) -> Void) -> Self {
+		willSizeThatFitsBlock = block
+		return self
+	}
+	
 }

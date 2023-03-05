@@ -109,8 +109,14 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
+	/// This block will be called when a new StackFrameLayout was added to a new row
 	public var onNewStackBlock: ((FlowFrameLayout, StackFrameLayout) -> Void)? = nil
 	
+	/// This block will be called when a new StackFrameLayout was added to a new row
+	public func onNewStackBlock(_ block: @escaping (_ flowLayout: FlowFrameLayout, _ addedStack: StackFrameLayout) -> Void) -> Self {
+		onNewStackBlock = block
+		return self
+	}
 	// MARK: -
 	
 	public convenience init(axis: NKLayoutAxis) {

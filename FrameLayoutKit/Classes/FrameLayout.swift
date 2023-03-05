@@ -209,7 +209,7 @@ open class FrameLayout: UIView {
 	public var willSizeThatFitsBlock: ((FrameLayout, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
 	public var willLayoutSubviewsBlock: ((FrameLayout) -> Void)?
-	/// Block will be called at the end of layoutSubviews function
+	/// Block will be called after layoutSubviews finished
 	public var didLayoutSubviewsBlock: ((FrameLayout) -> Void)?
 	
 	override open var frame: CGRect {

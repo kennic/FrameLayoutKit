@@ -210,6 +210,11 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func isIntrinsicSizeEnabled(_ value: Bool) -> Self {
+		isIntrinsicSizeEnabled = value
+		return self
+	}
+	
 	@discardableResult public func willLayoutSubviews(_ block: @escaping (FrameLayout) -> Void) -> Self {
 		willLayoutSubviewsBlock = block
 		return self
