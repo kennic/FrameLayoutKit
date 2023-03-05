@@ -16,7 +16,7 @@ class CardView: UIView {
 	let titleLabel = UILabel()
 	let dateLabel = UILabel()
 	let messageLabel = UILabel()
-	let expandButton = UIButton(type: .contactAdd)
+	let expandButton = UIButton()
 	let frameLayout = HStackLayout() {
 		$0.spacing = 15.0
 		$0.padding(top: 15, left: 15, bottom: 15, right: 15)
@@ -41,6 +41,8 @@ class CardView: UIView {
 		blueView.backgroundColor = .systemBlue
 		redView.backgroundColor = .systemRed
 		
+		expandButton.setImage(UIImage(named: "collapse_24x24"), for: .normal)
+		expandButton.setImage(UIImage(named: "expand_24x24"), for: .selected)
 		expandButton.addTarget(self, action: #selector(onButtonTap), for: .touchUpInside)
 		
 		nameLabel.font = .systemFont(ofSize: 18, weight: .bold)
@@ -69,23 +71,6 @@ class CardView: UIView {
 		
 		// Standard syntax:
 		
-		/*
-		frameLayout.add(VStackLayout {
-		$0.add(earthImageView).alignment = (.top, .center)
-		$0.addSpace().flexible()
-		$0.add(rocketImageView).alignment = (.center, .center)
-		})
-		
-		frameLayout.add(VStackLayout {
-		$0.add([nameLabel, dateLabel])
-		$0.addSpace(10)
-		$0.add(messageLabel)
-		$0.spacing = 5.0
-		})
-		*/
-		
-		// Operand syntax:
-		
 		frameLayout + VStackLayout {
 			($0 + earthImageView).alignment = (.top, .center)
 			($0 + 0).flexible()
@@ -95,10 +80,11 @@ class CardView: UIView {
 		frameLayout + VStackLayout {
 			$0 + HStackLayout {
 				($0 + nameLabel)//.flexible(ratio: 0.8) // takes 80% of flexible width, uncomment to try it
-				($0 + titleLabel).extendSize = CGSize(width: 10, height: 0)
+				($0 + titleLabel).extends(size: CGSize(width: 10, height: 0))
 				($0 + 0).flexible()
 				$0 + expandButton
-				$0.spacing = 10
+				
+				$0.spacing(10)
 			}
 			$0 + dateLabel
 //			$0 + 10.0
@@ -122,7 +108,7 @@ class CardView: UIView {
 			//---
 			
 			$0.flexible()
-			$0.spacing = 5.0
+				.spacing(5)
 		}
 		
 		
@@ -150,6 +136,7 @@ class CardView: UIView {
 	
 	@objc func onButtonTap() {
 		messageFrameLayout.isEnabled.toggle()
+		expandButton.isSelected = !messageFrameLayout.isEnabled
 		UIView.animate(withDuration: 0.25) { self.messageLabel.alpha = self.messageFrameLayout.isEnabled ? 1.0 : 0.0 }
 		
 		setNeedsLayout()

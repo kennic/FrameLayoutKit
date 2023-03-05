@@ -161,7 +161,12 @@ extension FrameLayout {
 	}
 	
 	@discardableResult public func bindFrame(to views: UIView ...) -> Self {
-		bindingViews = views
+		if let bindingViews = bindingViews, !bindingViews.isEmpty {
+			self.bindingViews?.append(contentsOf: views)
+		}
+		else {
+			bindingViews = views
+		}
 		return self
 	}
 	
@@ -212,6 +217,11 @@ extension FrameLayout {
 	
 	@discardableResult public func isIntrinsicSizeEnabled(_ value: Bool) -> Self {
 		isIntrinsicSizeEnabled = value
+		return self
+	}
+	
+	@discardableResult public func isFlexible(_ value: Bool) -> Self {
+		isFlexible = value
 		return self
 	}
 	

@@ -404,29 +404,7 @@ open class FrameLayout: UIView {
 		}
 		
 		guard let targetView = targetView, !bounds.isEmpty else {
-			var bindViews = bindingViews ?? []
-			if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
-			
-			guard !bindViews.isEmpty else { return }
-			#if swift(>=4.2)
-			let targetFrame = frame.inset(by: bindingEdgeInsets)
-			#else
-			let targetFrame = UIEdgeInsetsInsetRect(frame, bindingEdgeInsets)
-			#endif
-			guard !targetFrame.isEmpty else { return }
-			
-			bindViews.forEach {
-				if $0.superview == self.targetView {
-					$0.frame = CGRect(origin: .zero, size: targetFrame.size)
-				}
-				else if $0.superview != superview, let superView1 = $0.superview, let superView2 = superview {
-					$0.frame = superView2.convert(targetFrame, to: superView1)
-				}
-				else {
-					$0.frame = targetFrame
-				}
-			}
-			
+			bindViews(to: self)
 			return
 		}
 		
@@ -575,15 +553,18 @@ open class FrameLayout: UIView {
 			}
 		}
 		
+		bindViews(to: targetView)
+	}
+	
+	func bindViews(to targetView: UIView) {
 		var bindViews = bindingViews ?? []
 		if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
-		
 		guard !bindViews.isEmpty else { return }
-		#if swift(>=4.2)
-		targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
-		#else
-		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
-		#endif
+#if swift(>=4.2)
+		let targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
+#else
+		let targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
+#endif
 		bindViews.forEach {
 			if $0.superview == targetView {
 				$0.frame = CGRect(origin: .zero, size: targetFrame.size)
