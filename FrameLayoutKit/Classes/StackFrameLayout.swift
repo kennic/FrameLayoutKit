@@ -32,70 +32,50 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	override open var ignoreHiddenView: Bool {
-		didSet {
-			frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView }
-		}
+		didSet { frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView } }
 	}
 	
 	override open var shouldCacheSize: Bool {
-		didSet {
-			frameLayouts.forEach { $0.shouldCacheSize = shouldCacheSize }
-		}
+		didSet { frameLayouts.forEach { $0.shouldCacheSize = shouldCacheSize } }
 	}
 	
 	override open var debug: Bool {
-		didSet {
-			frameLayouts.forEach { $0.debug = debug }
-		}
+		didSet { frameLayouts.forEach { $0.debug = debug } }
 	}
 	
 	/// Set minContentSize for every FrameLayout inside
 	open var minItemSize: CGSize = .zero {
-		didSet {
-			frameLayouts.forEach { $0.minContentSize = minItemSize }
-		}
+		didSet { frameLayouts.forEach { $0.minContentSize = minItemSize } }
 	}
 	
 	/// Set maxContentSize for every FrameLayout inside
 	open var maxItemSize: CGSize = .zero {
-		didSet {
-			frameLayouts.forEach { $0.maxContentSize = maxItemSize }
-		}
+		didSet { frameLayouts.forEach { $0.maxContentSize = maxItemSize } }
 	}
 	
 	/// Set fixedContentSize for every FrameLayout inside
 	open var fixedItemSize: CGSize = .zero {
-		didSet {
-			frameLayouts.forEach { $0.fixedContentSize = fixedItemSize }
-		}
+		didSet { frameLayouts.forEach { $0.fixedContentSize = fixedItemSize } }
 	}
 	
 	/// Allow content view to expand its height to fill its frameLayout when the layout is higher than the view itself
 	override open var allowContentVerticalGrowing: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentVerticalGrowing = allowContentVerticalGrowing }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentVerticalGrowing = allowContentVerticalGrowing } }
 	}
 	
 	/// Allow content view to shrink its height to fit its frameLayout when the layout is shorter than the view itself
 	override open var allowContentVerticalShrinking: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentVerticalShrinking = allowContentVerticalShrinking }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentVerticalShrinking = allowContentVerticalShrinking } }
 	}
 	
 	/// Allow content view to expand its width to fill its frameLayout when the layout is wider than the view itself
 	override open var allowContentHorizontalGrowing: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentHorizontalGrowing = allowContentHorizontalGrowing }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentHorizontalGrowing = allowContentHorizontalGrowing } }
 	}
 	
 	/// Allow content view to shrink its width to fit its frameLayout when the layout is narrower than the view itself
 	override open var allowContentHorizontalShrinking: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking } }
 	}
 	
 	override open var frame: CGRect {
@@ -107,9 +87,7 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	override open var clipsToBounds: Bool {
-		didSet {
-			frameLayouts.forEach { $0.clipsToBounds = clipsToBounds }
-		}
+		didSet { frameLayouts.forEach { $0.clipsToBounds = clipsToBounds } }
 	}
 	
 	public var firstFrameLayout: FrameLayout? { frameLayouts.first }
@@ -307,20 +285,6 @@ open class StackFrameLayout: FrameLayout {
 		return self
 	}
 	
-	/// Search for the FrameLayout that handling `view` in all the tree structure of this StackFrameLayout
-	public func findFrameLayout(handling view: UIView) -> FrameLayout? {
-		if targetView == view { return self }
-		
-		for layout in frameLayouts {
-			if layout.targetView == view { return layout }
-			if let stack = layout as? StackFrameLayout {
-				return stack.findFrameLayout(handling: view)
-			}
-		}
-		
-		return nil
-	}
-	
 	// MARK: -
 	
 	public func frameLayout(at index: Int) -> FrameLayout? {
@@ -329,11 +293,18 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	public func frameLayout(with view: UIView) -> FrameLayout? {
-		return frameLayouts.first(where: { $0.targetView == view })
+		if targetView == view { return self }
+		
+		for layout in frameLayouts {
+			if layout.targetView == view { return layout }
+			if let stack = layout as? StackFrameLayout { return stack.frameLayout(with: view) }
+		}
+		
+		return nil
 	}
 	
 	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
-		var stop: Bool = false
+		var stop = false
 		var index = 0
 		
 		for layout in frameLayouts {
@@ -358,13 +329,8 @@ open class StackFrameLayout: FrameLayout {
 		frameLayouts.forEach { $0.setNeedsLayout() }
 	}
 	
-	fileprivate func visibleFrames() -> [FrameLayout] {
-		return frameLayouts.filter { !$0.isEmpty }
-	}
-	
-	fileprivate func numberOfVisibleFrames() -> Int {
-		return visibleFrames().count
-	}
+	fileprivate func visibleFrames() -> [FrameLayout] { frameLayouts.filter { !$0.isEmpty } }
+	fileprivate func numberOfVisibleFrames() -> Int { visibleFrames().count }
 	
 	// MARK: -
 	
