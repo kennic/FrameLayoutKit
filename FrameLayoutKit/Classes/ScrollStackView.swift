@@ -436,9 +436,6 @@ open class ScrollStackView: UIView {
 	public func frameLayout(with view: UIView) -> FrameLayout? { frameLayout.frameLayout(with: view) }
 	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) { frameLayout.enumerate(block) }
 
-	/// Search for the FrameLayout that handling `view` in all the tree structure of this StackFrameLayout
-	public func findFrameLayout(handling view: UIView) -> FrameLayout? { frameLayout.findFrameLayout(handling: view) }
-	
 	@discardableResult
 	public func flexible(ratio: CGFloat = -1) -> Self {
 		frameLayout.flexible(ratio: ratio)
