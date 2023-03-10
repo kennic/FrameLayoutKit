@@ -307,6 +307,20 @@ open class StackFrameLayout: FrameLayout {
 		return self
 	}
 	
+	/// Search for the FrameLayout that handling `view` in all the tree structure of this StackFrameLayout
+	public func findFrameLayout(handling view: UIView) -> FrameLayout? {
+		if targetView == view { return self }
+		
+		for layout in frameLayouts {
+			if layout.targetView == view { return layout }
+			if let stack = layout as? StackFrameLayout {
+				return stack.findFrameLayout(handling: view)
+			}
+		}
+		
+		return nil
+	}
+	
 	// MARK: -
 	
 	public func frameLayout(at index: Int) -> FrameLayout? {

@@ -431,21 +431,13 @@ open class ScrollStackView: UIView {
 	
 	// MARK: -
 	
-	public func view(at index: Int) -> UIView? {
-		return frameLayout.frameLayout(at: index)?.targetView
-	}
-	
-	public func frameLayout(at index: Int) -> FrameLayout? {
-		return frameLayout.frameLayout(at: index)
-	}
-	
-	public func frameLayout(with view: UIView) -> FrameLayout? {
-		return frameLayout.frameLayout(with: view)
-	}
-	
-	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
-		frameLayout.enumerate(block)
-	}
+	public func view(at index: Int) -> UIView? { frameLayout.frameLayout(at: index)?.targetView }
+	public func frameLayout(at index: Int) -> FrameLayout? { frameLayout.frameLayout(at: index) }
+	public func frameLayout(with view: UIView) -> FrameLayout? { frameLayout.frameLayout(with: view) }
+	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) { frameLayout.enumerate(block) }
+
+	/// Search for the FrameLayout that handling `view` in all the tree structure of this StackFrameLayout
+	public func findFrameLayout(handling view: UIView) -> FrameLayout? { frameLayout.findFrameLayout(handling: view) }
 	
 	@discardableResult
 	public func flexible(ratio: CGFloat = -1) -> Self {
