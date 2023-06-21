@@ -32,15 +32,31 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	override open var ignoreHiddenView: Bool {
-		didSet { frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView } }
+		didSet {
+			super.ignoreHiddenView = ignoreHiddenView
+			frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView }
+		}
 	}
 	
 	override open var shouldCacheSize: Bool {
-		didSet { frameLayouts.forEach { $0.shouldCacheSize = shouldCacheSize } }
+		didSet {
+			super.shouldCacheSize = shouldCacheSize
+			frameLayouts.forEach { $0.shouldCacheSize = shouldCacheSize }
+		}
 	}
 	
 	override open var debug: Bool {
-		didSet { frameLayouts.forEach { $0.debug = debug } }
+		didSet {
+			super.debug = debug
+			frameLayouts.forEach { $0.debug = debug }
+		}
+	}
+	
+	override open var debugColor: UIColor?{
+		didSet {
+			super.debugColor = debugColor
+			frameLayouts.forEach { $0.debugColor = debugColor }
+		}
 	}
 	
 	/// Set minContentSize for every FrameLayout inside
@@ -87,7 +103,10 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	override open var clipsToBounds: Bool {
-		didSet { frameLayouts.forEach { $0.clipsToBounds = clipsToBounds } }
+		didSet {
+			super.clipsToBounds = clipsToBounds
+			frameLayouts.forEach { $0.clipsToBounds = clipsToBounds }
+		}
 	}
 	
 	public var firstFrameLayout: FrameLayout? { frameLayouts.first }

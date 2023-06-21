@@ -74,6 +74,11 @@ open class ScrollStackView: UIView {
 		set { frameLayout.debug = newValue }
 	}
 	
+	public var debugColor: UIColor? {
+		get { frameLayout.debugColor }
+		set { frameLayout.debugColor = newValue }
+	}
+	
 	public var isOverlapped: Bool {
 		get { frameLayout.isOverlapped }
 		set { frameLayout.isOverlapped = newValue }

@@ -84,8 +84,17 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	override open var debug: Bool {
 		didSet {
+			super.debug = debug
 			frameLayout1.debug = debug
 			frameLayout2.debug = debug
+		}
+	}
+	
+	override open var debugColor: UIColor?{
+		didSet {
+			super.debugColor = debugColor
+			frameLayout1.debugColor = debugColor
+			frameLayout2.debugColor = debugColor
 		}
 	}
 	

@@ -64,11 +64,11 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	override public var debug: Bool {
-		didSet {
-			stackLayout.debug = debug
-			stackLayout.frameLayouts.forEach { $0.debug = debug }
-			setNeedsLayout()
-		}
+		didSet { stackLayout.debug = debug }
+	}
+	
+	override public var debugColor: UIColor? {
+		didSet { stackLayout.debugColor = debugColor }
 	}
 	
 	public var isJustified: Bool = false {
