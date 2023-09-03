@@ -20,7 +20,6 @@ class CardView: UIView {
 	let frameLayout = HStackLayout() {
 		$0.spacing = 15.0
 		$0.padding(top: 15, left: 15, bottom: 15, right: 15)
-		$0.debug = true
 	}
 	let blueView = UIView()
 	let redView = UIView()
@@ -108,10 +107,16 @@ class CardView: UIView {
 			//---
 			
 			$0.flexible()
-				.spacing(5)
+			  .spacing(5)
 		}
 		
-		
+		frameLayout
+//			.debug(true)
+			.isSkeletonMode(true)
+
+		DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+			self.frameLayout.isSkeletonMode(false)
+		}
 	}
 	
 	func Label(_ color: UIColor) -> UILabel {

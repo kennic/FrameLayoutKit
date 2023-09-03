@@ -161,7 +161,7 @@ extension FrameLayout {
 	}
 	
 	@discardableResult public func bindFrame(to views: UIView ...) -> Self {
-		if let bindingViews = bindingViews, !bindingViews.isEmpty {
+		if let bindingViews, !bindingViews.isEmpty {
 			self.bindingViews?.append(contentsOf: views)
 		}
 		else {
@@ -254,6 +254,33 @@ extension FrameLayout {
 	
 	@discardableResult public func clipsToBounds(_ value: Bool) -> Self {
 		clipsToBounds = value
+		return self
+	}
+	
+	@discardableResult public func isUserInteractionEnabled(_ value: Bool) -> Self {
+		isUserInteractionEnabled = value
+		return self
+	}
+	
+	// Skeleton
+	
+	@discardableResult public func isSkeletonMode(_ value: Bool) -> Self {
+		isSkeletonMode = value
+		return self
+	}
+	
+	@discardableResult public func skeletonColor(_ value: UIColor) -> Self {
+		skeletonColor = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMinSize(_ value: CGSize) -> Self {
+		skeletonMinSize = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMaxSize(_ value: CGSize) -> Self {
+		skeletonMaxSize = value
 		return self
 	}
 	

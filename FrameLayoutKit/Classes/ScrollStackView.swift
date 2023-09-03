@@ -315,6 +315,38 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	// Skeleton
+	
+	/// set color for skeleton mode
+	public var skeletonColor: UIColor {
+		get { frameLayout.skeletonColor }
+		set {
+			frameLayout.skeletonColor = newValue
+			setNeedsLayout()
+		}
+	}
+	public var skeletonMinSize: CGSize {
+		get { frameLayout.skeletonMinSize }
+		set {
+			frameLayout.skeletonMinSize = newValue
+			setNeedsLayout()
+		}
+	}
+	public var skeletonMaxSize: CGSize {
+		get { frameLayout.skeletonMaxSize }
+		set {
+			frameLayout.skeletonMaxSize = newValue
+			setNeedsLayout()
+		}
+	}
+	public var isSkeletonMode: Bool {
+		get { frameLayout.isSkeletonMode }
+		set {
+			frameLayout.isSkeletonMode = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var frameLayouts: [FrameLayout] {
 		get { frameLayout.frameLayouts }
 		set { frameLayout.frameLayouts = newValue }
@@ -355,7 +387,7 @@ open class ScrollStackView: UIView {
 		self.distribution = distribution
 		
 		defer {
-			if let views = views, !views.isEmpty {
+			if let views, !views.isEmpty {
 				self.views = views
 			}
 		}
@@ -456,7 +488,8 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
 		let layout = frameLayout.add(view)
-		if let view = view { scrollView.addSubview(view) }
+		layout.isUserInteractionEnabled = true
+		if let view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
 	}
@@ -469,7 +502,8 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
 		let layout = frameLayout.insert(view, at: index)
-		if let view = view { scrollView.insertSubview(view, at: index) }
+		layout.isUserInteractionEnabled = true
+		if let view { scrollView.insertSubview(view, at: index) }
 		setNeedsLayout()
 		return layout
 	}

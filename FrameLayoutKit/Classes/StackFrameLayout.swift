@@ -94,6 +94,10 @@ open class StackFrameLayout: FrameLayout {
 		didSet { frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking } }
 	}
 	
+	public override var isUserInteractionEnabled: Bool {
+		didSet { frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled } }
+	}
+	
 	override open var frame: CGRect {
 		didSet { setNeedsLayout() }
 	}
@@ -137,6 +141,31 @@ open class StackFrameLayout: FrameLayout {
 		}
 	}
 	
+	// Skeleton
+	
+	/// set color for skeleton mode
+	override public var skeletonColor: UIColor {
+		didSet {
+			frameLayouts.forEach { $0.skeletonColor = skeletonColor }
+		}
+	}
+	override public var skeletonMinSize: CGSize {
+		didSet {
+			frameLayouts.forEach { $0.skeletonMinSize = skeletonMinSize }
+		}
+	}
+	override public var skeletonMaxSize: CGSize {
+		didSet {
+			frameLayouts.forEach { $0.skeletonMaxSize = skeletonMaxSize }
+		}
+	}
+	override public var isSkeletonMode: Bool {
+		didSet {
+			frameLayouts.forEach { $0.isSkeletonMode = isSkeletonMode }
+			setNeedsLayout()
+		}
+	}
+	
 	// MARK: -
 	
 	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [UIView]? = nil) {
@@ -145,9 +174,7 @@ open class StackFrameLayout: FrameLayout {
 		self.axis = axis
 		self.distribution = distribution
 		
-		if let views = views {
-			add(views)
-		}
+		if let views { add(views) }
 	}
 	
 	public required init() {
@@ -169,12 +196,13 @@ open class StackFrameLayout: FrameLayout {
 	@discardableResult
 	open func add(_ view: UIView? = nil) -> FrameLayout {
 		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil {
+			if let view, view.superview == nil {
 				#if DEBUG
 				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
 					print("⚠️ [FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout.")
@@ -184,12 +212,10 @@ open class StackFrameLayout: FrameLayout {
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
-			frameLayout.debug = debug
-			frameLayout.debugColor = debugColor
-			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
@@ -199,12 +225,13 @@ open class StackFrameLayout: FrameLayout {
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
 		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil {
+			if let view, view.superview == nil {
 				#if DEBUG
 				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
 					print("⚠️ [FrameLayoutKit] \(view) was automatically added to StackFrameLayout \(self) which was disabled user interation. This could make your control unable to interact. You can either set isUserInteractionEnabled = true for this FrameLayout or addSubview(your control) before adding to frameLayout.")
@@ -214,16 +241,23 @@ open class StackFrameLayout: FrameLayout {
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
-			frameLayout.debug = debug
-			frameLayout.debugColor = debugColor
-			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
 		}
+	}
+	
+	func applyCommonAttributes(to frameLayout: FrameLayout) {
+		frameLayout.debug = debug
+		frameLayout.debugColor = debugColor
+		frameLayout.ignoreHiddenView = ignoreHiddenView
+		frameLayout.isSkeletonMode = isSkeletonMode || frameLayout.isSkeletonMode
+		frameLayout.skeletonColor = skeletonColor
+		frameLayout.isUserInteractionEnabled = isUserInteractionEnabled
 	}
 	
 	@discardableResult
@@ -282,7 +316,7 @@ open class StackFrameLayout: FrameLayout {
 			currentFrameLayout = frameLayouts[index]
 		}
 		
-		if let currentFrameLayout = currentFrameLayout, currentFrameLayout != frameLayout {
+		if let currentFrameLayout, currentFrameLayout != frameLayout {
 			if currentFrameLayout.superview == self {
 				currentFrameLayout.removeFromSuperview()
 			}

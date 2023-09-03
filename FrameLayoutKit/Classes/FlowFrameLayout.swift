@@ -90,6 +90,12 @@ open class FlowFrameLayout: FrameLayout {
 		}
 	}
 	
+	public override var isUserInteractionEnabled: Bool {
+		didSet {
+			stackLayout.frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled }
+		}
+	}
+	
 	public var stackCount: Int { stackLayout.frameLayouts.count }
 	public var stacks: [StackFrameLayout] { stackLayout.frameLayouts as? [StackFrameLayout] ?? [] }
 	public var firstStack: StackFrameLayout? { stackLayout.firstFrameLayout as? StackFrameLayout }

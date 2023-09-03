@@ -42,7 +42,9 @@ open class FrameLayout: UIView {
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It will also ignore `willSizeThatFits` and `willLayoutSubviews` blocks.
-	public var isEnabled = true
+	public var isEnabled = true {
+		didSet { skeletonView?.isHidden = targetView == nil || !isEnabled || isEmpty }
+	}
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
 	/// Add translation position to view
@@ -192,11 +194,13 @@ open class FrameLayout: UIView {
 		}
 	}
 	
+	/// Set fixed width of targetView
 	public var fixedContentWidth: CGFloat {
 		get { fixedContentSize.width }
 		set { fixedContentSize.width = newValue }
 	}
 	
+	/// Set fixed height of targetView
 	public var fixedContentHeight: CGFloat {
 		get { fixedContentSize.height }
 		set { fixedContentSize.height = newValue }
@@ -267,7 +271,29 @@ open class FrameLayout: UIView {
 	
 	/// Returns intrinsic content size
 	open override var intrinsicContentSize: CGSize {
-		return contentSizeThatFits(size: bounds.size)
+		return contentSizeThatFits(size: CGSize(width: UIScreen.main.nativeBounds.width, height: .greatestFiniteMagnitude))
+	}
+	
+	// Skeleton
+	
+	public var skeletonView: FLSkeletonView?
+	/// set color for skeleton mode
+	public var skeletonColor: UIColor = UIColor(white: 0.8, alpha: 1.0)
+	public var skeletonMinSize: CGSize = .zero
+	public var skeletonMaxSize: CGSize = .zero
+	public var isSkeletonMode: Bool = false {
+		didSet {
+			if isSkeletonMode {
+				skeletonView = FLSkeletonView()
+				skeletonView!.backgroundColor = skeletonColor
+				addSubview(skeletonView!)
+				setNeedsLayout()
+			}
+			else {
+				skeletonView?.removeFromSuperview()
+				skeletonView = nil
+			}
+		}
 	}
 	
 	// MARK: -
@@ -400,6 +426,13 @@ open class FrameLayout: UIView {
 		super.layoutSubviews()
 		
 		defer {
+			if let skeletonView {
+				var skeletonFrame: CGRect = targetView != nil ? convert(targetView!.frame, from: targetView!.superview) : bounds.inset(by: edgeInsets)
+				skeletonFrame.size.limitedTo(minSize: skeletonMinSize, maxSize: skeletonMaxSize)
+				skeletonView.frame = skeletonFrame
+				skeletonView.isHidden = targetView == nil || !isEnabled || isEmpty
+			}
+			
 			didLayoutSubviewsBlock?(self)
 		}
 		

@@ -195,4 +195,26 @@ extension ScrollStackView {
 		return self
 	}
 	
+	// Skeleton
+	
+	@discardableResult public func isSkeletonMode(_ value: Bool) -> Self {
+		isSkeletonMode = value
+		return self
+	}
+	
+	@discardableResult public func skeletonColor(_ value: UIColor) -> Self {
+		skeletonColor = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMinSize(_ value: CGSize) -> Self {
+		skeletonMinSize = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMaxSize(_ value: CGSize) -> Self {
+		skeletonMaxSize = value
+		return self
+	}
+	
 }

@@ -138,6 +138,38 @@ open class DoubleFrameLayout: FrameLayout {
 		return "[\(super.description)]\n[frameLayout1: \(String(describing: frameLayout1))]\n-[frameLayout2: \(String(describing: frameLayout2))]"
 	}
 	
+	// Skeleton
+	
+	/// set color for skeleton mode
+	override public var skeletonColor: UIColor {
+		get { frameLayout1.skeletonColor }
+		set {
+			super.skeletonColor = newValue
+			frameLayout1.skeletonColor = newValue
+			frameLayout2.skeletonColor = newValue
+		}
+	}
+	override public var skeletonMinSize: CGSize {
+		get { frameLayout1.skeletonMinSize }
+		set {
+			frameLayout1.skeletonMinSize = newValue
+			frameLayout2.skeletonMinSize = newValue
+		}
+	}
+	override public var skeletonMaxSize: CGSize {
+		get { frameLayout1.skeletonMaxSize }
+		set {
+			frameLayout1.skeletonMaxSize = newValue
+			frameLayout2.skeletonMaxSize = newValue
+		}
+	}
+	override public var isSkeletonMode: Bool {
+		didSet {
+			frameLayout1.isSkeletonMode = isSkeletonMode
+			frameLayout2.isSkeletonMode = isSkeletonMode
+		}
+	}
+	
 	// MARK: -
 	
 	public var frameLayout1: FrameLayout = FrameLayout() {
@@ -180,6 +212,13 @@ open class DoubleFrameLayout: FrameLayout {
 		didSet { setNeedsLayout() }
 	}
 	
+	public override var isUserInteractionEnabled: Bool {
+		didSet {
+			frameLayout1.isUserInteractionEnabled = isUserInteractionEnabled
+			frameLayout2.isUserInteractionEnabled = isUserInteractionEnabled
+		}
+	}
+	
 	// MARK: -
 	
 	@discardableResult
@@ -195,7 +234,7 @@ open class DoubleFrameLayout: FrameLayout {
 		self.distribution = distribution
 		
 		defer {
-			if let views = views {
+			if let views {
 				let count = views.count
 				
 				if count > 0 {
