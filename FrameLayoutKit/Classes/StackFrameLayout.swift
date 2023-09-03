@@ -33,69 +33,69 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	
 	override open var ignoreHiddenView: Bool {
 		didSet {
+			super.ignoreHiddenView = ignoreHiddenView
 			frameLayouts.forEach { $0.ignoreHiddenView = ignoreHiddenView }
 		}
 	}
 	
 	override open var shouldCacheSize: Bool {
 		didSet {
+			super.shouldCacheSize = shouldCacheSize
 			frameLayouts.forEach { $0.shouldCacheSize = shouldCacheSize }
 		}
 	}
 	
 	override open var debug: Bool {
 		didSet {
+			super.debug = debug
 			frameLayouts.forEach { $0.debug = debug }
+		}
+	}
+	
+	override open var debugColor: UIColor?{
+		didSet {
+			super.debugColor = debugColor
+			frameLayouts.forEach { $0.debugColor = debugColor }
 		}
 	}
 	
 	/// Set minContentSize for every FrameLayout inside
 	open var minItemSize: CGSize = .zero {
-		didSet {
-			frameLayouts.forEach { $0.minContentSize = minItemSize }
-		}
+		didSet { frameLayouts.forEach { $0.minContentSize = minItemSize } }
 	}
 	
 	/// Set maxContentSize for every FrameLayout inside
 	open var maxItemSize: CGSize = .zero {
-		didSet {
-			frameLayouts.forEach { $0.maxContentSize = maxItemSize }
-		}
+		didSet { frameLayouts.forEach { $0.maxContentSize = maxItemSize } }
 	}
 	
 	/// Set fixedContentSize for every FrameLayout inside
 	open var fixedItemSize: CGSize = .zero {
-		didSet {
-			frameLayouts.forEach { $0.fixedContentSize = fixedItemSize }
-		}
+		didSet { frameLayouts.forEach { $0.fixedContentSize = fixedItemSize } }
 	}
 	
 	/// Allow content view to expand its height to fill its frameLayout when the layout is higher than the view itself
 	override open var allowContentVerticalGrowing: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentVerticalGrowing = allowContentVerticalGrowing }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentVerticalGrowing = allowContentVerticalGrowing } }
 	}
 	
 	/// Allow content view to shrink its height to fit its frameLayout when the layout is shorter than the view itself
 	override open var allowContentVerticalShrinking: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentVerticalShrinking = allowContentVerticalShrinking }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentVerticalShrinking = allowContentVerticalShrinking } }
 	}
 	
 	/// Allow content view to expand its width to fill its frameLayout when the layout is wider than the view itself
 	override open var allowContentHorizontalGrowing: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentHorizontalGrowing = allowContentHorizontalGrowing }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentHorizontalGrowing = allowContentHorizontalGrowing } }
 	}
 	
 	/// Allow content view to shrink its width to fit its frameLayout when the layout is narrower than the view itself
 	override open var allowContentHorizontalShrinking: Bool {
-		didSet {
-			frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking }
-		}
+		didSet { frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking } }
+	}
+	
+	public override var isUserInteractionEnabled: Bool {
+		didSet { frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled } }
 	}
 	
 	override open var frame: CGRect {
@@ -108,6 +108,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	
 	override open var clipsToBounds: Bool {
 		didSet {
+			super.clipsToBounds = clipsToBounds
 			frameLayouts.forEach { $0.clipsToBounds = clipsToBounds }
 		}
 	}
@@ -140,6 +141,31 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
+	// Skeleton
+	
+	/// set color for skeleton mode
+	override public var skeletonColor: UIColor {
+		didSet {
+			frameLayouts.forEach { $0.skeletonColor = skeletonColor }
+		}
+	}
+	override public var skeletonMinSize: CGSize {
+		didSet {
+			frameLayouts.forEach { $0.skeletonMinSize = skeletonMinSize }
+		}
+	}
+	override public var skeletonMaxSize: CGSize {
+		didSet {
+			frameLayouts.forEach { $0.skeletonMaxSize = skeletonMaxSize }
+		}
+	}
+	override public var isSkeletonMode: Bool {
+		didSet {
+			frameLayouts.forEach { $0.isSkeletonMode = isSkeletonMode }
+			setNeedsLayout()
+		}
+	}
+	
 	// MARK: -
 	
 	convenience public init(axis: NKLayoutAxis, distribution: NKLayoutDistribution = .top, views: [T]? = nil) {
@@ -148,9 +174,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		self.axis = axis
 		self.distribution = distribution
 		
-		if let views = views {
-			add(views)
-		}
+		if let views { add(views) }
 	}
 	
 	public required init() {
@@ -172,12 +196,13 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	@discardableResult
 	open func add(_ view: T? = nil) -> FrameLayout<T> {
 		if let frameLayout = view as? FrameLayout<T>, frameLayout.superview == nil {
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil {
+			if let view, view.superview == nil {
 				/*
 				#if DEBUG
 				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
@@ -189,12 +214,10 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
-			frameLayout.debug = debug
-			frameLayout.debugColor = debugColor
-			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.append(frameLayout)
 			addSubview(frameLayout)
 			return frameLayout
@@ -204,12 +227,13 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	@discardableResult
 	open func insert(_ view: T?, at index: Int) -> FrameLayout<T> {
 		if let frameLayout = view as? FrameLayout<T>, frameLayout.superview == nil {
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
 		}
 		else {
-			if let view = view, view.superview == nil {
+			if let view, view.superview == nil {
 				/*
 				#if DEBUG
 				if FrameLayout.showDebugWarnings, !isUserInteractionEnabled, view is UIControl {
@@ -221,16 +245,23 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 			}
 			
 			let frameLayout = FrameLayout(targetView: view)
-			frameLayout.debug = debug
-			frameLayout.debugColor = debugColor
-			frameLayout.ignoreHiddenView = ignoreHiddenView
 			frameLayout.fixedContentSize = fixedItemSize
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
+			applyCommonAttributes(to: frameLayout)
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 			return frameLayout
 		}
+	}
+	
+	func applyCommonAttributes(to frameLayout: FrameLayout<T>) {
+		frameLayout.debug = debug
+		frameLayout.debugColor = debugColor
+		frameLayout.ignoreHiddenView = ignoreHiddenView
+		frameLayout.isSkeletonMode = isSkeletonMode || frameLayout.isSkeletonMode
+		frameLayout.skeletonColor = skeletonColor
+		frameLayout.isUserInteractionEnabled = isUserInteractionEnabled
 	}
 	
 	@discardableResult
@@ -289,7 +320,7 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 			currentFrameLayout = frameLayouts[index]
 		}
 		
-		if let currentFrameLayout = currentFrameLayout, currentFrameLayout != frameLayout {
+		if let currentFrameLayout, currentFrameLayout != frameLayout {
 			if currentFrameLayout.superview == self {
 				currentFrameLayout.removeFromSuperview()
 			}
@@ -319,11 +350,18 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	public func frameLayout(with view: T) -> FrameLayout<T>? {
-		return frameLayouts.first(where: { $0.targetView == view })
+		if targetView == view { return self }
+		
+		for layout in frameLayouts {
+			if layout.targetView == view { return layout }
+			if let stack = layout as? StackFrameLayout { return stack.frameLayout(with: view) }
+		}
+		
+		return nil
 	}
 	
 	public func enumerate(_ block: ((FrameLayout<T>, Int, inout Bool) -> Void)) {
-		var stop: Bool = false
+		var stop = false
 		var index = 0
 		
 		for layout in frameLayouts {
@@ -348,13 +386,8 @@ open class StackFrameLayout<T: UIView>: FrameLayout<T> {
 		frameLayouts.forEach { $0.setNeedsLayout() }
 	}
 	
-	fileprivate func visibleFrames() -> [FrameLayout<T>] {
-		return frameLayouts.filter { !$0.isEmpty }
-	}
-	
-	fileprivate func numberOfVisibleFrames() -> Int {
-		return visibleFrames().count
-	}
+	fileprivate func visibleFrames() -> [FrameLayout<T>] { frameLayouts.filter { !$0.isEmpty } }
+	fileprivate func numberOfVisibleFrames() -> Int { visibleFrames().count }
 	
 	// MARK: -
 	

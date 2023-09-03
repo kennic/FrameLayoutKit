@@ -20,6 +20,7 @@ Say NO to autolayout constraint nightmare:
 ![NO](https://github.com/kennic/FrameLayoutKit/blob/master/no_constraint.png)
 ![YES](https://github.com/kennic/FrameLayoutKit/blob/master/frameLayoutSyntax.png)
 
+FrameLayoutKit supports complex layouts, including chaining and nesting layout with simple and intuitive operand syntax.
 
 ## Example
 
@@ -59,48 +60,25 @@ https://github.com/kennic/FrameLayoutKit.git
 This is how FrameLayoutKit layout the card view below:
 
 ```swift
-let frameLayout = HStackLayout {
-  $0.add(VStackLayout {
-    $0.add(earthImageView).alignment = (.top, .center)
-    $0.addSpace().flexible()
-    $0.add(rocketImageView).alignment = (.center, .center)
-  })
-		
-  $0.add(VStackLayout {
-    $0.add([nameLabel, dateLabel])
-    $0.addSpace(10)
-    $0.add(messageLabel)
-    $0.spacing = 5.0
-  })
-
-  $0.spacing = 15.0
-  $0.padding(top: 15, left: 15, bottom: 15, right: 15)
-  $0.debug = true
-}
-```
-![Hello World](/helloWorld.png "Hello World")
-
-Or you can use operand syntax for shorter/cleaner code:
-
-```swift
 let frameLayout = StackFrameLayout(axis: .horizontal)
 frameLayout + VStackLayout {
-	($0 + earthImageView).alignment = (.top, .center)
-	($0 + 0).flexible() // add a flexible space
-	($0 + rocketImageView).alignment = (.center, .center)
+   ($0 + earthImageView).alignment = (.top, .center)
+   ($0 + 0).flexible() // add a flexible space
+   ($0 + rocketImageView).alignment = (.center, .center)
 }
 frameLayout + VStackLayout {
-	$0 + [nameLabel, dateLabel] // add an array of views
-	$0 + 10 // add space with 10 px fixed
-	$0 + messageLabel // add a single view
-	$0.spacing = 5.0 // spacing between views
+   $0 + [nameLabel, dateLabel] // add an array of views
+   $0 + 10 // add space with 10 px fixed
+   $0 + messageLabel // add a single view
+   $0.spacing = 5.0 // spacing between views
 }
 
-frameLayout.spacing = 15.0
-frameLayout.padding(top: 15, left: 15, bottom: 15, right: 15)
-frameLayout.debug = true // show debug frame
-}
+frameLayout
+   .spacing(15)
+   .padding(top: 15, left: 15, bottom: 15, right: 15)
+   .debug(true)
 ```
+![Hello World](/helloWorld.png "Hello World")
 
 ## Benchmark
 FrameLayoutKit is one of the fastest layout libraries.

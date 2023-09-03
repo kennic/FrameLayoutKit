@@ -17,6 +17,12 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	/// Auto set number of columns or rows base on its size
 	public var isAutoSize = false
 	
+	public override var isUserInteractionEnabled: Bool {
+		didSet {
+			stackLayout.frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled }
+		}
+	}
+	
 	public override var isIntrinsicSizeEnabled: Bool {
 		get { stackLayout.isIntrinsicSizeEnabled }
 		set {
@@ -104,11 +110,11 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 	}
 	
 	override public var debug: Bool {
-		didSet {
-			stackLayout.debug = debug
-			stackLayout.frameLayouts.forEach { $0.debug = debug }
-			setNeedsLayout()
-		}
+		didSet { stackLayout.debug = debug }
+	}
+	
+	override public var debugColor: UIColor? {
+		didSet { stackLayout.debugColor = debugColor }
 	}
 	
 	public var verticalSpacing: CGFloat {
@@ -125,6 +131,33 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 			setNeedsLayout()
 		}
 	}
+	
+	// Skeleton
+	
+	/// set color for skeleton mode
+	override public var skeletonColor: UIColor {
+		didSet {
+			stackLayout.skeletonColor = skeletonColor
+		}
+	}
+	override public var skeletonMinSize: CGSize {
+		didSet {
+			stackLayout.skeletonMinSize = skeletonMinSize
+		}
+	}
+	override public var skeletonMaxSize: CGSize {
+		didSet {
+			stackLayout.skeletonMaxSize = skeletonMaxSize
+		}
+	}
+	override public var isSkeletonMode: Bool {
+		didSet {
+			stackLayout.isSkeletonMode = isSkeletonMode
+			setNeedsLayout()
+		}
+	}
+	
+	// MARK: -
 	
 	public var rows: Int {
 		get { stackLayout.frameLayouts.count }
@@ -278,6 +311,9 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = horizontalSpacing
 		layout.debug = debug
+		layout.debugColor = debugColor
+		layout.isSkeletonMode = isSkeletonMode || layout.isSkeletonMode
+		layout.skeletonColor = skeletonColor
 		
 		if fixedRowHeight > 0 {
 			layout.fixedSize = CGSize(width: 0, height: fixedRowHeight)
@@ -334,6 +370,9 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 			if let rowLayout = layout as? StackFrameLayout<UIView> {
 				let row = rowLayout.add()
 				row.debug = debug
+				row.debugColor = debugColor
+				row.isSkeletonMode = isSkeletonMode || row.isSkeletonMode
+				row.skeletonColor = skeletonColor
 				
 				if fixedColumnWidth > 0 {
 					row.fixedSize = CGSize(width: fixedColumnWidth, height: fixedRowHeight)
@@ -352,6 +391,9 @@ open class GridFrameLayout<T: UIView>: FrameLayout<T>{
 			if let rowLayout = layout as? StackFrameLayout<UIView> {
 				let row = rowLayout.insert(nil, at: index)
 				row.debug = debug
+				row.debugColor = debugColor
+				row.isSkeletonMode = isSkeletonMode
+				row.skeletonColor = skeletonColor
 				
 				if fixedColumnWidth > 0 {
 					row.fixedSize = CGSize(width: fixedColumnWidth, height: fixedRowHeight)

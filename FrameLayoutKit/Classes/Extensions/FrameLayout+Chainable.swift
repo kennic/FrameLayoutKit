@@ -161,7 +161,12 @@ extension FrameLayout {
 	}
 	
 	@discardableResult public func bindFrame(to views: UIView ...) -> Self {
-		bindingViews = views
+		if let bindingViews, !bindingViews.isEmpty {
+			self.bindingViews?.append(contentsOf: views)
+		}
+		else {
+			bindingViews = views
+		}
 		return self
 	}
 	
@@ -210,6 +215,16 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func isIntrinsicSizeEnabled(_ value: Bool) -> Self {
+		isIntrinsicSizeEnabled = value
+		return self
+	}
+	
+	@discardableResult public func isFlexible(_ value: Bool) -> Self {
+		isFlexible = value
+		return self
+	}
+	
 	@discardableResult public func willLayoutSubviews(_ block: @escaping (FrameLayout) -> Void) -> Self {
 		willLayoutSubviewsBlock = block
 		return self
@@ -222,6 +237,50 @@ extension FrameLayout {
 	
 	@discardableResult public func willSizeThatFits(_ block: @escaping (FrameLayout, CGSize) -> Void) -> Self {
 		willSizeThatFitsBlock = block
+		return self
+	}
+	
+	// UIView properties
+	
+	@discardableResult public func backgroundColor(_ color: UIColor) -> Self {
+		backgroundColor = color
+		return self
+	}
+	
+	@discardableResult public func alpha(_ value: CGFloat) -> Self {
+		alpha = value
+		return self
+	}
+	
+	@discardableResult public func clipsToBounds(_ value: Bool) -> Self {
+		clipsToBounds = value
+		return self
+	}
+	
+	@discardableResult public func isUserInteractionEnabled(_ value: Bool) -> Self {
+		isUserInteractionEnabled = value
+		return self
+	}
+	
+	// Skeleton
+	
+	@discardableResult public func isSkeletonMode(_ value: Bool) -> Self {
+		isSkeletonMode = value
+		return self
+	}
+	
+	@discardableResult public func skeletonColor(_ value: UIColor) -> Self {
+		skeletonColor = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMinSize(_ value: CGSize) -> Self {
+		skeletonMinSize = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMaxSize(_ value: CGSize) -> Self {
+		skeletonMaxSize = value
 		return self
 	}
 	

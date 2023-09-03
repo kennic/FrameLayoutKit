@@ -180,4 +180,41 @@ extension ScrollStackView {
 		return self
 	}
 	
+	@discardableResult public func willLayoutSubviews(_ block: @escaping (ScrollStackView) -> Void) -> Self {
+		willLayoutSubviewsBlock = block
+		return self
+	}
+	
+	@discardableResult public func didLayoutSubviews(_ block: @escaping (ScrollStackView) -> Void) -> Self {
+		didLayoutSubviewsBlock = block
+		return self
+	}
+	
+	@discardableResult public func willSizeThatFits(_ block: @escaping (ScrollStackView, CGSize) -> Void) -> Self {
+		willSizeThatFitsBlock = block
+		return self
+	}
+	
+	// Skeleton
+	
+	@discardableResult public func isSkeletonMode(_ value: Bool) -> Self {
+		isSkeletonMode = value
+		return self
+	}
+	
+	@discardableResult public func skeletonColor(_ value: UIColor) -> Self {
+		skeletonColor = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMinSize(_ value: CGSize) -> Self {
+		skeletonMinSize = value
+		return self
+	}
+	
+	@discardableResult public func skeletonMaxSize(_ value: CGSize) -> Self {
+		skeletonMaxSize = value
+		return self
+	}
+	
 }

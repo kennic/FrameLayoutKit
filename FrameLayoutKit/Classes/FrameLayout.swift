@@ -41,7 +41,9 @@ open class FrameLayout<T: UIView>: UIView {
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It will also ignore `willSizeThatFits` and `willLayoutSubviews` blocks.
-	public var isEnabled = true
+	public var isEnabled = true {
+		didSet { skeletonView?.isHidden = targetView == nil || !isEnabled || isEmpty }
+	}
 	/// Padding edge insets
 	public var edgeInsets: UIEdgeInsets = .zero
 	/// Add translation position to view
@@ -191,11 +193,13 @@ open class FrameLayout<T: UIView>: UIView {
 		}
 	}
 	
+	/// Set fixed width of targetView
 	public var fixedContentWidth: CGFloat {
 		get { fixedContentSize.width }
 		set { fixedContentSize.width = newValue }
 	}
 	
+	/// Set fixed height of targetView
 	public var fixedContentHeight: CGFloat {
 		get { fixedContentSize.height }
 		set { fixedContentSize.height = newValue }
@@ -208,7 +212,7 @@ open class FrameLayout<T: UIView>: UIView {
 	public var willSizeThatFitsBlock: ((FrameLayout, CGSize) -> Void)?
 	/// Block will be called before calling layoutSubviews
 	public var willLayoutSubviewsBlock: ((FrameLayout) -> Void)?
-	/// Block will be called at the end of layoutSubviews function
+	/// Block will be called after layoutSubviews finished
 	public var didLayoutSubviewsBlock: ((FrameLayout) -> Void)?
 	
 	override open var frame: CGRect {
@@ -266,7 +270,29 @@ open class FrameLayout<T: UIView>: UIView {
 	
 	/// Returns intrinsic content size
 	open override var intrinsicContentSize: CGSize {
-		return contentSizeThatFits(size: bounds.size)
+		return contentSizeThatFits(size: CGSize(width: UIScreen.main.nativeBounds.width, height: .greatestFiniteMagnitude))
+	}
+	
+	// Skeleton
+	
+	public var skeletonView: FLSkeletonView?
+	/// set color for skeleton mode
+	public var skeletonColor: UIColor = UIColor(white: 0.8, alpha: 1.0)
+	public var skeletonMinSize: CGSize = .zero
+	public var skeletonMaxSize: CGSize = .zero
+	public var isSkeletonMode: Bool = false {
+		didSet {
+			if isSkeletonMode {
+				skeletonView = FLSkeletonView()
+				skeletonView!.backgroundColor = skeletonColor
+				addSubview(skeletonView!)
+				setNeedsLayout()
+			}
+			else {
+				skeletonView?.removeFromSuperview()
+				skeletonView = nil
+			}
+		}
 	}
 	
 	// MARK: -
@@ -399,33 +425,18 @@ open class FrameLayout<T: UIView>: UIView {
 		super.layoutSubviews()
 		
 		defer {
+			if let skeletonView {
+				var skeletonFrame: CGRect = targetView != nil ? convert(targetView!.frame, from: targetView!.superview) : bounds.inset(by: edgeInsets)
+				skeletonFrame.size.limitedTo(minSize: skeletonMinSize, maxSize: skeletonMaxSize)
+				skeletonView.frame = skeletonFrame
+				skeletonView.isHidden = targetView == nil || !isEnabled || isEmpty
+			}
+			
 			didLayoutSubviewsBlock?(self)
 		}
 		
 		guard let targetView = targetView, !bounds.isEmpty else {
-			var bindViews = bindingViews ?? []
-			if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
-			
-			guard !bindViews.isEmpty else { return }
-			#if swift(>=4.2)
-			let targetFrame = frame.inset(by: bindingEdgeInsets)
-			#else
-			let targetFrame = UIEdgeInsetsInsetRect(frame, bindingEdgeInsets)
-			#endif
-			guard !targetFrame.isEmpty else { return }
-			
-			bindViews.forEach {
-				if $0.superview == self.targetView {
-					$0.frame = CGRect(origin: .zero, size: targetFrame.size)
-				}
-				else if $0.superview != superview, let superView1 = $0.superview, let superView2 = superview {
-					$0.frame = superView2.convert(targetFrame, to: superView1)
-				}
-				else {
-					$0.frame = targetFrame
-				}
-			}
-			
+			bindViews(to: self)
 			return
 		}
 		
@@ -574,15 +585,18 @@ open class FrameLayout<T: UIView>: UIView {
 			}
 		}
 		
+		bindViews(to: targetView)
+	}
+	
+	func bindViews(to targetView: UIView) {
 		var bindViews = bindingViews ?? []
 		if let views = lazyBindingViews?() { bindViews.append(contentsOf: views.compactMap {$0}) }
-		
 		guard !bindViews.isEmpty else { return }
-		#if swift(>=4.2)
-		targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
-		#else
-		targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
-		#endif
+#if swift(>=4.2)
+		let targetFrame = targetView.frame.inset(by: bindingEdgeInsets)
+#else
+		let targetFrame = UIEdgeInsetsInsetRect(targetView.frame, bindingEdgeInsets)
+#endif
 		bindViews.forEach {
 			if $0.superview == targetView {
 				$0.frame = CGRect(origin: .zero, size: targetFrame.size)

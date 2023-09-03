@@ -74,6 +74,11 @@ open class ScrollStackView: UIView {
 		set { frameLayout.debug = newValue }
 	}
 	
+	public var debugColor: UIColor? {
+		get { frameLayout.debugColor }
+		set { frameLayout.debugColor = newValue }
+	}
+	
 	public var isOverlapped: Bool {
 		get { frameLayout.isOverlapped }
 		set { frameLayout.isOverlapped = newValue }
@@ -310,6 +315,38 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	// Skeleton
+	
+	/// set color for skeleton mode
+	public var skeletonColor: UIColor {
+		get { frameLayout.skeletonColor }
+		set {
+			frameLayout.skeletonColor = newValue
+			setNeedsLayout()
+		}
+	}
+	public var skeletonMinSize: CGSize {
+		get { frameLayout.skeletonMinSize }
+		set {
+			frameLayout.skeletonMinSize = newValue
+			setNeedsLayout()
+		}
+	}
+	public var skeletonMaxSize: CGSize {
+		get { frameLayout.skeletonMaxSize }
+		set {
+			frameLayout.skeletonMaxSize = newValue
+			setNeedsLayout()
+		}
+	}
+	public var isSkeletonMode: Bool {
+		get { frameLayout.isSkeletonMode }
+		set {
+			frameLayout.isSkeletonMode = newValue
+			setNeedsLayout()
+		}
+	}
+	
 	public var frameLayouts: [FrameLayout<UIView>] {
 		get { frameLayout.frameLayouts }
 		set { frameLayout.frameLayouts = newValue }
@@ -350,7 +387,7 @@ open class ScrollStackView: UIView {
 		self.distribution = distribution
 		
 		defer {
-			if let views = views, !views.isEmpty {
+			if let views, !views.isEmpty {
 				self.views = views
 			}
 		}
@@ -430,23 +467,12 @@ open class ScrollStackView: UIView {
 	}
 	
 	// MARK: -
-	
-	public func view(at index: Int) -> UIView? {
-		return frameLayout.frameLayout(at: index)?.targetView
-	}
-	
-	public func frameLayout(at index: Int) -> FrameLayout<UIView>? {
-		return frameLayout.frameLayout(at: index)
-	}
-	
-	public func frameLayout(with view: UIView) -> FrameLayout<UIView>? {
-		return frameLayout.frameLayout(with: view)
-	}
-	
-	public func enumerate(_ block: ((FrameLayout<UIView>, Int, inout Bool) -> Void)) {
-		frameLayout.enumerate(block)
-	}
-	
+		
+	public func view(at index: Int) -> UIView? { frameLayout.frameLayout(at: index)?.targetView }
+	public func frameLayout(at index: Int) -> FrameLayout<UIView>? { frameLayout.frameLayout(at: index) }
+	public func frameLayout(with view: UIView) -> FrameLayout<UIView>? { frameLayout.frameLayout(with: view) }
+	public func enumerate(_ block: ((FrameLayout<UIView>, Int, inout Bool) -> Void)) { frameLayout.enumerate(block) }
+		
 	@discardableResult
 	public func flexible(ratio: CGFloat = -1) -> Self {
 		frameLayout.flexible(ratio: ratio)
@@ -462,7 +488,8 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout<UIView> {
 		let layout = frameLayout.add(view)
-		if let view = view { scrollView.addSubview(view) }
+		layout.isUserInteractionEnabled = true
+		if let view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
 	}
@@ -475,7 +502,8 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout<UIView> {
 		let layout = frameLayout.insert(view, at: index)
-		if let view = view { scrollView.insertSubview(view, at: index) }
+		layout.isUserInteractionEnabled = true
+		if let view { scrollView.insertSubview(view, at: index) }
 		setNeedsLayout()
 		return layout
 	}

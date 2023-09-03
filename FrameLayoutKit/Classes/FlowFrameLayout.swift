@@ -64,11 +64,11 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 	}
 	
 	override public var debug: Bool {
-		didSet {
-			stackLayout.debug = debug
-			stackLayout.frameLayouts.forEach { $0.debug = debug }
-			setNeedsLayout()
-		}
+		didSet { stackLayout.debug = debug }
+	}
+	
+	override public var debugColor: UIColor? {
+		didSet { stackLayout.debugColor = debugColor }
 	}
 	
 	public var isJustified: Bool = false {
@@ -87,6 +87,12 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		didSet {
 			stackLayout.frameLayouts.filter { $0 is StackFrameLayout }.forEach { ($0 as? StackFrameLayout)?.spacing = interItemSpacing }
 			setNeedsLayout()
+		}
+	}
+	
+	public override var isUserInteractionEnabled: Bool {
+		didSet {
+			stackLayout.frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled }
 		}
 	}
 	
@@ -109,8 +115,14 @@ open class FlowFrameLayout<T: UIView>: FrameLayout<T> {
 		}
 	}
 	
+	/// This block will be called when a new StackFrameLayout was added to a new row
 	public var onNewStackBlock: ((FlowFrameLayout, StackFrameLayout) -> Void)? = nil
 	
+	/// This block will be called when a new StackFrameLayout was added to a new row
+	public func onNewStackBlock(_ block: @escaping (_ flowLayout: FlowFrameLayout, _ addedStack: StackFrameLayout<UIView>) -> Void) -> Self {
+		onNewStackBlock = block
+		return self
+	}
 	// MARK: -
 	
 	public convenience init(axis: NKLayoutAxis) {
