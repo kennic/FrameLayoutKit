@@ -94,9 +94,11 @@ open class StackFrameLayout: FrameLayout {
 		didSet { frameLayouts.forEach { $0.allowContentHorizontalShrinking = allowContentHorizontalShrinking } }
 	}
 	
+	/*
 	public override var isUserInteractionEnabled: Bool {
 		didSet { frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled } }
 	}
+	*/
 	
 	override open var frame: CGRect {
 		didSet { setNeedsLayout() }

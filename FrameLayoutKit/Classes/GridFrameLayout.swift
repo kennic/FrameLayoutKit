@@ -17,11 +17,13 @@ open class GridFrameLayout: FrameLayout {
 	/// Auto set number of columns or rows base on its size
 	public var isAutoSize = false
 	
+	/*
 	public override var isUserInteractionEnabled: Bool {
 		didSet {
 			stackLayout.frameLayouts.forEach { $0.isUserInteractionEnabled = isUserInteractionEnabled }
 		}
 	}
+	*/
 	
 	public override var isIntrinsicSizeEnabled: Bool {
 		get { stackLayout.isIntrinsicSizeEnabled }
