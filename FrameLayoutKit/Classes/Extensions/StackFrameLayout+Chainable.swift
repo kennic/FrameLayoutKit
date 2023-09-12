@@ -55,9 +55,4 @@ extension StackFrameLayout {
 		return self
 	}
 	
-	@discardableResult public func setClipsToBounds(_ value: Bool) -> Self {
-		clipsToBounds = value
-		return self
-	}
-	
 }
