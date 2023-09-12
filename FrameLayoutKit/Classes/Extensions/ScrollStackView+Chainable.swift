@@ -170,13 +170,13 @@ extension ScrollStackView {
 		return self
 	}
 	
-	@discardableResult public func setClipsToBounds(_ value: Bool) -> Self {
-		clipsToBounds = value
+	@discardableResult public func debug(_ value: Bool) -> Self {
+		debug = value
 		return self
 	}
 	
-	@discardableResult public func debug(_ value: Bool) -> Self {
-		debug = value
+	@discardableResult public func debugColor(_ value: UIColor) -> Self {
+		debugColor = value
 		return self
 	}
 	
@@ -192,6 +192,28 @@ extension ScrollStackView {
 	
 	@discardableResult public func willSizeThatFits(_ block: @escaping (ScrollStackView, CGSize) -> Void) -> Self {
 		willSizeThatFitsBlock = block
+		return self
+	}
+	
+	// UIView properties
+	
+	@discardableResult public func backgroundColor(_ color: UIColor) -> Self {
+		backgroundColor = color
+		return self
+	}
+	
+	@discardableResult public func alpha(_ value: CGFloat) -> Self {
+		alpha = value
+		return self
+	}
+	
+	@discardableResult public func clipsToBounds(_ value: Bool) -> Self {
+		clipsToBounds = value
+		return self
+	}
+	
+	@discardableResult public func isUserInteractionEnabled(_ value: Bool) -> Self {
+		isUserInteractionEnabled = value
 		return self
 	}
 	

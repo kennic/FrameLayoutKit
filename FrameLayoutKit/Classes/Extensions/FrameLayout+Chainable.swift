@@ -242,22 +242,22 @@ extension FrameLayout {
 	
 	// UIView properties
 	
-	@discardableResult public func setBackgroundColor(_ color: UIColor) -> Self {
+	@discardableResult public func backgroundColor(_ color: UIColor) -> Self {
 		backgroundColor = color
 		return self
 	}
 	
-	@discardableResult public func setAlpha(_ value: CGFloat) -> Self {
+	@discardableResult public func alpha(_ value: CGFloat) -> Self {
 		alpha = value
 		return self
 	}
 	
-	@discardableResult public func setClipsToBounds(_ value: Bool) -> Self {
+	@discardableResult public func clipsToBounds(_ value: Bool) -> Self {
 		clipsToBounds = value
 		return self
 	}
 	
-	@discardableResult public func setUserInteractionEnabled(_ value: Bool) -> Self {
+	@discardableResult public func isUserInteractionEnabled(_ value: Bool) -> Self {
 		isUserInteractionEnabled = value
 		return self
 	}
