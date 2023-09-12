@@ -257,7 +257,6 @@ open class StackFrameLayout: FrameLayout {
 		frameLayout.ignoreHiddenView = ignoreHiddenView
 		frameLayout.isSkeletonMode = isSkeletonMode || frameLayout.isSkeletonMode
 		frameLayout.skeletonColor = skeletonColor
-		frameLayout.isUserInteractionEnabled = isUserInteractionEnabled
 	}
 	
 	@discardableResult

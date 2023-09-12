@@ -311,7 +311,6 @@ open class GridFrameLayout: FrameLayout {
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = horizontalSpacing
 		layout.debug = debug
-		layout.debugColor = debugColor
 		layout.isSkeletonMode = isSkeletonMode || layout.isSkeletonMode
 		layout.skeletonColor = skeletonColor
 		
@@ -370,7 +369,6 @@ open class GridFrameLayout: FrameLayout {
 			if let rowLayout = layout as? StackFrameLayout {
 				let row = rowLayout.add()
 				row.debug = debug
-				row.debugColor = debugColor
 				row.isSkeletonMode = isSkeletonMode || row.isSkeletonMode
 				row.skeletonColor = skeletonColor
 				
@@ -391,7 +389,6 @@ open class GridFrameLayout: FrameLayout {
 			if let rowLayout = layout as? StackFrameLayout {
 				let row = rowLayout.insert(nil, at: index)
 				row.debug = debug
-				row.debugColor = debugColor
 				row.isSkeletonMode = isSkeletonMode
 				row.skeletonColor = skeletonColor
 				
