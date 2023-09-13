@@ -51,14 +51,14 @@ public class FLSkeletonView: UIView {
 		}
 	}
 	
-	func startShimmering(duration: TimeInterval = 1.0, repeatCount: Float = HUGE, repeatDuration: TimeInterval = 0) {
+	public func startShimmering(duration: TimeInterval = 1.0, repeatCount: Float = HUGE, repeatDuration: TimeInterval = 0) {
 		animation.duration = duration
 		animation.repeatCount = repeatCount
 		animation.repeatDuration = repeatDuration
 		gradient.add(animation, forKey: "shimmer")
 	}
 	
-	func stopShimmering() {
+	public func stopShimmering() {
 		layer.mask?.removeAllAnimations()
 		layer.mask = nil
 	}
