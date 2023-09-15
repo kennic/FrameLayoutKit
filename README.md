@@ -73,7 +73,7 @@ frameLayout + VStackLayout {
 }
 frameLayout + VStackLayout {
    $0 + [nameLabel, dateLabel] // add an array of views
-   $0 + 10 // add space with 10 px fixed
+   $0 + 10 // add a space with a minimum of 10 pixels
    $0 + messageLabel // add a single view
    $0.spacing = 5.0 // spacing between views
 }
