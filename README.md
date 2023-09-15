@@ -139,6 +139,31 @@ frameLayout + VStackLayout {
 </tr>
 </table>
 
+Two types of code styles:
+
+<table>
+<tr><td>Old way</td> <td>Nested way</td></tr>
+<tr>
+<td>
+
+```swift
+frameLayout.distribution = .center
+frameLayout.spacing = 16
+frameLayout.flexible = true
+```
+</td>
+<td>
+	
+```swift
+frameLayout
+  .distribution(.center)
+  .spacing(16)
+  .flexible()
+```
+</td>
+</tr>
+</table>
+
 ## Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
 ![Benchmark Results](images/bechmark.png "Benchmark results")
