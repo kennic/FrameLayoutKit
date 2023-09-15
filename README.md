@@ -17,8 +17,8 @@ For Objective-C version: [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayo
 
 Say NO to autolayout constraint nightmare:
 
-![NO](https://github.com/kennic/FrameLayoutKit/blob/master/no_constraint.png)
-![YES](https://github.com/kennic/FrameLayoutKit/blob/master/frameLayoutSyntax.png)
+![NO](images/no_constraint.png)
+![YES](images/frameLayoutSyntax.png)
 
 FrameLayoutKit supports complex layouts, including chaining and nesting layout with simple and intuitive operand syntax.
 
@@ -78,11 +78,38 @@ frameLayout
    .padding(top: 15, left: 15, bottom: 15, right: 15)
    .debug(true)
 ```
-![Hello World](/helloWorld.png "Hello World")
+![Hello World](images/helloWorld.png "Hello World")
+
+<table>
+<tr><td> Source </td> <td> Result </td></tr>
+<tr>
+<td>
+
+```swift
+(frameLayout + imageView).flexible()
+frameLayout + VStackLayout {
+ $0 + titleLabel
+ $0 + ratingLabel
+}
+		
+frameLayout
+ .padding(top: 12, left: 12, bottom: 12, right: 12)
+ .distribution(.bottom)
+ .spacing(5)
+```
+
+</td>
+<td>
+
+<img alt="ActionRow screenshot" src="images/cell_example.png">
+
+</td>
+</tr>
+</table>
 
 ## Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
-![Benchmark Results](/bechmark.png "Benchmark results")
+![Benchmark Results](images/bechmark.png "Benchmark results")
 
 See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutFrameworkBenchmark)
 
