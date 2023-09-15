@@ -142,7 +142,7 @@ frameLayout + VStackLayout {
 Two types of code styles:
 
 <table>
-<tr><td>Old way</td> <td>Nested way</td></tr>
+<tr><td>Regular syntax</td> <td>Chained syntax</td></tr>
 <tr>
 <td>
 
