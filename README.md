@@ -95,6 +95,7 @@ frameLayout
 <td>
 
 ```swift
+let frameLayoyt = VStackLayout()
 (frameLayout + imageView).flexible()
 frameLayout + VStackLayout {
  $0 + titleLabel
