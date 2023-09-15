@@ -113,11 +113,12 @@ frameLayout
 <td>
 
 ```swift
+let posterSize = CGSize(width: 100, height: 150)
 let frameLayout = ZStackLayout()
 frameLayout + backdropImageView
 frameLayout + VStackLayout {
 	$0 + HStackLayout {
-		($0 + posterImageView).fixedSize(CGSize(width: 100, height: 150)) // Movie Poster ratio is 2:3
+		($0 + posterImageView).fixedSize(posterSize)
 		$0 + VStackLayout {
 			$0 + titleLabel
 			$0 + subtitleLabel
