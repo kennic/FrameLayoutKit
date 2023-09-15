@@ -117,15 +117,15 @@ let posterSize = CGSize(width: 100, height: 150)
 let frameLayout = ZStackLayout()
 frameLayout + backdropImageView
 frameLayout + VStackLayout {
-	$0 + HStackLayout {
-		($0 + posterImageView).fixedSize(posterSize)
-		$0 + VStackLayout {
-			$0 + titleLabel
-			$0 + subtitleLabel
-		}.padding(bottom: 5).flexible().distribution(.bottom)
-	}.spacing(12).padding(top: 0, left: 12, bottom: 12, right: 12)
+ $0 + HStackLayout {
+  ($0 + posterImageView).fixedSize(posterSize)
+    $0 + VStackLayout {
+      $0 + titleLabel
+      $0 + subtitleLabel
+    }.padding(bottom: 5).flexible().distribution(.bottom)
+  }.spacing(12).padding(top: 0, left: 12, bottom: 12, right: 12)
 			
-	$0.distribution(.bottom)
+  $0.distribution(.bottom)
 }
 ```
 
