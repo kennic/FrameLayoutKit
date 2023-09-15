@@ -131,9 +131,7 @@ frameLayout + VStackLayout {
       $0 + subtitleLabel
     }.padding(bottom: 5).flexible().distribution(.bottom)
   }.spacing(12).padding(top: 0, left: 12, bottom: 12, right: 12)
-			
-  $0.distribution(.bottom)
-}
+}.distribution(.bottom)
 ```
 </td>
 <td>
