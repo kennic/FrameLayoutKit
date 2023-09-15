@@ -19,7 +19,7 @@ It simplifies the UI creation process, resulting in cleaner and more maintainabl
 Say NO to autolayout constraint nightmare:
 
 <table>
-<tr><td> No </td> <td> Yes </td></tr>
+<tr><td> Autolayout </td> <td> FrameLayoutKit </td></tr>
 <tr>
 <td>
 <img alt="No" src="images/no_constraint.png">
