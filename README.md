@@ -99,15 +99,13 @@ frameLayout
 <td>
 
 ```swift
-let frameLayoyt = VStackLayout()
-(frameLayout + imageView).flexible()
-frameLayout + VStackLayout {
- $0 + titleLabel
- $0 + ratingLabel
-}
-		
-frameLayout
- .padding(top: 12, left: 12, bottom: 12, right: 12)
+let frameLayout = VStackLayout {
+  ($0 + imageView).flexible()
+  $0 + VStackLayout {
+     $0 + titleLabel
+     $0 + ratingLabel
+  }
+}.padding(top: 12, left: 12, bottom: 12, right: 12)
  .distribution(.bottom)
  .spacing(5)
 ```
