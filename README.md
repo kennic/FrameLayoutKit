@@ -101,7 +101,37 @@ frameLayout
 </td>
 <td>
 
-<img alt="ActionRow screenshot" src="images/cell_example.png">
+<img alt="result 1" src="images/example_1.png">
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr><td> Source </td> <td> Result </td></tr>
+<tr>
+<td>
+
+```swift
+let frameLayout = ZStackLayout()
+frameLayout + backdropImageView
+frameLayout + VStackLayout {
+	$0 + HStackLayout {
+		($0 + posterImageView).fixedSize(CGSize(width: 100, height: 150)) // Movie Poster ratio is 2:3
+		$0 + VStackLayout {
+			$0 + titleLabel
+			$0 + subtitleLabel
+		}.padding(bottom: 5).flexible().distribution(.bottom)
+	}.spacing(12).padding(top: 0, left: 12, bottom: 12, right: 12)
+			
+	$0.distribution(.bottom)
+}
+```
+
+</td>
+<td>
+
+<img alt="result 2" src="images/example_2.png">
 
 </td>
 </tr>
