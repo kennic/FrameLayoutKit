@@ -80,7 +80,7 @@ frameLayout + VStackLayout {
 frameLayout
    .spacing(15)
    .padding(top: 15, left: 15, bottom: 15, right: 15)
-   .debug(true)
+   .debug(true) // show dashed lines to visualize the layout
 ```
 </td>
 <td>
