@@ -45,9 +45,8 @@ pod "FrameLayoutKit"
 
 
 ### Swift Package Manager
-The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into Xcode and the Swift compiler. **This is the recommended installation method.** Updates to FrameLayoutKit will always be available immediately to projects with SPM. SPM is also integrated directly with Xcode.
+[Swift Package Manager](https://swift.org/package-manager/) is recommended to install FrameLayoutKit.
 
-If you are using Xcode 11 or later:
  1. Click `File`
  2. `Add Packages...`
  3. Specify the git URL for FrameLayoutKit.
