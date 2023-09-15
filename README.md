@@ -144,7 +144,7 @@ frameLayout + VStackLayout {
 </tr>
 </table>
 
-Two types of code styles:
+Two types of code syntax:
 
 <table>
 <tr><td>Regular syntax</td> <td>Chained syntax</td></tr>
