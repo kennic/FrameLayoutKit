@@ -9,24 +9,29 @@
 
 ![image](images/banner.jpg)
 
-FrameLayout is a super fast and easy to use layout library for iOS and tvOS.
+A super fast and easy-to-use layout library for iOS. FrameLayoutKit supports complex layouts, including chaining and nesting layout with simple and intuitive operand syntax.
 
-For Objective-C version: [NKFrameLayoutKit](http://github.com/kennic/NKFrameLayoutKit) (Deprecated, not recommended)
+It simplifies the UI creation process, resulting in cleaner and more maintainable code.
+
 
 ## Why?
 
 Say NO to autolayout constraint nightmare:
 
-![NO](images/no_constraint.png)
-![YES](images/frameLayoutSyntax.png)
+<table>
+<tr><td> No </td> <td> Yes </td></tr>
+<tr>
+<td>
+<img alt="No" src="images/no_constraint.png">
+</td>
+<td>
+<img alt="Yes!!!" src="images/frameLayoutSyntax.png">
+</td>
+</tr>
+</table>
 
-FrameLayoutKit supports complex layouts, including chaining and nesting layout with simple and intuitive operand syntax.
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Installation
+# Installation
 
 FrameLayoutKit is available through `Swift Package Manager` (Recommended) and [CocoaPods](http://cocoapods.org):
 
@@ -55,7 +60,7 @@ pod "FrameLayoutKit"
 https://github.com/kennic/FrameLayoutKit.git
 ```
 
-## Example
+# Example
 Some examples of how FrameLayoutKit works:
 
 <table>
@@ -164,13 +169,13 @@ frameLayout
 </tr>
 </table>
 
-## Benchmark
+# Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
 ![Benchmark Results](images/bechmark.png "Benchmark results")
 
 See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutFrameworkBenchmark)
 
-## Todo
+# Todo
 
 - [x] Swift Package Manager
 - [x] CocoaPods support
@@ -179,10 +184,10 @@ See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutF
 - [x] Examples
 - [ ] Documents
 
-## Author
+# Author
 
 Nam Kennic, namkennic@me.com
 
-## License
+# License
 
 FrameLayoutKit is available under the MIT license. See the LICENSE file for more info.
