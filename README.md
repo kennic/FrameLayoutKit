@@ -154,7 +154,7 @@ Two types of code syntax:
 ```swift
 frameLayout.distribution = .center
 frameLayout.spacing = 16
-frameLayout.flexible = true
+frameLayout.isFlexible = true
 ```
 </td>
 <td>
