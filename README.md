@@ -57,10 +57,15 @@ https://github.com/kennic/FrameLayoutKit.git
 ```
 
 ## Example
-This is how FrameLayoutKit layout the card view below:
+Some examples of how FrameLayoutKit works:
 
+<table>
+<tr><td> Source </td> <td> Result </td></tr>
+<tr>
+<td>
+	
 ```swift
-let frameLayout = StackFrameLayout(axis: .horizontal)
+let frameLayout = HStackLayout()
 frameLayout + VStackLayout {
    ($0 + earthImageView).alignment = (.top, .center)
    ($0 + 0).flexible() // add a flexible space
@@ -78,7 +83,12 @@ frameLayout
    .padding(top: 15, left: 15, bottom: 15, right: 15)
    .debug(true)
 ```
-![Hello World](images/helloWorld.png "Hello World")
+</td>
+<td>
+<img alt="result 1" src="images/helloWorld.png">
+</td>
+</tr>
+</table>
 
 <table>
 <tr><td> Source </td> <td> Result </td></tr>
@@ -97,12 +107,9 @@ frameLayout
  .distribution(.bottom)
  .spacing(5)
 ```
-
 </td>
 <td>
-
 <img alt="result 1" src="images/example_1.png">
-
 </td>
 </tr>
 </table>
@@ -128,12 +135,9 @@ frameLayout + VStackLayout {
   $0.distribution(.bottom)
 }
 ```
-
 </td>
 <td>
-
 <img alt="result 2" src="images/example_2.png">
-
 </td>
 </tr>
 </table>
