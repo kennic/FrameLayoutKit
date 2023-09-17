@@ -142,6 +142,30 @@ frameLayout + VStackLayout {
 </tr>
 </table>
 
+<table>
+<tr><td> Source </td> <td> Result </td></tr>
+<tr>
+<td>
+
+```swift
+let buttonSize = CGSize(width: 45, height: 45)
+let cardView = VStackLayout().spacing(10)
+cardView + subtitleLabel
+(cardView + emailField).minHeight = 50
+(cardView + passwordField).minHeight = 50
+(cardView + nextButton).fixedHeight = 45
+(cardView + separateLine).fixedContentHeight(1).padding(top: 4, left: 0, bottom: 4, right: 40)
+cardView + HStackLayout {
+ ($0 + [facebookButton, googleButton, appleButton]).forEach { $0.fixedContentSize(buttonSize) }
+}.distribution(.center).spacing(10)
+```
+</td>
+<td>
+<img alt="result 2" src="images/example_3.png">
+</td>
+</tr>
+</table>
+
 Two types of code syntax:
 
 <table>
