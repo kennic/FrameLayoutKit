@@ -1296,3 +1296,48 @@ open class ZStackLayout: StackFrameLayout {
 	}
 	
 }
+
+// MARK: -
+
+open class HStackView: HStackLayout {
+	
+	init(@ViewBuilder builder: () -> [UIView]) {
+		super.init()
+		add(builder())
+	}
+	
+	required public init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	required public init() {
+		fatalError("init() has not been implemented")
+	}
+	
+}
+
+open class VStackView: VStackLayout {
+	
+	init(@ViewBuilder builder: () -> [UIView]) {
+		super.init()
+		add(builder())
+	}
+	
+	required public init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	required public init() {
+		fatalError("init() has not been implemented")
+	}
+	
+}
+
+
+@resultBuilder
+public class ViewBuilder {
+	static func buildBlock(_ views: UIView...) -> [UIView] {
+		return views
+	}
+}
+
