@@ -151,40 +151,6 @@ public extension FlowFrameLayout {
 	}
 }
 
-/*
---- No longer need this protocol since we have nested functions ---
- 
-public protocol With {}
-extension With where Self: FrameLayout {
-	
-	/// Add ability to set properties with closures just after initializing.
-	///
-	///     let frameLayout = FrameLayout().with {
-	///       $0.alignment = (.top, .center)
-	///       $0.padding(top: 5, left: 5, bottom: 5, right: 5)
-	///     }
-	///
-	/// So you can also nest a block of FrameLayout into another by:
-	///
-	///		let stack = StackFrameLayout(axis: .vertical)
-	///		stack + HStackLayout().with {
-	///			$0 + imageView
-	///			$0 + label
-	///		}
-	///		stack + textField
-	///
-	///
-	@discardableResult
-	public func with(_ block: (Self) throws -> Void) rethrows -> Self {
-		try block(self)
-		return self
-	}
-	
-}
-
-extension FrameLayout: With {}
- */
-
 extension CGSize {
 	
 	mutating func limitedTo(minSize: CGSize, maxSize: CGSize) {
