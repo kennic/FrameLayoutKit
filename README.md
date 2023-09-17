@@ -149,14 +149,20 @@ frameLayout + VStackLayout {
 
 ```swift
 let buttonSize = CGSize(width: 45, height: 45)
-let cardView = VStackLayout().spacing(10)
-cardView + subtitleLabel
+let cardView = VStackLayout()
+  .spacing(10)
+  .padding(top: 24, left: 24, bottom: 24, right: 24)
+
+cardView + titleLabel
 (cardView + emailField).minHeight = 50
 (cardView + passwordField).minHeight = 50
 (cardView + nextButton).fixedHeight = 45
-(cardView + separateLine).fixedContentHeight(1).padding(top: 4, left: 0, bottom: 4, right: 40)
+(cardView + separateLine)
+  .fixedContentHeight(1)
+  .padding(top: 4, left: 0, bottom: 4, right: 40)
 cardView + HStackLayout {
- ($0 + [facebookButton, googleButton, appleButton]).forEach { $0.fixedContentSize(buttonSize) }
+ ($0 + [facebookButton, googleButton, appleButton])
+  .forEach { $0.fixedContentSize(buttonSize) }
 }.distribution(.center).spacing(10)
 ```
 </td>
