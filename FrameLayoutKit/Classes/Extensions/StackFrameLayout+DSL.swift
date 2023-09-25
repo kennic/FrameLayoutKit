@@ -5,6 +5,8 @@
 //  Created by Nam Kennic on 9/25/23.
 //
 
+import UIKit
+
 @resultBuilder
 public struct ViewBuilder {
 	
