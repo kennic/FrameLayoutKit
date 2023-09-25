@@ -357,7 +357,7 @@ open class StackFrameLayout: FrameLayout {
 		return nil
 	}
 	
-	public func enumerate(_ block: ((FrameLayout, Int, inout Bool) -> Void)) {
+	public func enumerate(_ block: (FrameLayout, Int, inout Bool) -> Void) {
 		var stop = false
 		var index = 0
 		

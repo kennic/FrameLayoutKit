@@ -67,9 +67,43 @@ class CardView: UIView {
 		}
 		
 		[blueView, redView, earthImageView, rocketImageView, nameLabel, titleLabel, dateLabel, messageLabel, expandButton, frameLayout].forEach { addSubview($0) }
+
+		// DSL syntax:
+		
+		frameLayout + VStackView {
+			StackItem(earthImageView).align(vertical: .top, horizontal: .center)
+			FlexibleSpace(10)
+			StackItem(rocketImageView).align(vertical: .center, horizontal: .center).bindFrame(to: redView)
+		}.bindFrame(to: blueView)
+		
+		frameLayout + VStackView {
+			HStackView {
+				StackItem(nameLabel)
+				StackItem(titleLabel)
+				FlexibleSpace()
+				StackItem(expandButton)
+			}.spacing(10)
+			dateLabel
+			StackItem(messageLabel).assign(to: &messageFrameLayout)
+			FlexibleSpace()
+			HStackView {
+				Label(.yellow)
+				Label(.green)
+				Label(.brown)
+				Label(.systemPink)
+				Label(.blue)
+			}.each { layout, _, _ in
+				layout.didLayoutSubviewsBlock = {
+					guard let label = $0.targetView as? UILabel else { return }
+					let size = $0.frame.size
+					label.text = "\(size.width) x \(size.height)"
+				}
+			}.distribution(.split(ratio: [0.5, -1, -1, 0.3])).spacing(10)
+		}.flexible().spacing(5)
+		
 		
 		// Standard syntax:
-		
+/*
 		frameLayout + VStackLayout {
 			($0 + earthImageView).alignment = (.top, .center)
 			($0 + 0).flexible()
@@ -109,20 +143,22 @@ class CardView: UIView {
 			$0.flexible()
 			  .spacing(5)
 		}
+*/
 		
-		frameLayout
+//		frameLayout
 //			.debug(true)
-			.isSkeletonMode(true)
+//			.isSkeletonMode(true)
 
 		DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
 			self.frameLayout.isSkeletonMode(false)
 		}
 	}
 	
-	func Label(_ color: UIColor) -> UILabel {
+	func Label(_ color: UIColor, _ text: String = " ") -> UILabel {
 		let label = UILabel()
 		label.textColor = .black
 		label.backgroundColor = color
+		label.text = text
 		return label
 	}
 	
