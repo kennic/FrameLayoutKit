@@ -20,8 +20,39 @@ frameLayout
 
 extension FrameLayout {
 	
+	@discardableResult public func flexible(ratio: CGFloat = -1) -> Self {
+		isFlexible = true
+		flexibleRatio = ratio
+		return self
+	}
+	
+	@discardableResult public func inflexible() -> Self {
+		isFlexible = false
+		return self
+	}
+	
+	@discardableResult public func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
+		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+		return self
+	}
+	
+	@discardableResult public func padding(_ value: CGFloat) -> Self {
+		edgeInsets = UIEdgeInsets(top: value, left: value, bottom: value, right: value)
+		return self
+	}
+	
+	@discardableResult public func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
+		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
+		return self
+	}
+	
 	@discardableResult public func align(vertical: NKContentVerticalAlignment? = nil, horizontal: NKContentHorizontalAlignment? = nil) -> Self {
 		alignment = (vertical ?? alignment.vertical, horizontal ?? alignment.horizontal)
+		return self
+	}
+	
+	@discardableResult public func aligns(_ vertical: NKContentVerticalAlignment, _ horizontal: NKContentHorizontalAlignment) -> Self {
+		alignment = (vertical, horizontal)
 		return self
 	}
 	

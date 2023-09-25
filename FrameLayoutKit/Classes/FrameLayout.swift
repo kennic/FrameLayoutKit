@@ -320,34 +320,7 @@ open class FrameLayout: UIView {
 	public required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 	}
-	
-	// MARK: -
-	
-	@discardableResult
-	open func flexible(ratio: CGFloat = -1) -> Self {
-		isFlexible = true
-		flexibleRatio = ratio
-		return self
-	}
-	
-	@discardableResult
-	open func inflexible() -> Self {
-		isFlexible = false
-		return self
-	}
-	
-	@discardableResult
-	open func padding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
-		edgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
-		return self
-	}
-	
-	@discardableResult
-	open func addPadding(top: CGFloat = 0, left: CGFloat = 0, bottom: CGFloat = 0, right: CGFloat = 0) -> Self {
-		edgeInsets = UIEdgeInsets(top: edgeInsets.top + top, left: edgeInsets.left + left, bottom: edgeInsets.bottom + bottom, right: edgeInsets.right + right)
-		return self
-	}
-	
+		
 	#if DEBUG
 	override open func draw(_ rect: CGRect) {
 		guard debug, !isEmpty, bounds != .zero else {
