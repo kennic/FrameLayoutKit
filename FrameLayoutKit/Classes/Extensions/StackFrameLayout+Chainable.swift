@@ -55,4 +55,9 @@ extension StackFrameLayout {
 		return self
 	}
 	
+	@discardableResult public func each(_ block: (FrameLayout, Int, inout Bool) -> Void) -> Self {
+		enumerate(block)
+		return self
+	}
+	
 }

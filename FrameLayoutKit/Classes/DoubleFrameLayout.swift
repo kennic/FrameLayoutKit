@@ -27,6 +27,7 @@ public enum NKLayoutDistribution: Equatable {
 	}
 }
 
+/*
 @propertyWrapper
 public struct Clamping<Value: Comparable> {
 	var value: Value
@@ -44,7 +45,6 @@ public struct Clamping<Value: Comparable> {
 	}
 }
 
-/*
 @propertyWrapper
 public struct UnitPercentage<Value: FloatingPoint> {
 	@Clamping(0...1)

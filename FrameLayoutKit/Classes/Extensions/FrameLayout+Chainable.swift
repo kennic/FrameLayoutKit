@@ -175,6 +175,11 @@ extension FrameLayout {
 		return self
 	}
 	
+	@discardableResult public func assign(to instance: inout FrameLayout?) -> Self {
+		instance = self
+		return self
+	}
+	
 	@discardableResult public func enable(_ value: Bool) -> Self {
 		isEnabled = value
 		return self

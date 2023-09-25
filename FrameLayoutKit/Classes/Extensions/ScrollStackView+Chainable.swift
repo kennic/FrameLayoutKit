@@ -217,6 +217,11 @@ extension ScrollStackView {
 		return self
 	}
 	
+	@discardableResult public func each(_ block: (FrameLayout, Int, inout Bool) -> Void) -> Self {
+		enumerate(block)
+		return self
+	}
+	
 	// Skeleton
 	
 	@discardableResult public func isSkeletonMode(_ value: Bool) -> Self {
