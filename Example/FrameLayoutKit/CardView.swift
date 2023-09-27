@@ -19,7 +19,7 @@ class CardView: UIView {
 	let expandButton = UIButton()
 	let frameLayout = HStackLayout {
 		$0.spacing = 15.0
-		$0.padding(top: 15, left: 15, bottom: 15, right: 15)
+		$0.padding(15)
 	}
 	let blueView = UIView()
 	let redView = UIView()
