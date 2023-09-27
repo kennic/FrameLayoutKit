@@ -66,13 +66,43 @@ open class VStackView: VStackLayout {
 	
 }
 
+/**
+ Enable DSL syntax:
+ 
+ ```
+ let stack = ZStackView {
+   UILabel()
+   UIButton()
+ }
+ */
+open class ZStackView: ZStackLayout {
+	
+	public init(@ViewBuilder builder: () -> [UIView]) {
+		super.init()
+		add(builder())
+	}
+	
+	required public init?(coder: NSCoder) {
+		super.init(coder: coder)
+	}
+	
+	required public init() {
+		fatalError("init() has not been implemented")
+	}
+	
+}
+
+
 // MARK: -
 
 open class StackItem<T: UIView>: FrameLayout {
+	var content: T?
 	
 	public required init(_ view: T?) {
 		super.init()
+		
 		targetView = view
+		content = view
 	}
 	
 	public required init() {
