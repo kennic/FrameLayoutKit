@@ -488,7 +488,6 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func add(_ view: UIView?) -> FrameLayout {
 		let layout = frameLayout.add(view)
-		layout.isUserInteractionEnabled = true
 		if let view { scrollView.addSubview(view) }
 		setNeedsLayout()
 		return layout
@@ -502,7 +501,6 @@ open class ScrollStackView: UIView {
 	@discardableResult
 	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
 		let layout = frameLayout.insert(view, at: index)
-		layout.isUserInteractionEnabled = true
 		if let view { scrollView.insertSubview(view, at: index) }
 		setNeedsLayout()
 		return layout
