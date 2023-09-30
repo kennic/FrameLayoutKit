@@ -902,6 +902,9 @@ open class DoubleFrameLayout: FrameLayout {
 			}
 		}
 		
+		targetFrame1 = targetFrame1.offsetBy(dx: translationOffset.x, dy: translationOffset.y)
+		targetFrame2 = targetFrame2.offsetBy(dx: translationOffset.x, dy: translationOffset.y)
+		
 		frameLayout1.frame = targetFrame1.integral
 		frameLayout2.frame = targetFrame2.integral
 	}

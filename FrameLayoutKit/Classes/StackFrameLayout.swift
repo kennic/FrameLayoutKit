@@ -1201,6 +1201,12 @@ open class StackFrameLayout: FrameLayout {
 					break
 			}
 		}
+		
+		if translationX != 0 || translationY != 0 {
+			frameLayouts.forEach {
+				$0.frame = $0.frame.offsetBy(dx: translationOffset.x, dy: translationOffset.y)
+			}
+		}
 	}
 	
 }
