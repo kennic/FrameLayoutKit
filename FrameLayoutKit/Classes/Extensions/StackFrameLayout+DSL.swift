@@ -8,7 +8,7 @@
 import UIKit
 
 @resultBuilder
-public struct ViewBuilder {
+public struct FLViewBuilder {
 	
 	static public func buildBlock(_ views: UIView...) -> [UIView] { views }
 	
@@ -19,13 +19,13 @@ public struct ViewBuilder {
  
  ```
  let stack = HStackView {
- UILabel()
- UIButton()
+   UILabel()
+   UIButton()
  }
  */
 open class HStackView: HStackLayout {
 	
-	public init(@ViewBuilder builder: () -> [UIView]) {
+	public init(@FLViewBuilder builder: () -> [UIView]) {
 		super.init()
 		add(builder())
 	}
@@ -45,13 +45,13 @@ open class HStackView: HStackLayout {
  
  ```
  let stack = VStackView {
- UILabel()
- UIButton()
+   UILabel()
+   UIButton()
  }
  */
 open class VStackView: VStackLayout {
 	
-	public init(@ViewBuilder builder: () -> [UIView]) {
+	public init(@FLViewBuilder builder: () -> [UIView]) {
 		super.init()
 		add(builder())
 	}
@@ -77,7 +77,7 @@ open class VStackView: VStackLayout {
  */
 open class ZStackView: ZStackLayout {
 	
-	public init(@ViewBuilder builder: () -> [UIView]) {
+	public init(@FLViewBuilder builder: () -> [UIView]) {
 		super.init()
 		add(builder())
 	}
@@ -95,8 +95,17 @@ open class ZStackView: ZStackLayout {
 
 // MARK: -
 
+/**
+ Enable DSL syntax:
+ 
+ ```
+ let stack = VStackView {
+   StackItem(label).padding(12)
+   StackItem(button).aligns(.center, .center).padding(4)
+ }
+ */
 open class StackItem<T: UIView>: FrameLayout {
-	var content: T?
+	public var content: T?
 	
 	public required init(_ view: T?) {
 		super.init()
@@ -117,6 +126,16 @@ open class StackItem<T: UIView>: FrameLayout {
 
 // MARK: - Spacing
 
+/**
+ Enable DSL syntax:
+ 
+ ```
+ let stack = VStackView {
+   StackItem(label).padding(12)
+   SpaceItem(10)
+   StackItem(button).aligns(.center, .center).padding(4)
+ }
+ */
 open class SpaceItem: FrameLayout {
 	
 	public required init(_ value: CGFloat = 0) {
@@ -134,6 +153,16 @@ open class SpaceItem: FrameLayout {
 	
 }
 
+/**
+ Enable DSL syntax:
+ 
+ ```
+ let stack = VStackView {
+   StackItem(label).padding(12)
+   FlexibleSpace()
+   StackItem(button).aligns(.center, .center).padding(4)
+ }
+ */
 open class FlexibleSpace: FrameLayout {
 	
 	public required init(_ value: CGFloat = 0) {
