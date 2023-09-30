@@ -356,12 +356,15 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		if !isEnabled { return .zero }
+		
 		willSizeThatFitsBlock?(self, size)
 		return calculateSize(fitSize: size).size.limitTo(minSize: minSize, maxSize: maxSize)
 	}
 	
 	open override func layoutSubviews() {
 		super.layoutSubviews()
+		if !isEnabled { return }
 		
 		defer {
 			didLayoutSubviewsBlock?(self)

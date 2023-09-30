@@ -389,6 +389,7 @@ open class StackFrameLayout: FrameLayout {
 	// MARK: -
 	
 	open override func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
+		if !isEnabled { return .zero }
 		willSizeThatFitsBlock?(self, size)
 		
 		var result: CGSize = size
@@ -579,6 +580,7 @@ open class StackFrameLayout: FrameLayout {
 	
 	override open func layoutSubviews() {
 		super.layoutSubviews()
+		if !isEnabled { return }
 		
 		defer {
 			didLayoutSubviewsBlock?(self)

@@ -323,6 +323,8 @@ open class DoubleFrameLayout: FrameLayout {
 	}
 	
 	open override func sizeThatFits(_ size: CGSize, ignoreHiddenView: Bool) -> CGSize {
+		if !isEnabled { return .zero }
+		
 		willSizeThatFitsBlock?(self, size)
 		
 		var result: CGSize = size
@@ -619,6 +621,7 @@ open class DoubleFrameLayout: FrameLayout {
 	
 	override open func layoutSubviews() {
 		super.layoutSubviews()
+		if !isEnabled { return }
 		
 		defer {
 			didLayoutSubviewsBlock?(self)

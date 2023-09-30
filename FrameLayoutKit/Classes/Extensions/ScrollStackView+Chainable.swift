@@ -180,6 +180,11 @@ extension ScrollStackView {
 		return self
 	}
 	
+	@discardableResult public func enable(_ value: Bool) -> Self {
+		isEnabled = value
+		return self
+	}
+	
 	@discardableResult public func willLayoutSubviews(_ block: @escaping (ScrollStackView) -> Void) -> Self {
 		willLayoutSubviewsBlock = block
 		return self

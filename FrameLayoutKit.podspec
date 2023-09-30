@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name             = 'FrameLayoutKit'
-	s.version          = '7.0.2'
+	s.version          = '7.0.3'
 	s.summary          = 'FrameLayoutKit is a super fast and easy to use layout kit'
 	s.description      = <<-DESC
 	FrameLayoutKit is a powerful Swift library designed to streamline the process of creating user interfaces. With its intuitive operator syntax and support for nested functions, developers can effortlessly construct complex UI layouts with minimal code. By leveraging the flexibility of operators, developers can easily position and arrange views within a container view, enabling precise control over the visual hierarchy. Additionally, the library offers a range of convenient functions for configuring view properties, such as setting dimensions, margins, and alignment. Whether you're building a simple screen or a complex interface, FrameLayoutKit simplifies the UI creation process, resulting in cleaner, more maintainable code.

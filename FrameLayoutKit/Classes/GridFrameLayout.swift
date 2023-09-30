@@ -494,6 +494,7 @@ open class GridFrameLayout: FrameLayout {
 	fileprivate var lastSize: CGSize = .zero
 	open override func layoutSubviews() {
 		super.layoutSubviews()
+		if !isEnabled { return }
 		
 		if maxColumnWidth > 0, lastSize != bounds.size {
 			lastSize = bounds.size
@@ -506,6 +507,7 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	open override func sizeThatFits(_ size: CGSize) -> CGSize {
+		if !isEnabled { return .zero }
 		return stackLayout.sizeThatFits(size)
 	}
 	

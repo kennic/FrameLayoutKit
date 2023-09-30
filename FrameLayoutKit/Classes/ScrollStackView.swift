@@ -307,6 +307,8 @@ open class ScrollStackView: UIView {
 		}
 	}
 	
+	public var isEnabled = true
+	
 	public var heightRatio: CGFloat {
 		get { frameLayout.heightRatio }
 		set {
@@ -428,11 +430,14 @@ open class ScrollStackView: UIView {
 	}
 	
 	override open func sizeThatFits(_ size: CGSize) -> CGSize {
+		if !isEnabled { return .zero }
 		willSizeThatFitsBlock?(self, size)
 		return frameLayout.sizeThatFits(size)
 	}
 	
 	override open func layoutSubviews() {
+		if !isEnabled { return }
+		
 		willLayoutSubviewsBlock?(self)
 		super.layoutSubviews()
 		
