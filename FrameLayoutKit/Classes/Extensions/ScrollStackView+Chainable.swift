@@ -20,6 +20,11 @@ extension ScrollStackView {
 		return self
 	}
 	
+	@discardableResult public func padding(_ value: CGFloat) -> Self {
+		edgeInsets = UIEdgeInsets(top: value, left: value, bottom: value, right: value)
+		return self
+	}
+	
 	@discardableResult public func distribution(_ value: NKLayoutDistribution) -> Self {
 		distribution = value
 		return self
@@ -197,6 +202,11 @@ extension ScrollStackView {
 	
 	@discardableResult public func willSizeThatFits(_ block: @escaping (ScrollStackView, CGSize) -> Void) -> Self {
 		willSizeThatFitsBlock = block
+		return self
+	}
+	
+	@discardableResult public func isIntrinsicSizeEnabled(_ value: Bool) -> Self {
+		isIntrinsicSizeEnabled = value
 		return self
 	}
 	
