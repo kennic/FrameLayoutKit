@@ -197,6 +197,24 @@ frameLayout
 </tr>
 </table>
 
+## DSL Syntax
+
+In `FrameLayoutKit`, DSL (Domain Specific Language) syntax provides a more declarative and readable way to define layouts, much like SwiftUI. This syntax is particularly used in `VStackView`, `HStackView`, and `ZStackView`. These views support DSL, allowing you to add standard UIKit views directly or customize them with `Item(view)` for more control over size and position. It simplifies the process of creating and managing layouts by offering a SwiftUI-like declarative approach, making your code more readable and easier to maintain.
+
+```swift
+let titleLabel = UILabel()
+let descriptionLabel = UILabel()
+let actionButton = UIButton()
+
+let vStackLayout = VStackView {
+    titleLabel
+    descriptionLabel
+    SpaceItem(20) // Adds a space of 20 points
+    Item(actionButton).minWidth(120) // Customizes the button's minimum width
+}
+
+```
+
 # Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
 ![Benchmark Results](images/bechmark.png "Benchmark results")
