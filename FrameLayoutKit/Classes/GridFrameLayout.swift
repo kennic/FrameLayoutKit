@@ -346,9 +346,9 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func insertRow(at index: Int) -> StackFrameLayout {
+	open func insertRow(at index: Int, invert: Bool = false) -> StackFrameLayout {
 		let layout = newRow()
-		stackLayout.insert(layout, at: index)
+		stackLayout.insert(layout, at: index, invert: invert)
 		setNeedsLayout()
 		return layout
 	}

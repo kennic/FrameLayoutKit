@@ -225,10 +225,12 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	@discardableResult
-	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
+	open func insert(_ view: UIView?, at index: Int, invert: Bool = false) -> FrameLayout {
+		let targetIndex = invert ? max(frameLayouts.count - index, 0) : index
+		
 		if let frameLayout = view as? FrameLayout, frameLayout.superview == nil {
 			applyCommonAttributes(to: frameLayout)
-			frameLayouts.insert(frameLayout, at: index)
+			frameLayouts.insert(frameLayout, at: targetIndex)
 			addSubview(frameLayout)
 			return frameLayout
 		}
@@ -247,7 +249,7 @@ open class StackFrameLayout: FrameLayout {
 			frameLayout.minContentSize = minItemSize
 			frameLayout.maxContentSize = maxItemSize
 			applyCommonAttributes(to: frameLayout)
-			frameLayouts.insert(frameLayout, at: index)
+			frameLayouts.insert(frameLayout, at: targetIndex)
 			addSubview(frameLayout)
 			return frameLayout
 		}

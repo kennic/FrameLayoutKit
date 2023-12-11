@@ -504,9 +504,10 @@ open class ScrollStackView: UIView {
 	}
 	
 	@discardableResult
-	open func insert(_ view: UIView?, at index: Int) -> FrameLayout {
-		let layout = frameLayout.insert(view, at: index)
-		if let view { scrollView.insertSubview(view, at: index) }
+	open func insert(_ view: UIView?, at index: Int, invert: Bool = false) -> FrameLayout {
+		let targetIndex = invert ? max(frameLayouts.count - index, 0) : index
+		let layout = frameLayout.insert(view, at: targetIndex)
+		if let view { scrollView.insertSubview(view, at: targetIndex) }
 		setNeedsLayout()
 		return layout
 	}
