@@ -310,6 +310,7 @@ open class GridFrameLayout: FrameLayout {
 	
 	fileprivate func newRow() -> StackFrameLayout {
 		let layout = StackFrameLayout(axis: .horizontal, distribution: .equal)
+		layout.parent = self
 		layout.numberOfFrameLayouts = columns
 		layout.spacing = horizontalSpacing
 		layout.debug = debug
@@ -367,8 +368,8 @@ open class GridFrameLayout: FrameLayout {
 	// MARK: -
 	
 	open func addColumn() {
-		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout {
+		stackLayout.frameLayouts.forEach {
+			if let rowLayout = $0 as? StackFrameLayout {
 				let row = rowLayout.add()
 				row.debug = debug
 				row.isSkeletonMode = isSkeletonMode || row.isSkeletonMode
@@ -387,8 +388,8 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	open func insertColumn(at index: Int) {
-		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout {
+		stackLayout.frameLayouts.forEach {
+			if let rowLayout = $0 as? StackFrameLayout {
 				let row = rowLayout.insert(nil, at: index)
 				row.debug = debug
 				row.isSkeletonMode = isSkeletonMode
@@ -407,17 +408,13 @@ open class GridFrameLayout: FrameLayout {
 	}
 	
 	open func removeColumn(at index: Int) {
-		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout {
-				rowLayout.removeFrameLayout(at: index)
-			}
-		}
+		stackLayout.frameLayouts.forEach { ($0 as? StackFrameLayout)?.removeFrameLayout(at: index) }
 		setNeedsLayout()
 	}
 	
 	open func removeLastColumn() {
-		stackLayout.frameLayouts.forEach { (layout) in
-			if let rowLayout = layout as? StackFrameLayout {
+		stackLayout.frameLayouts.forEach {
+			if let rowLayout = $0 as? StackFrameLayout {
 				rowLayout.removeFrameLayout(at: rowLayout.frameLayouts.count - 1)
 			}
 		}
@@ -487,6 +484,17 @@ open class GridFrameLayout: FrameLayout {
 		
 		setNeedsLayout()
 		layoutIfNeeded()
+	}
+	
+	/**
+	 This will set `isUserInteractionEnabled` as well as all sub-frameLayouts to the same value.
+	 - parameter enabled: The name says it all
+	 */
+	@discardableResult
+	public func setUserInteraction(enabled: Bool) -> Self {
+		isUserInteractionEnabled = enabled
+		stackLayout.frameLayouts.forEach { $0.isUserInteractionEnabled = enabled }
+		return self
 	}
 	
 	// MARK: -

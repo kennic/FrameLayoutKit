@@ -256,6 +256,7 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 	func applyCommonAttributes(to frameLayout: FrameLayout) {
+		frameLayout.parent = self
 		frameLayout.debug = debug
 		frameLayout.debugColor = debugColor
 		frameLayout.ignoreHiddenView = ignoreHiddenView
@@ -275,15 +276,11 @@ open class StackFrameLayout: FrameLayout {
 		guard index >= 0 && index < frameLayouts.count else { return self }
 		
 		let frameLayout = frameLayouts[index]
-		if frameLayout.superview == self {
-			frameLayout.removeFromSuperview()
-		}
-		
-		if autoRemoveTargetView {
-			frameLayout.targetView?.removeFromSuperview()
-		}
+		if frameLayout.superview == self { frameLayout.removeFromSuperview() }
+		if autoRemoveTargetView { frameLayout.targetView?.removeFromSuperview() }
 		
 		frameLayout.targetView = nil
+		frameLayout.parent = nil
 		frameLayouts.remove(at: index)
 		return self
 	}
@@ -291,14 +288,10 @@ open class StackFrameLayout: FrameLayout {
 	@discardableResult
 	open func removeAll(autoRemoveTargetView: Bool = false) -> Self {
 		for layout in frameLayouts {
-			if autoRemoveTargetView {
-				layout.targetView?.removeFromSuperview()
-			}
-			
+			if autoRemoveTargetView { layout.targetView?.removeFromSuperview() }
 			layout.targetView = nil
-			if layout.superview == self {
-				layout.removeFromSuperview()
-			}
+			layout.parent = nil
+			if layout.superview == self { layout.removeFromSuperview() }
 		}
 		
 		frameLayouts.removeAll()
@@ -320,10 +313,8 @@ open class StackFrameLayout: FrameLayout {
 		}
 		
 		if let currentFrameLayout, currentFrameLayout != frameLayout {
-			if currentFrameLayout.superview == self {
-				currentFrameLayout.removeFromSuperview()
-			}
-			
+			if currentFrameLayout.superview == self { currentFrameLayout.removeFromSuperview() }
+			currentFrameLayout.parent = nil
 			frameLayouts.insert(frameLayout, at: index)
 			addSubview(frameLayout)
 		}
@@ -338,6 +329,17 @@ open class StackFrameLayout: FrameLayout {
 	public func invert() -> Self {
 		frameLayouts = frameLayouts.reversed()
 		setNeedsLayout()
+		return self
+	}
+	
+	/**
+	 This will set `isUserInteractionEnabled` as well as all sub-frameLayouts to the same value.
+	 - parameter enabled: The name says it all
+	 */
+	@discardableResult
+	public func setUserInteraction(enabled: Bool) -> Self {
+		isUserInteractionEnabled = enabled
+		frameLayouts.forEach { $0.isUserInteractionEnabled = enabled }
 		return self
 	}
 	
@@ -1212,6 +1214,9 @@ open class StackFrameLayout: FrameLayout {
 	}
 	
 }
+
+
+// MARK: -
 
 fileprivate extension Array where Element == CGFloat {
 	

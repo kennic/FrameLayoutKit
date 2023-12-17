@@ -39,6 +39,8 @@ open class FrameLayout: UIView {
 	public var bindingEdgeInsets: UIEdgeInsets = .zero
 	/// other views that will be binded to this frame
 	public var lazyBindingViews: (() -> [UIView?]?)?
+	/// FrameLayout that contains this
+	public weak var parent: FrameLayout?
 	/// If set to `true`, `sizeThatFits(size:)` will returns `.zero` if `targetView` is hidden.
 	public var ignoreHiddenView = true
 	/// If set to `false`, it will return .zero in sizeThatFits and ignore running layoutSubviews. It will also ignore `willSizeThatFits` and `willLayoutSubviews` blocks.

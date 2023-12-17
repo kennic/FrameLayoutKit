@@ -175,16 +175,32 @@ open class DoubleFrameLayout: FrameLayout {
 	public var frameLayout1: FrameLayout = FrameLayout() {
 		didSet {
 			guard frameLayout1 != oldValue else { return }
-			if oldValue.superview == self { oldValue.removeFromSuperview() }
-			if frameLayout1 != self { addSubview(frameLayout1) }
+			
+			if oldValue.superview == self {
+				oldValue.parent = nil
+				oldValue.removeFromSuperview()
+			}
+			
+			if frameLayout1 != self {
+				frameLayout1.parent = self
+				addSubview(frameLayout1)
+			}
 		}
 	}
 	
 	public var frameLayout2: FrameLayout = FrameLayout() {
 		didSet {
 			guard frameLayout2 != oldValue else { return }
-			if oldValue.superview == self { oldValue.removeFromSuperview() }
-			if frameLayout2 != self { addSubview(frameLayout2) }
+			
+			if oldValue.superview == self {
+				oldValue.parent = nil
+				oldValue.removeFromSuperview()
+			}
+			
+			if frameLayout2 != self {
+				frameLayout2.parent = self
+				addSubview(frameLayout2)
+			}
 		}
 	}
 	

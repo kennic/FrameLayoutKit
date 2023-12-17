@@ -180,7 +180,7 @@ open class FlowFrameLayout: FrameLayout {
 	}
 	
 	public func viewsAt(stack: Int) -> [UIView]? {
-		return stacks(at: stack)?.frameLayouts.compactMap( { return $0.targetView } )
+		return stacks(at: stack)?.frameLayouts.compactMap { $0.targetView }
 	}
 	
 	public func stacks(at index: Int) -> StackFrameLayout? {
@@ -216,6 +216,7 @@ open class FlowFrameLayout: FrameLayout {
 		layout.spacing = axis == .horizontal ? interItemSpacing : lineSpacing
 		layout.isJustified = isJustified
 		layout.debug = debug
+		layout.parent = self
 		
 		return layout
 	}

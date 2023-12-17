@@ -572,6 +572,17 @@ open class ScrollStackView: UIView {
 		frameLayout.layoutIfNeeded()
 	}
 	
+	/**
+	 This will set `isUserInteractionEnabled` as well as all sub-frameLayouts to the same value.
+	 - parameter enabled: The name says it all
+	 */
+	@discardableResult
+	public func setUserInteraction(enabled: Bool) -> Self {
+		isUserInteractionEnabled = enabled
+		frameLayouts.forEach { $0.isUserInteractionEnabled = enabled }
+		return self
+	}
+	
 	// MARK: -
 	
 	fileprivate func updateLayout() {
@@ -582,20 +593,20 @@ open class ScrollStackView: UIView {
 			let total = _views.count
 			
 			if frameLayout.frameLayouts.count > total {
-				frameLayout.enumerate({ (layout, index, stop) in
+				frameLayout.enumerate { layout, index, _ in
 					if Int(index) >= Int(total) {
 						layout.targetView?.removeFromSuperview()
 					}
-				})
+				}
 			}
 			
 			frameLayout.numberOfFrameLayouts = total
 			
-			frameLayout.enumerate({ (layout, idx, stop) in
+			frameLayout.enumerate { layout, idx, _ in
 				let view = views[idx]
 				scrollView.addSubview(view)
 				layout.targetView = view
-			})
+			}
 		}
 		
 		setNeedsLayout()
