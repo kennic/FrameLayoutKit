@@ -353,12 +353,19 @@ open class StackFrameLayout: FrameLayout {
 	public func frameLayout(with view: UIView) -> FrameLayout? {
 		if targetView == view { return self }
 		
-		for layout in frameLayouts {
-			if layout.targetView == view { return layout }
-			if let stack = layout as? StackFrameLayout { return stack.frameLayout(with: view) }
+		var result: FrameLayout? = nil
+		enumerate { layout, _, stop in
+			if layout.targetView == view {
+				result = layout
+			}
+			else if let subStack = layout as? StackFrameLayout {
+				result = subStack.frameLayout(with: view)
+			}
+			
+			if result != nil { stop = true }
 		}
 		
-		return nil
+		return result;
 	}
 	
 	public func enumerate(_ block: (FrameLayout, Int, inout Bool) -> Void) {
