@@ -215,6 +215,10 @@ let vStackLayout = VStackView {
 
 ```
 
+## Overall Structure
+
+![image](images/FrameLayoutKit.png)
+
 # Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
 ![Benchmark Results](images/bechmark.png "Benchmark results")
