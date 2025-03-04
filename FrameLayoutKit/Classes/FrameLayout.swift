@@ -370,7 +370,7 @@ open class FrameLayout: UIView {
 		if !isEnabled { return .zero }
 		
 		willSizeThatFitsBlock?(self, size)
-		guard !isEmpty || !ignoreHiddenView else { return .zero }
+		if isEmpty && ignoreHiddenView { return .zero }
 		
 		if minSize == maxSize && minSize.width > 0 && minSize.height > 0 { return minSize }
 		
