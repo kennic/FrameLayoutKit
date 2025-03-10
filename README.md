@@ -1,8 +1,7 @@
 # FrameLayoutKit
 
 [![Platform](https://img.shields.io/cocoapods/p/FrameLayoutKit.svg?style=flat)](http://cocoapods.org/pods/FrameLayoutKit)
-[![Language](http://img.shields.io/badge/language-Swift-brightgreen.svg?style=flat
-)](https://developer.apple.com/swift)
+[![Language](http://img.shields.io/badge/language-Swift-brightgreen.svg?style=flat)](https://developer.apple.com/swift)
 [![Version](https://img.shields.io/cocoapods/v/FrameLayoutKit.svg?style=flat-square)](http://cocoapods.org/pods/FrameLayoutKit)
 [![SwiftPM Compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 [![License](https://img.shields.io/cocoapods/l/FrameLayoutKit.svg?style=flat-square)](http://cocoapods.org/pods/FrameLayoutKit)
@@ -13,8 +12,7 @@ A super fast and easy-to-use layout library for iOS. FrameLayoutKit supports com
 
 It simplifies the UI creation process, resulting in cleaner and more maintainable code.
 
-
-## Why?
+## Why Use FrameLayoutKit?
 
 Say NO to autolayout constraint nightmare:
 
@@ -30,38 +28,183 @@ Say NO to autolayout constraint nightmare:
 </tr>
 </table>
 
+## Table of Contents
 
-# Installation
+-   [Installation](#installation)
+-   [Core Components](#core-components)
+-   [Basic Usage](#basic-usage)
+-   [DSL Syntax](#dsl-syntax)
+-   [Examples](#examples)
+-   [Performance](#performance)
+-   [Requirements](#requirements)
+-   [Author](#author)
+-   [License](#license)
+
+## Installation
 
 FrameLayoutKit is available through `Swift Package Manager` (Recommended) and [CocoaPods](http://cocoapods.org):
 
-Regardless, make sure to import the project wherever you may use it:
+Regardless of the method, make sure to import the framework into your project:
 
 ```swift
 import FrameLayoutKit
 ```
 
-### Cocoapods:
-FrameLayoutKit can be installed as a [CocoaPod](https://cocoapods.org/). To install, include this in your Podfile.
+### Swift Package Manager (Recommended)
 
-```ruby
-pod "FrameLayoutKit"
-```
-
-
-### Swift Package Manager
 [Swift Package Manager](https://swift.org/package-manager/) is recommended to install FrameLayoutKit.
 
- 1. Click `File`
- 2. `Add Packages...`
- 3. Specify the git URL for FrameLayoutKit.
+1.  Click `File`
+2.  `Add Packages...`
+3.  Enter the git URL for FrameLayoutKit:
 
 ```swift
 https://github.com/kennic/FrameLayoutKit.git
 ```
 
-# Example
-Some examples of how FrameLayoutKit works:
+### CocoaPods
+
+FrameLayoutKit can also be installed as a [CocoaPod](https://cocoapods.org/). To install, add the following line to your Podfile:
+
+```ruby
+pod "FrameLayoutKit"
+```
+
+## Core Components
+
+![image](images/FrameLayoutKit.png)
+
+FrameLayoutKit includes the following core components:
+
+### FrameLayout
+
+The most basic class, manages a single view and adjusts its size and position based on configured properties.
+
+### StackFrameLayout
+
+Manages multiple views in rows (horizontal) or columns (vertical), similar to `UIStackView` but with higher performance and more options.
+
+-   **HStackLayout**: Horizontal layout
+-   **VStackLayout**: Vertical layout
+-   **ZStackLayout**: Stacked layout (z-index)
+
+### GridFrameLayout
+
+Arranges views in a grid, with customizable number of columns and rows.
+
+### FlowFrameLayout
+
+Arranges views in a flow, automatically wrapping to the next line when there's not enough space.
+
+### DoubleFrameLayout
+
+Manages two views with various layout options.
+
+### ScrollStackView
+
+Combines `UIScrollView` with `StackFrameLayout` to create a scrollview that can automatically layout its child views.
+
+## Basic Usage
+
+### Creating and Configuring Layouts
+
+```swift
+// Create a vertical layout
+let vStackLayout = VStackLayout()
+vStackLayout.spacing = 10
+vStackLayout.distribution = .center
+vStackLayout.padding(top: 20, left: 20, bottom: 20, right: 20)
+
+// Add views to the layout
+vStackLayout.add(view1)
+vStackLayout.add(view2)
+vStackLayout.add(view3)
+
+// Add the layout to a parent view
+parentView.addSubview(vStackLayout)
+
+// Update the layout's frame
+vStackLayout.frame = parentView.bounds
+```
+
+### Using Operator Syntax (Recommended)
+
+FrameLayoutKit provides the `+` operator syntax to easily add views to layouts:
+
+```swift
+// Add a single view
+vStackLayout + view1
+
+// Add an array of views
+vStackLayout + [view1, view2, view3]
+
+// Add spacing
+vStackLayout + 10 // Add 10pt spacing
+
+// Add a child layout
+vStackLayout + hStackLayout
+```
+
+### Configuring View Properties
+
+```swift
+// Configure alignment
+(vStackLayout + view1).alignment = (.center, .fill)
+
+// Configure fixed size
+(vStackLayout + view2).fixedSize = CGSize(width: 100, height: 50)
+
+// Add a flexible view (can expand)
+(vStackLayout + view3).flexible()
+```
+
+### Chained Syntax (Recommended)
+
+```swift
+vStackLayout
+    .distribution(.center)
+    .spacing(16)
+    .flexible()
+    .fixedHeight(50)
+    .aligns(.top, .center)
+    .padding(top: 20, left: 20, bottom: 20, right: 20)
+```
+
+## DSL Syntax
+
+FrameLayoutKit provides a DSL (Domain Specific Language) syntax similar to SwiftUI, making layout creation more intuitive and readable:
+
+```swift
+// Create VStackLayout with DSL syntax
+let vStackLayout = VStackView {
+    titleLabel
+    descriptionLabel
+    SpaceItem(20) // Add a 20pt space
+    Item(actionButton).minWidth(120) // Customize the button's minimum width
+}
+
+// Create HStackLayout with DSL syntax
+let hStackLayout = HStackView {
+    StackItem(imageView).fixedSize(width: 50, height: 50)
+    VStackView {
+        titleLabel
+        subtitleLabel
+    }.spacing(5)
+    FlexibleSpace() // Add flexible space
+    StackItem(button).align(vertical: .center, horizontal: .right)
+}
+```
+
+### Main DSL Components
+
+-   **StackItem**: Wraps a view to add to a stack with additional options
+-   **SpaceItem**: Adds fixed spacing
+-   **FlexibleSpace**: Adds flexible spacing (can expand)
+-   **Item**: Similar to StackItem but with more options
+
+## Examples
+
+Here are some examples of how FrameLayoutKit works:
 
 <table>
 <tr><td> Source </td> <td> Result </td></tr>
@@ -82,10 +225,11 @@ frameLayout + VStackLayout {
 }.spacing(5.0)
 
 frameLayout
-   .spacing(15)
-   .padding(top: 15, left: 15, bottom: 15, right: 15)
-   .debug(true) // show dashed lines to visualize the layout
-```
+.spacing(15)
+.padding(top: 15, left: 15, bottom: 15, right: 15)
+.debug(true) // show dashed lines to visualize the layout
+
+````
 </td>
 <td>
 <img alt="result 1" src="images/helloWorld.png">
@@ -108,7 +252,8 @@ let frameLayout = VStackLayout {
 }.padding(top: 12, left: 12, bottom: 12, right: 12)
  .distribution(.bottom)
  .spacing(5)
-```
+````
+
 </td>
 <td>
 <img alt="result 1" src="images/example_1.png">
@@ -135,6 +280,7 @@ frameLayout + VStackLayout {
   }.spacing(12).padding(top: 0, left: 12, bottom: 12, right: 12)
 }.distribution(.bottom)
 ```
+
 </td>
 <td>
 <img alt="result 2" src="images/example_2.png">
@@ -165,6 +311,7 @@ cardView + HStackLayout {
   .forEach { $0.fixedContentSize(buttonSize) }
 }.distribution(.center).spacing(10)
 ```
+
 </td>
 <td>
 <img alt="result 2" src="images/example_3.png">
@@ -172,72 +319,42 @@ cardView + HStackLayout {
 </tr>
 </table>
 
-Two types of code syntax:
+## Key Properties
 
-<table>
-<tr><td>Regular syntax</td> <td>Chained syntax</td></tr>
-<tr>
-<td>
+### FrameLayout
 
-```swift
-frameLayout.distribution = .center
-frameLayout.spacing = 16
-frameLayout.isFlexible = true
-```
-</td>
-<td>
-	
-```swift
-frameLayout
-  .distribution(.center)
-  .spacing(16)
-  .flexible()
-```
-</td>
-</tr>
-</table>
+-   **targetView**: The view managed by this layout
+-   **edgeInsets**: Padding around the view
+-   **minSize/maxSize**: Minimum/maximum size of the layout
+-   **minContentSize/maxContentSize**: Minimum/maximum size of the child view
+-   **fixedSize/fixedContentSize**: Fixed size of the layout/child view
+-   **contentAlignment**: Content alignment (top, center, bottom, left, right, fill, fit)
+-   **isFlexible**: Allows the layout to expand to fill available space
 
-## DSL Syntax
+### StackFrameLayout
 
-In `FrameLayoutKit`, DSL (Domain Specific Language) syntax provides a more declarative and readable way to define layouts, much like SwiftUI. This syntax is particularly used in `VStackView`, `HStackView`, and `ZStackView`. These views support DSL, allowing you to add standard UIKit views directly or customize them with `Item(view)` for more control over size and position. It simplifies the process of creating and managing layouts by offering a SwiftUI-like declarative approach, making your code more readable and easier to maintain.
+-   **axis**: Direction of the stack (vertical, horizontal)
+-   **distribution**: How child views are distributed (top, center, bottom, left, right, fill, fit, justified)
+-   **spacing**: Space between child views
+-   **isJustified**: Evenly distributes child views
+-   **isOverlapped**: Allows child views to overlap
 
-```swift
-let titleLabel = UILabel()
-let descriptionLabel = UILabel()
-let actionButton = UIButton()
+## Performance
 
-let vStackLayout = VStackView {
-    titleLabel
-    descriptionLabel
-    SpaceItem(20) // Adds a space of 20 points
-    Item(actionButton).minWidth(120) // Customizes the button's minimum width
-}
-
-```
-
-## Overall Structure
-
-![image](images/FrameLayoutKit.png)
-
-# Benchmark
 FrameLayoutKit is one of the fastest layout libraries.
 ![Benchmark Results](images/bechmark.png "Benchmark results")
 
 See: [Layout libraries benchmark's project](https://github.com/layoutBox/LayoutFrameworkBenchmark)
 
-# Todo
+## Requirements
 
-- [x] Swift Package Manager
-- [x] CocoaPods support
-- [x] Objective-C version (Deprecated - Not recommended)
-- [x] Swift version
-- [x] Examples
-- [ ] Documents
+-   iOS 11.0+
+-   Swift 5.0+
 
-# Author
+## Author
 
 Nam Kennic, namkennic@me.com
 
-# License
+## License
 
 FrameLayoutKit is available under the MIT license. See the LICENSE file for more info.
