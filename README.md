@@ -104,6 +104,9 @@ Manages two views with various layout options.
 
 Combines `UIScrollView` with `StackFrameLayout` to create a scrollview that can automatically layout its child views.
 
+## Full Documentation:
+[Read Full Documentation here](https://deepwiki.com/kennic/FrameLayoutKit)
+
 ## Basic Usage
 
 ### Creating and Configuring Layouts
@@ -170,7 +173,7 @@ vStackLayout
     .padding(top: 20, left: 20, bottom: 20, right: 20)
 ```
 
-## DSL Syntax
+## DSL Syntax (Experimental)
 
 FrameLayoutKit provides a DSL (Domain Specific Language) syntax similar to SwiftUI, making layout creation more intuitive and readable:
 
