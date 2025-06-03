@@ -325,19 +325,52 @@ cardView + HStackLayout {
 
 -   **targetView**: The view managed by this layout
 -   **edgeInsets**: Padding around the view
--   **minSize/maxSize**: Minimum/maximum size of the layout
--   **minContentSize/maxContentSize**: Minimum/maximum size of the child view
--   **fixedSize/fixedContentSize**: Fixed size of the layout/child view
 -   **contentAlignment**: Content alignment (top, center, bottom, left, right, fill, fit)
--   **isFlexible**: Allows the layout to expand to fill available space
+-   **Size & Content Size**:
+    -   `minSize/maxSize`, `fixedSize`: Minimum/maximum/fixed size of the layout.
+    -   `minContentSize/maxContentSize`, `fixedContentSize`: Minimum/maximum/fixed size of the `targetView`.
+    -   `extendSize (extendWidth, extendHeight)`: Additional size for the `contentSize`.
+    -   `heightRatio`: Defines height based on width.
+    -   `isIntrinsicSizeEnabled`: Controls if `sizeThatFits` uses `targetView`'s intrinsic size.
+-   **Flexibility & Layout Behavior**:
+    -   `isFlexible`, `flexibleRatio`: For flexible layouts within a stack.
+    -   `allowContentVerticalGrowing/Shrinking`, `allowContentHorizontalGrowing/Shrinking`: Controls how `targetView` adapts to `FrameLayout`'s bounds.
+-   **View Hierarchy & State**:
+    -   `parent`: The containing `FrameLayout`.
+    -   `bindingViews`, `bindingEdgeInsets`, `lazyBindingViews`: For binding other views to `targetView`'s frame.
+    -   `ignoreHiddenView`, `isEnabled`, `isEmpty`: Control layout behavior based on visibility and enabled state.
+-   **Positioning**:
+    -   `translationOffset (translationX, translationY)`: For manual position adjustments.
+-   **Callbacks**:
+    -   `willSizeThatFitsBlock`: A block that will be called before `sizeThatFits` is called.
+    -   `willLayoutSubviewsBlock`: A block that will be called before `layoutSubviews` is called.
+    -   `didLayoutSubviewsBlock`: A block that will be called after `layoutSubviews` has finished.
+-   **Debugging**:
+    -   `debug`, `debugColor`: For visualizing layout frames.
+-   **Skeleton Mode**:
+    -   `isSkeletonMode`, `skeletonView`, `skeletonColor`, `skeletonMinSize`, `skeletonMaxSize`: For displaying placeholder content.
+-   **Performance**:
+    -   `shouldCacheSize`: Caches `sizeThatFits` results.
 
 ### StackFrameLayout
 
--   **axis**: Direction of the stack (vertical, horizontal)
--   **distribution**: How child views are distributed (top, center, bottom, left, right, fill, fit, justified)
--   **spacing**: Space between child views
--   **isJustified**: Evenly distributes child views
--   **isOverlapped**: Allows child views to overlap
+-   **Core Layout & Distribution**:
+    -   `axis`: Direction of the stack (vertical or horizontal). You can use `VStackLayout` (vertical axis), `HStackLayout` (horizontal axis).
+    -   `distribution`: How child views are distributed and space is allocated (e.g., `top`, `center`, `bottom`, `left`, `right`, `fill`, `equal`, `split`).
+    -   `spacing`: Space between child views.
+    -   `isOverlapped`: Allows child views to overlap. `ZStackLayout` automatically sets this to `true`.
+    -   `isJustified`, `justifyThreshold`: Enables even distribution of child views. `justifyThreshold` is the minimum remaining space required to trigger justification.
+-   **Child Item Management**:
+    -   `frameLayouts`: Array of child `FrameLayout`s.
+    -   `numberOfFrameLayouts`: Get or set the number of child layouts.
+    -   `firstFrameLayout`, `lastFrameLayout`: Access the first and last child layout.
+    -   `frameLayout(at: Int)`, `frameLayout(with: UIView)`: Retrieve specific child layouts.
+    -   `enumerate(_ block: (FrameLayout, Int, inout Bool) -> Void)`: Iterate over child layouts.
+    -   *Item Management Methods*: Includes functions like `add()`, `insert()`, `removeFrameLayout()`, `removeAll()`, `replace()`, `addSpace()`, and `invert()` for managing child items.
+    -   `setUserInteraction(enabled: Bool)`: Sets `isUserInteractionEnabled` for the stack and all its child layouts.
+-   **Child Item Defaults & Property Propagation**:
+    -   `minItemSize`, `maxItemSize`, `fixedItemSize`: Sets default min/max/fixed content size for all child `FrameLayout`s added to the stack.
+    -   *Property Propagation*: Many common `FrameLayout` properties (e.g., `ignoreHiddenView`, `allowContent...Growing/Shrinking`, `debug`, `skeletonMode`, `clipsToBounds`, `shouldCacheSize`) when set on a `StackFrameLayout` are propagated to its child `FrameLayout`s.
 
 ## Performance
 
