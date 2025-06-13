@@ -104,7 +104,7 @@ Manages two views with various layout options.
 
 Combines `UIScrollView` with `StackFrameLayout` to create a scrollview that can automatically layout its child views.
 
-## Tutorail and Documentation:
+## Tutorial and Documentation:
 [See Tutorial by Codebase2Tutorial (Recommended)](https://code2tutorial.com/tutorial/9a53c8b4-8655-4b7f-a43a-121377744541/index.md)
 
 [Read full document by DeepWiki](https://deepwiki.com/kennic/FrameLayoutKit)
