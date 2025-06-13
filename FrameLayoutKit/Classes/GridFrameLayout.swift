@@ -48,12 +48,12 @@ open class GridFrameLayout: FrameLayout {
 		}
 	}
 	
-	override public var maxSize: CGSize {
-		didSet {
-			stackLayout.maxSize = minSize
-			setNeedsLayout()
-		}
-	}
+        override public var maxSize: CGSize {
+                didSet {
+                        stackLayout.maxSize = maxSize
+                        setNeedsLayout()
+                }
+        }
 	
 	override public var fixedSize: CGSize {
 		didSet {
