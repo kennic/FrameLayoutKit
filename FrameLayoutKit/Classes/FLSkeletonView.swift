@@ -14,7 +14,7 @@ public class FLSkeletonView: UIView {
 	
 	public override var backgroundColor: UIColor? {
 		didSet {
-			lightLayer.fillColor = UIColor.lightText.cgColor
+			lightLayer.fillColor = UIColor(white: 1.0, alpha: 0.6).cgColor
 		}
 	}
 	
@@ -74,5 +74,5 @@ public class FLSkeletonView: UIView {
 	deinit {
 		stopShimmering()
 	}
-
+	
 }
